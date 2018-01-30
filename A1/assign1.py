@@ -7,6 +7,7 @@ import ply.yacc as yacc
 
 tokens = (
 		'ID', 'NUMBER','FLOAT_NUMBER',
+		'COMMENT',
 		'EQUALS',
 		'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
 		'SEMICOLON','STAR', 'AMPERSAND', 'COMMA', 
@@ -36,6 +37,10 @@ reserved = {
 	'void' : 'VOID',
 	'main' : 'MAIN',
 }
+
+def t_COMMENT(t):
+	r'//.*'
+	return t
 
 def t_ID(t):
 	r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -123,6 +128,7 @@ def p_statements(p):
 				| 
 	statement : declaration
 			| xassignment
+			| COMMENT
 	'''
 	pass
 
