@@ -93,8 +93,6 @@ def p_function(p):
 	'''
 	function : type MAIN LPAREN args RPAREN LBRACE statements RBRACE
 	type : INT
-		| FLOAT
-		| CHAR
 		| VOID		
 	'''
 	pass
