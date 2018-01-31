@@ -55,7 +55,7 @@ def t_NUMBER(t):
 	return t
 
 def t_error(t): 
-	print("Illegal character '%s'" % t.value[0])
+	print("Illegal character %s" % t.value[0])
 	t.lexer.skip(1)
 
 # Parsing rules
@@ -100,6 +100,7 @@ def p_pointer(p):
 	'''
 	pointer : STAR pointer
 			| STAR ID
+			| STAR address
 	'''
 	p[0] = '*'
 	pass
@@ -107,6 +108,7 @@ def p_pointer(p):
 def p_address(p):
 	'''
 	address : AMPERSAND ID
+			| AMPERSAND pointer
 	'''
 	pass
 

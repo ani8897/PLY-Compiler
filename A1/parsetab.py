@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftCOMMArightEQUALSrightAMPERSANDSTARID NUMBER COMMENT EQUALS LPAREN RPAREN LBRACE RBRACE SEMICOLON STAR AMPERSAND COMMA INT VOID MAIN\n\tstart : function\n\t\n\tfunction : type MAIN LPAREN args RPAREN LBRACE statements RBRACE\n\ttype : INT\n\t\t| VOID\t\t\n\t\n\t\targs : arg COMMA args\n\t\t\t| arg\n\t\t\t| \n\t\targ : type ID\n\t\n\tpointer : STAR pointer\n\t\t\t| STAR ID\n\t\n\taddress : AMPERSAND ID\n\t\n\tstatements :  statement statements\n\t\t\t\t| \n\tstatement : declaration\n\t\t\t| xassignment\n\t\t\t| COMMENT\n\t\n\tdeclaration : type idlist SEMICOLON\n\t\n\tidlist : pointer COMMA idlist \n\t\t\t| ID COMMA idlist\n\t\t\t| ID\n\t\t\t| pointer\n\t\n\txassignment : assignmentlist SEMICOLON\n\t\n\tassignmentlist : assignment COMMA assignmentlist \n\t\t\t\t\t| assignment\n\t\n\tassignment : ID EQUALS address\n\t\t\t\t| ID EQUALS ID\n\t\t\t\t| pointer EQUALS pointer\n\t\t\t\t| pointer EQUALS NUMBER\n\t\t\t\t| pointer EQUALS ID\n\t'
+_lr_signature = 'leftCOMMArightEQUALSrightAMPERSANDSTARID NUMBER COMMENT EQUALS LPAREN RPAREN LBRACE RBRACE SEMICOLON STAR AMPERSAND COMMA INT VOID MAIN\n\tstart : function\n\t\n\tfunction : type MAIN LPAREN args RPAREN LBRACE statements RBRACE\n\ttype : INT\n\t\t| VOID\t\t\n\t\n\t\targs : arg COMMA args\n\t\t\t| arg\n\t\t\t| \n\t\targ : type ID\n\t\n\tpointer : STAR pointer\n\t\t\t| STAR ID\n\t\t\t| STAR address\n\t\n\taddress : AMPERSAND ID\n\t\t\t| AMPERSAND pointer\n\t\n\tstatements :  statement statements\n\t\t\t\t| \n\tstatement : declaration\n\t\t\t| xassignment\n\t\t\t| COMMENT\n\t\n\tdeclaration : type idlist SEMICOLON\n\t\n\tidlist : pointer COMMA idlist \n\t\t\t| ID COMMA idlist\n\t\t\t| ID\n\t\t\t| pointer\n\t\n\txassignment : assignmentlist SEMICOLON\n\t\n\tassignmentlist : assignment COMMA assignmentlist \n\t\t\t\t\t| assignment\n\t\n\tassignment : ID EQUALS address\n\t\t\t\t| ID EQUALS ID\n\t\t\t\t| pointer EQUALS pointer\n\t\t\t\t| pointer EQUALS NUMBER\n\t\t\t\t| pointer EQUALS ID\n\t'
     
-_lr_action_items = {'SEMICOLON':([21,25,27,28,29,34,35,42,43,44,45,46,47,48,49,50,],[-24,37,38,-20,-21,-10,-9,-26,-25,-29,-28,-27,-23,-19,-18,-11,]),'AMPERSAND':([30,],[41,]),'RPAREN':([7,9,10,11,12,14,],[-7,-6,13,-8,-7,-5,]),'ID':([2,3,8,15,16,18,22,23,24,26,30,31,33,37,38,39,40,41,],[-3,-4,11,17,28,-15,-16,34,17,-14,42,44,17,-22,-17,28,28,50,]),'MAIN':([1,2,3,],[6,-3,-4,]),'COMMENT':([15,18,22,24,26,37,38,],[22,-15,-16,22,-14,-22,-17,]),'INT':([0,7,12,15,18,22,24,26,37,38,],[2,2,2,2,-15,-16,2,-14,-22,-17,]),'LBRACE':([13,],[15,]),'STAR':([2,3,15,16,18,22,23,24,26,31,33,37,38,39,40,],[-3,-4,23,23,-15,-16,23,23,-14,23,23,-22,-17,23,23,]),'NUMBER':([31,],[45,]),'LPAREN':([6,],[7,]),'VOID':([0,7,12,15,18,22,24,26,37,38,],[3,3,3,3,-15,-16,3,-14,-22,-17,]),'EQUALS':([17,19,34,35,],[30,31,-10,-9,]),'COMMA':([9,11,21,28,29,34,35,42,43,44,45,46,50,],[12,-8,33,39,40,-10,-9,-26,-25,-29,-28,-27,-11,]),'RBRACE':([15,18,20,22,24,26,36,37,38,],[-13,-15,32,-16,-13,-14,-12,-22,-17,]),'$end':([4,5,32,],[-1,0,-2,]),}
+_lr_action_items = {'INT':([0,7,13,14,16,20,24,26,34,50,],[1,1,1,1,-17,1,-18,-16,-24,-19,]),'LPAREN':([6,],[7,]),'ID':([1,2,9,14,16,18,20,24,25,26,27,31,32,34,35,48,49,50,],[-3,-4,12,22,-17,29,22,-18,38,-16,42,44,22,-24,47,38,38,-19,]),'MAIN':([1,2,5,],[-3,-4,6,]),'VOID':([0,7,13,14,16,20,24,26,34,50,],[2,2,2,2,-17,2,-18,-16,-24,-19,]),'EQUALS':([17,22,28,29,30,43,44,],[27,35,-9,-10,-11,-13,-12,]),'RBRACE':([14,16,20,23,24,26,33,34,50,],[-15,-17,-15,36,-18,-16,-14,-24,-19,]),'NUMBER':([27,],[41,]),'RPAREN':([7,8,10,12,13,15,],[-7,11,-6,-8,-7,-5,]),'COMMA':([10,12,19,28,29,30,37,38,40,41,42,43,44,46,47,],[13,-8,32,-9,-10,-11,48,49,-29,-30,-31,-13,-12,-27,-28,]),'STAR':([1,2,14,16,18,20,24,25,26,27,31,32,34,48,49,50,],[-3,-4,18,-17,18,18,-18,18,-16,18,18,18,-24,18,18,-19,]),'AMPERSAND':([18,35,],[31,31,]),'COMMENT':([14,16,20,24,26,34,50,],[24,-17,24,-18,-16,-24,-19,]),'SEMICOLON':([19,21,28,29,30,37,38,39,40,41,42,43,44,45,46,47,51,52,],[-26,34,-9,-10,-11,-23,-22,50,-29,-30,-31,-13,-12,-25,-27,-28,-20,-21,]),'LBRACE':([11,],[14,]),'$end':([3,4,36,],[0,-1,-2,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'type':([0,7,12,15,24,],[1,8,8,16,16,]),'statements':([15,24,],[20,36,]),'arg':([7,12,],[9,9,]),'assignment':([15,24,33,],[21,21,21,]),'address':([30,],[43,]),'idlist':([16,39,40,],[27,48,49,]),'xassignment':([15,24,],[18,18,]),'pointer':([15,16,23,24,31,33,39,40,],[19,29,35,19,46,19,29,29,]),'statement':([15,24,],[24,24,]),'function':([0,],[4,]),'args':([7,12,],[10,14,]),'assignmentlist':([15,24,33,],[25,25,47,]),'start':([0,],[5,]),'declaration':([15,24,],[26,26,]),}
+_lr_goto_items = {'pointer':([14,18,20,25,27,31,32,48,49,],[17,28,17,37,40,43,17,37,37,]),'assignmentlist':([14,20,32,],[21,21,45,]),'address':([18,35,],[30,46,]),'args':([7,13,],[8,15,]),'statement':([14,20,],[20,20,]),'statements':([14,20,],[23,33,]),'xassignment':([14,20,],[16,16,]),'idlist':([25,48,49,],[39,51,52,]),'start':([0,],[3,]),'function':([0,],[4,]),'assignment':([14,20,32,],[19,19,19,]),'type':([0,7,13,14,20,],[5,9,9,25,25,]),'arg':([7,13,],[10,10,]),'declaration':([14,20,],[26,26,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -36,23 +36,25 @@ _lr_productions = [
   ('arg -> type ID','arg',2,'p_args','assign1.py',94),
   ('pointer -> STAR pointer','pointer',2,'p_pointer','assign1.py',101),
   ('pointer -> STAR ID','pointer',2,'p_pointer','assign1.py',102),
-  ('address -> AMPERSAND ID','address',2,'p_address','assign1.py',109),
-  ('statements -> statement statements','statements',2,'p_statements','assign1.py',115),
-  ('statements -> <empty>','statements',0,'p_statements','assign1.py',116),
-  ('statement -> declaration','statement',1,'p_statements','assign1.py',117),
-  ('statement -> xassignment','statement',1,'p_statements','assign1.py',118),
-  ('statement -> COMMENT','statement',1,'p_statements','assign1.py',119),
-  ('declaration -> type idlist SEMICOLON','declaration',3,'p_declaration','assign1.py',125),
-  ('idlist -> pointer COMMA idlist','idlist',3,'p_idlist','assign1.py',131),
-  ('idlist -> ID COMMA idlist','idlist',3,'p_idlist','assign1.py',132),
-  ('idlist -> ID','idlist',1,'p_idlist','assign1.py',133),
-  ('idlist -> pointer','idlist',1,'p_idlist','assign1.py',134),
-  ('xassignment -> assignmentlist SEMICOLON','xassignment',2,'p_xassignment','assign1.py',144),
-  ('assignmentlist -> assignment COMMA assignmentlist','assignmentlist',3,'p_assignmentlist','assign1.py',150),
-  ('assignmentlist -> assignment','assignmentlist',1,'p_assignmentlist','assign1.py',151),
-  ('assignment -> ID EQUALS address','assignment',3,'p_assignment','assign1.py',157),
-  ('assignment -> ID EQUALS ID','assignment',3,'p_assignment','assign1.py',158),
-  ('assignment -> pointer EQUALS pointer','assignment',3,'p_assignment','assign1.py',159),
-  ('assignment -> pointer EQUALS NUMBER','assignment',3,'p_assignment','assign1.py',160),
-  ('assignment -> pointer EQUALS ID','assignment',3,'p_assignment','assign1.py',161),
+  ('pointer -> STAR address','pointer',2,'p_pointer','assign1.py',103),
+  ('address -> AMPERSAND ID','address',2,'p_address','assign1.py',110),
+  ('address -> AMPERSAND pointer','address',2,'p_address','assign1.py',111),
+  ('statements -> statement statements','statements',2,'p_statements','assign1.py',117),
+  ('statements -> <empty>','statements',0,'p_statements','assign1.py',118),
+  ('statement -> declaration','statement',1,'p_statements','assign1.py',119),
+  ('statement -> xassignment','statement',1,'p_statements','assign1.py',120),
+  ('statement -> COMMENT','statement',1,'p_statements','assign1.py',121),
+  ('declaration -> type idlist SEMICOLON','declaration',3,'p_declaration','assign1.py',127),
+  ('idlist -> pointer COMMA idlist','idlist',3,'p_idlist','assign1.py',133),
+  ('idlist -> ID COMMA idlist','idlist',3,'p_idlist','assign1.py',134),
+  ('idlist -> ID','idlist',1,'p_idlist','assign1.py',135),
+  ('idlist -> pointer','idlist',1,'p_idlist','assign1.py',136),
+  ('xassignment -> assignmentlist SEMICOLON','xassignment',2,'p_xassignment','assign1.py',146),
+  ('assignmentlist -> assignment COMMA assignmentlist','assignmentlist',3,'p_assignmentlist','assign1.py',152),
+  ('assignmentlist -> assignment','assignmentlist',1,'p_assignmentlist','assign1.py',153),
+  ('assignment -> ID EQUALS address','assignment',3,'p_assignment','assign1.py',159),
+  ('assignment -> ID EQUALS ID','assignment',3,'p_assignment','assign1.py',160),
+  ('assignment -> pointer EQUALS pointer','assignment',3,'p_assignment','assign1.py',161),
+  ('assignment -> pointer EQUALS NUMBER','assignment',3,'p_assignment','assign1.py',162),
+  ('assignment -> pointer EQUALS ID','assignment',3,'p_assignment','assign1.py',163),
 ]
