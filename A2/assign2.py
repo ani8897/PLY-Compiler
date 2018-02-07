@@ -8,9 +8,9 @@ import ply.yacc as yacc
 tokens = (
 		'ID', 'NUMBER',
 		'COMMENT',
-		'EQUALS',
 		'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
-		'SEMICOLON','STAR', 'AMPERSAND', 'COMMA', 
+		'SEMICOLON','AMPERSAND', 'COMMA',
+		'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS', 
 		'INT', 'VOID', 'MAIN',
 )
 
@@ -20,13 +20,18 @@ def t_newline(t):
 	r'\n+'
 	globals()["line"] += len(t.value)
 
+
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_TIMES = r'\*'
+t_DIVIDE = r'/'
 t_EQUALS = r'='
+
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
 t_SEMICOLON = r';'
-t_STAR = r'\*'
 t_AMPERSAND = r'\&'
 t_COMMA = r','
 
@@ -62,6 +67,9 @@ def t_error(t):
 precedence = (
 	('left', 'COMMA'),
 	('right', 'EQUALS'),
+	('left', 'PLUS', 'MINUS'),
+	('left', 'TIMES', 'DIVIDE'),
+	('right', 'UMINUS'),
 	('right', 'AMPERSAND','STAR'),
 
 )
@@ -75,8 +83,8 @@ def p_start(p):
 	'''
 	start : function
 	'''
-	g = globals()
-	print("%d\n%d\n%d"%(g["idec"],g["pdec"],g["ass"]))
+	print("Successfully Parsed")
+	pass
 
 def p_function(p):
 	'''
@@ -98,17 +106,17 @@ def p_args(p):
 ###
 def p_pointer(p):
 	'''
-	pointer : STAR pointer
-			| STAR ID
-			| STAR address
+	pointer : TIMES pointer %prec STAR
+			| TIMES ID %prec STAR
+			| TIMES address %prec STAR
 	'''
-	p[0] = '*'
 	pass
 
 def p_address(p):
 	'''
 	address : AMPERSAND ID
 			| AMPERSAND pointer
+			| AMPERSAND address
 	'''
 	pass
 
@@ -135,10 +143,6 @@ def p_idlist(p):
 			| ID
 			| pointer
 	'''
-	if p[1] == '*':
-		globals()['pdec']+=1
-	elif p[1] != '*':
-		globals()['idec']+=1 
 	pass
 
 def p_xassignment(p):
@@ -158,12 +162,27 @@ def p_assignment(p):
 	'''
 	assignment : ID EQUALS address
 				| ID EQUALS ID
-				| pointer EQUALS pointer
-				| pointer EQUALS NUMBER
-				| pointer EQUALS ID
+				| pointer EQUALS expression
 	'''
-	p[0] = p[1]
-	globals()["ass"] += 1
+	pass
+
+def p_expression(p):
+	'''
+	expression : expression PLUS expression
+				| expression MINUS expression
+				| expression TIMES expression
+				| expression DIVIDE expression
+				| pointer
+				| address
+				| NUMBER
+				| ID
+	'''
+	pass
+
+def p_expression_uminus(p):
+	'''
+	expression : MINUS expression %prec UMINUS
+	'''
 	pass
 
 def p_error(p):
@@ -186,6 +205,5 @@ if __name__ == "__main__":
 	with open(sys.argv[1], 'r') as f:
 		data = f.read()
 
-	g = globals()
-	g["idec"],g["pdec"],g["ass"],g["line"] = 0,0,0,1
+	globals()["line"] = 1
 	process(data)
