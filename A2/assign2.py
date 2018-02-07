@@ -83,7 +83,9 @@ def p_start(p):
 	'''
 	start : function
 	'''
-	print("Successfully Parsed")
+	for t in globals()["trees"]:
+		t.print_node(0)
+		print()
 	pass
 
 def p_function(p):
@@ -103,22 +105,34 @@ def p_args(p):
 	'''
 	pass
 
-###
+def p_var(p):
+	'''
+	var : ID
+	'''
+	p[0] = Node('VAR('+p[1]+')',[])
+
+def p_const(p):
+	'''
+	const : NUMBER
+	'''
+	p[0] = Node('CONST('+str(p[1])+')',[])
+
+
 def p_pointer(p):
 	'''
 	pointer : TIMES pointer %prec STAR
-			| TIMES ID %prec STAR
 			| TIMES address %prec STAR
+			| TIMES var %prec STAR
 	'''
-	pass
+	p[0] = Node('DEREF',[p[2]])
 
 def p_address(p):
 	'''
-	address : AMPERSAND ID
-			| AMPERSAND pointer
+	address : AMPERSAND pointer
 			| AMPERSAND address
+			| AMPERSAND var
 	'''
-	pass
+	p[0] = Node('ADDR',[p[2]])
 
 def p_statements(p):
 	'''
@@ -160,11 +174,12 @@ def p_assignmentlist(p):
 
 def p_assignment(p):
 	'''
-	assignment : ID EQUALS address
-				| ID EQUALS ID
+	assignment : var EQUALS address
+				| var EQUALS var
 				| pointer EQUALS expression
 	'''
-	pass
+	p[0] = Node('ASGN',[p[1],p[3]])
+	globals()["trees"].append(p[0])
 
 def p_expression(p):
 	'''
@@ -174,15 +189,25 @@ def p_expression(p):
 				| expression DIVIDE expression
 				| pointer
 				| address
-				| NUMBER
-				| ID
+				| const
+				| var
 	'''
-	pass
+	if len(p) == 2:
+		p[0] = p[1]
+	elif p[2] == '+':
+		p[0] = Node('PLUS',[p[1],p[3]])
+	elif p[2] == '-':
+		p[0] = Node('MINUS',[p[1],p[3]])
+	elif p[2] == '*':
+		p[0] = Node('MUL',[p[1],p[3]])
+	elif p[2] == '/':
+		p[0] = Node('DIV',[p[1],p[3]])
 
 def p_expression_uminus(p):
 	'''
 	expression : MINUS expression %prec UMINUS
 	'''
+	p[0] = Node('UMINUS',[p[2]])
 	pass
 
 def p_error(p):
@@ -192,6 +217,24 @@ def p_error(p):
 		print("Syntax error at EOF")
 
 ####################### END ####################
+
+class Node:
+	def __init__(self,token,children):
+		self.token = token
+		self.children = children
+
+	def print_node(self,depth):
+
+		print('\t'*depth + self.token)
+		if len(self.children) != 0:
+			i = 0
+			print('\t'*depth + '(')
+			for child in self.children:
+				i+=1
+				child.print_node(depth+1)
+				if(i < len(self.children)): print('\t'*(depth+1) + ',')
+			print('\t'*depth + ')')
+
 def process(data):
 	lex.lex()
 	yacc.yacc()
@@ -206,4 +249,5 @@ if __name__ == "__main__":
 		data = f.read()
 
 	globals()["line"] = 1
+	globals()["trees"] = []
 	process(data)
