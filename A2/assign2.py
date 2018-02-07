@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from __future__ import print_function
 import sys
 import ply.lex as lex
 import ply.yacc as yacc
@@ -84,8 +85,9 @@ def p_start(p):
 	start : function
 	'''
 	for t in globals()["trees"]:
-		t.print_node(0)
-		print()
+		t.print_node(0,rfile = globals()["output_file"])
+		print('',file = globals()["output_file"])
+	print("Successful Parsed")
 	pass
 
 def p_function(p):
@@ -223,17 +225,16 @@ class Node:
 		self.token = token
 		self.children = children
 
-	def print_node(self,depth):
-
-		print('\t'*depth + self.token)
+	def print_node(self,depth,rfile=1):
+		print('\t'*depth + self.token, file=rfile)
 		if len(self.children) != 0:
 			i = 0
-			print('\t'*depth + '(')
+			print('\t'*depth + '(', file=rfile)
 			for child in self.children:
 				i+=1
-				child.print_node(depth+1)
-				if(i < len(self.children)): print('\t'*(depth+1) + ',')
-			print('\t'*depth + ')')
+				child.print_node(depth+1,rfile)
+				if(i < len(self.children)): print('\t'*(depth+1) + ',', file=rfile)
+			print('\t'*depth + ')', file=rfile)
 
 def process(data):
 	lex.lex()
@@ -250,4 +251,5 @@ if __name__ == "__main__":
 
 	globals()["line"] = 1
 	globals()["trees"] = []
+	globals()["output_file"] = open(sys.argv[1] + '.out','w')
 	process(data)
