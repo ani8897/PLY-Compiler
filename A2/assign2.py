@@ -85,9 +85,12 @@ def p_start(p):
 	start : function
 	'''
 	for t in globals()["trees"]:
+		if t.is_const and t.children[0].token[0:3] == 'VAR':
+			print("Syntax error at ",t.children[0].token[4:-1]," =")
+			exit(0)
 		t.print_node(0,rfile = globals()["output_file"])
 		print('',file = globals()["output_file"])
-	print("Successful Parsed")
+	print("Successfully Parsed")
 	pass
 
 def p_function(p):
@@ -111,13 +114,13 @@ def p_var(p):
 	'''
 	var : ID
 	'''
-	p[0] = Node('VAR('+p[1]+')',[])
+	p[0] = Node('VAR('+p[1]+')',[],False)
 
 def p_const(p):
 	'''
 	const : NUMBER
 	'''
-	p[0] = Node('CONST('+str(p[1])+')',[])
+	p[0] = Node('CONST('+str(p[1])+')',[],True)
 
 
 def p_pointer(p):
@@ -126,7 +129,7 @@ def p_pointer(p):
 			| TIMES address %prec STAR
 			| TIMES var %prec STAR
 	'''
-	p[0] = Node('DEREF',[p[2]])
+	p[0] = Node('DEREF',[p[2]],False)
 
 def p_address(p):
 	'''
@@ -134,7 +137,7 @@ def p_address(p):
 			| AMPERSAND address
 			| AMPERSAND var
 	'''
-	p[0] = Node('ADDR',[p[2]])
+	p[0] = Node('ADDR',[p[2]],False)
 
 def p_statements(p):
 	'''
@@ -176,11 +179,10 @@ def p_assignmentlist(p):
 
 def p_assignment(p):
 	'''
-	assignment : var EQUALS address
-				| var EQUALS var
-				| pointer EQUALS expression
+	assignment : pointer EQUALS expression
+				| var EQUALS expression
 	'''
-	p[0] = Node('ASGN',[p[1],p[3]])
+	p[0] = Node('ASGN',[p[1],p[3]],p[3].is_const)
 	globals()["trees"].append(p[0])
 
 def p_expression(p):
@@ -193,23 +195,26 @@ def p_expression(p):
 				| address
 				| const
 				| var
+				| LPAREN expression RPAREN
 	'''
 	if len(p) == 2:
 		p[0] = p[1]
 	elif p[2] == '+':
-		p[0] = Node('PLUS',[p[1],p[3]])
+		p[0] = Node('PLUS',[p[1],p[3]],p[1].is_const and p[3].is_const)
 	elif p[2] == '-':
-		p[0] = Node('MINUS',[p[1],p[3]])
+		p[0] = Node('MINUS',[p[1],p[3]],p[1].is_const and p[3].is_const)
 	elif p[2] == '*':
-		p[0] = Node('MUL',[p[1],p[3]])
+		p[0] = Node('MUL',[p[1],p[3]],p[1].is_const and p[3].is_const)
 	elif p[2] == '/':
-		p[0] = Node('DIV',[p[1],p[3]])
+		p[0] = Node('DIV',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	else :
+		p[0] = p[2]
 
 def p_expression_uminus(p):
 	'''
 	expression : MINUS expression %prec UMINUS
 	'''
-	p[0] = Node('UMINUS',[p[2]])
+	p[0] = Node('UMINUS',[p[2]],p[2].is_const)
 	pass
 
 def p_error(p):
@@ -221,9 +226,10 @@ def p_error(p):
 ####################### END ####################
 
 class Node:
-	def __init__(self,token,children):
+	def __init__(self,token,children,is_const):
 		self.token = token
 		self.children = children
+		self.is_const = is_const
 
 	def print_node(self,depth,rfile=1):
 		print('\t'*depth + self.token, file=rfile)

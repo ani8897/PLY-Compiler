@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftCOMMArightEQUALSleftPLUSMINUSleftTIMESDIVIDErightUMINUSrightAMPERSANDSTARID NUMBER COMMENT LPAREN RPAREN LBRACE RBRACE SEMICOLON AMPERSAND COMMA PLUS MINUS TIMES DIVIDE EQUALS INT VOID MAIN\n\tstart : function\n\t\n\tfunction : type MAIN LPAREN args RPAREN LBRACE statements RBRACE\n\ttype : INT\n\t\t| VOID\t\t\n\t\n\t\targs : arg COMMA args\n\t\t\t| arg\n\t\t\t| \n\t\targ : type ID\n\t\n\tvar : ID\n\t\n\tconst : NUMBER\n\t\n\tpointer : TIMES pointer %prec STAR\n\t\t\t| TIMES address %prec STAR\n\t\t\t| TIMES var %prec STAR\n\t\n\taddress : AMPERSAND pointer\n\t\t\t| AMPERSAND address\n\t\t\t| AMPERSAND var\n\t\n\tstatements :  statement statements\n\t\t\t\t| \n\tstatement : declaration\n\t\t\t| xassignment\n\t\t\t| COMMENT\n\t\n\tdeclaration : type idlist SEMICOLON\n\t\n\tidlist : pointer COMMA idlist \n\t\t\t| ID COMMA idlist\n\t\t\t| ID\n\t\t\t| pointer\n\t\n\txassignment : assignmentlist SEMICOLON\n\t\n\tassignmentlist : assignment COMMA assignmentlist \n\t\t\t\t\t| assignment\n\t\n\tassignment : var EQUALS address\n\t\t\t\t| var EQUALS var\n\t\t\t\t| pointer EQUALS expression\n\t\n\texpression : expression PLUS expression\n\t\t\t\t| expression MINUS expression\n\t\t\t\t| expression TIMES expression\n\t\t\t\t| expression DIVIDE expression\n\t\t\t\t| pointer\n\t\t\t\t| address\n\t\t\t\t| const\n\t\t\t\t| var\n\t\n\texpression : MINUS expression %prec UMINUS\n\t'
+_lr_signature = 'leftCOMMArightEQUALSleftPLUSMINUSleftTIMESDIVIDErightUMINUSrightAMPERSANDSTARID NUMBER COMMENT LPAREN RPAREN LBRACE RBRACE SEMICOLON AMPERSAND COMMA PLUS MINUS TIMES DIVIDE EQUALS INT VOID MAIN\n\tstart : function\n\t\n\tfunction : type MAIN LPAREN args RPAREN LBRACE statements RBRACE\n\ttype : INT\n\t\t| VOID\t\t\n\t\n\t\targs : arg COMMA args\n\t\t\t| arg\n\t\t\t| \n\t\targ : type ID\n\t\n\tvar : ID\n\t\n\tconst : NUMBER\n\t\n\tpointer : TIMES pointer %prec STAR\n\t\t\t| TIMES address %prec STAR\n\t\t\t| TIMES var %prec STAR\n\t\n\taddress : AMPERSAND pointer\n\t\t\t| AMPERSAND address\n\t\t\t| AMPERSAND var\n\t\n\tstatements :  statement statements\n\t\t\t\t| \n\tstatement : declaration\n\t\t\t| xassignment\n\t\t\t| COMMENT\n\t\n\tdeclaration : type idlist SEMICOLON\n\t\n\tidlist : pointer COMMA idlist \n\t\t\t| ID COMMA idlist\n\t\t\t| ID\n\t\t\t| pointer\n\t\n\txassignment : assignmentlist SEMICOLON\n\t\n\tassignmentlist : assignment COMMA assignmentlist \n\t\t\t\t\t| assignment\n\t\n\tassignment : pointer EQUALS expression\n\t\t\t\t| var EQUALS expression\n\t\n\texpression : expression PLUS expression\n\t\t\t\t| expression MINUS expression\n\t\t\t\t| expression TIMES expression\n\t\t\t\t| expression DIVIDE expression\n\t\t\t\t| pointer\n\t\t\t\t| address\n\t\t\t\t| const\n\t\t\t\t| var\n\t\t\t\t| LPAREN expression RPAREN\n\t\n\texpression : MINUS expression %prec UMINUS\n\t'
     
-_lr_action_items = {'COMMENT':([14,17,20,21,26,29,50,],[20,-20,-21,20,-19,-27,-22,]),'DIVIDE':([27,38,39,40,41,42,43,44,45,46,54,55,56,61,64,65,66,67,],[-9,-12,-13,-11,-39,-10,-37,-38,-40,57,-15,-16,-14,-41,-36,-35,57,57,]),'LBRACE':([11,],[14,]),'RPAREN':([7,8,9,12,13,15,],[-7,11,-6,-7,-8,-5,]),'RBRACE':([14,16,17,20,21,26,29,31,50,],[-18,28,-20,-21,-18,-19,-27,-17,-22,]),'SEMICOLON':([18,24,27,33,34,35,38,39,40,41,42,43,44,45,46,48,49,53,54,55,56,61,62,63,64,65,66,67,],[29,-29,-9,50,-26,-25,-12,-13,-11,-39,-10,-37,-38,-40,-32,-30,-31,-28,-15,-16,-14,-41,-23,-24,-36,-35,-33,-34,]),'INT':([0,7,12,14,17,20,21,26,29,50,],[2,2,2,2,-20,-21,2,-19,-27,-22,]),'VOID':([0,7,12,14,17,20,21,26,29,50,],[3,3,3,3,-20,-21,3,-19,-27,-22,]),'EQUALS':([19,22,27,38,39,40,54,55,56,],[30,32,-9,-12,-13,-11,-15,-16,-14,]),'TIMES':([2,3,14,17,20,21,23,25,26,27,29,30,36,37,38,39,40,41,42,43,44,45,46,47,50,51,52,54,55,56,57,58,59,60,61,64,65,66,67,],[-3,-4,25,-20,-21,25,25,25,-19,-9,-27,25,25,25,-12,-13,-11,-39,-10,-37,-38,-40,58,25,-22,25,25,-15,-16,-14,25,25,25,25,-41,-36,-35,58,58,]),'NUMBER':([30,47,57,58,59,60,],[42,42,42,42,42,42,]),'COMMA':([9,13,24,27,34,35,38,39,40,41,42,43,44,45,46,48,49,54,55,56,61,64,65,66,67,],[12,-8,36,-9,51,52,-12,-13,-11,-39,-10,-37,-38,-40,-32,-30,-31,-15,-16,-14,-41,-36,-35,-33,-34,]),'LPAREN':([6,],[7,]),'PLUS':([27,38,39,40,41,42,43,44,45,46,54,55,56,61,64,65,66,67,],[-9,-12,-13,-11,-39,-10,-37,-38,-40,59,-15,-16,-14,-41,-36,-35,-33,-34,]),'AMPERSAND':([25,30,32,37,47,57,58,59,60,],[37,37,37,37,37,37,37,37,37,]),'MAIN':([2,3,5,],[-3,-4,6,]),'MINUS':([27,30,38,39,40,41,42,43,44,45,46,47,54,55,56,57,58,59,60,61,64,65,66,67,],[-9,47,-12,-13,-11,-39,-10,-37,-38,-40,60,47,-15,-16,-14,47,47,47,47,-41,-36,-35,-33,-34,]),'ID':([2,3,10,14,17,20,21,23,25,26,29,30,32,36,37,47,50,51,52,57,58,59,60,],[-3,-4,13,27,-20,-21,27,35,27,-19,-27,27,27,27,27,27,-22,35,35,27,27,27,27,]),'$end':([1,4,28,],[-1,0,-2,]),}
+_lr_action_items = {'LPAREN':([6,34,36,45,49,60,61,62,63,],[7,45,45,45,45,45,45,45,45,]),'INT':([0,7,13,14,16,18,22,25,33,44,],[1,1,1,1,-19,1,-21,-20,-27,-22,]),'AMPERSAND':([27,34,36,38,45,49,60,61,62,63,],[38,38,38,38,38,38,38,38,38,38,]),'COMMA':([10,11,17,26,30,31,37,39,40,46,47,48,50,51,52,53,54,55,56,64,65,66,67,68,69,],[13,-8,28,-9,42,43,-12,-11,-13,-10,-30,-38,-37,-36,-39,-31,-15,-14,-16,-41,-40,-32,-35,-34,-33,]),'$end':([2,5,35,],[-1,0,-2,]),'ID':([1,4,8,14,16,18,19,22,25,27,28,33,34,36,38,42,43,44,45,49,60,61,62,63,],[-3,-4,11,26,-19,26,31,-21,-20,26,26,-27,26,26,26,31,31,-22,26,26,26,26,26,26,]),'NUMBER':([34,36,45,49,60,61,62,63,],[46,46,46,46,46,46,46,46,]),'EQUALS':([21,24,26,37,39,40,54,55,56,],[34,36,-9,-12,-11,-13,-15,-14,-16,]),'MINUS':([26,34,36,37,39,40,45,46,47,48,49,50,51,52,53,54,55,56,59,60,61,62,63,64,65,66,67,68,69,],[-9,49,49,-12,-11,-13,49,-10,63,-38,49,-37,-36,-39,63,-15,-14,-16,63,49,49,49,49,-41,-40,-32,-35,-34,-33,]),'RBRACE':([14,16,18,22,23,25,29,33,44,],[-18,-19,-18,-21,35,-20,-17,-27,-22,]),'VOID':([0,7,13,14,16,18,22,25,33,44,],[4,4,4,4,-19,4,-21,-20,-27,-22,]),'PLUS':([26,37,39,40,46,47,48,50,51,52,53,54,55,56,59,64,65,66,67,68,69,],[-9,-12,-11,-13,-10,60,-38,-37,-36,-39,60,-15,-14,-16,60,-41,-40,-32,-35,-34,-33,]),'RPAREN':([7,9,10,11,13,15,26,37,39,40,46,48,50,51,52,54,55,56,59,64,65,66,67,68,69,],[-7,12,-6,-8,-7,-5,-9,-12,-11,-13,-10,-38,-37,-36,-39,-15,-14,-16,65,-41,-40,-32,-35,-34,-33,]),'COMMENT':([14,16,18,22,25,33,44,],[22,-19,22,-21,-20,-27,-22,]),'MAIN':([1,3,4,],[-3,6,-4,]),'SEMICOLON':([17,20,26,30,31,32,37,39,40,41,46,47,48,50,51,52,53,54,55,56,57,58,64,65,66,67,68,69,],[-29,33,-9,-26,-25,44,-12,-11,-13,-28,-10,-30,-38,-37,-36,-39,-31,-15,-14,-16,-23,-24,-41,-40,-32,-35,-34,-33,]),'LBRACE':([12,],[14,]),'DIVIDE':([26,37,39,40,46,47,48,50,51,52,53,54,55,56,59,64,65,66,67,68,69,],[-9,-12,-11,-13,-10,61,-38,-37,-36,-39,61,-15,-14,-16,61,-41,-40,61,-35,-34,61,]),'TIMES':([1,4,14,16,18,19,22,25,26,27,28,33,34,36,37,38,39,40,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,59,60,61,62,63,64,65,66,67,68,69,],[-3,-4,27,-19,27,27,-21,-20,-9,27,27,-27,27,27,-12,27,-11,-13,27,27,-22,27,-10,62,-38,27,-37,-36,-39,62,-15,-14,-16,62,27,27,27,27,-41,-40,62,-35,-34,62,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'function':([0,],[1,]),'declaration':([14,21,],[26,26,]),'statements':([14,21,],[16,31,]),'idlist':([23,51,52,],[33,62,63,]),'address':([25,30,32,37,47,57,58,59,60,],[38,44,48,54,44,44,44,44,44,]),'assignment':([14,21,36,],[24,24,24,]),'args':([7,12,],[8,15,]),'xassignment':([14,21,],[17,17,]),'start':([0,],[4,]),'expression':([30,47,57,58,59,60,],[46,61,64,65,66,67,]),'statement':([14,21,],[21,21,]),'arg':([7,12,],[9,9,]),'var':([14,21,25,30,32,36,37,47,57,58,59,60,],[22,22,39,45,49,22,55,45,45,45,45,45,]),'assignmentlist':([14,21,36,],[18,18,53,]),'type':([0,7,12,14,21,],[5,10,10,23,23,]),'pointer':([14,21,23,25,30,36,37,47,51,52,57,58,59,60,],[19,19,34,40,43,19,56,43,34,34,43,43,43,43,]),'const':([30,47,57,58,59,60,],[41,41,41,41,41,41,]),}
+_lr_goto_items = {'expression':([34,36,45,49,60,61,62,63,],[47,53,59,64,66,67,68,69,]),'statements':([14,18,],[23,29,]),'address':([27,34,36,38,45,49,60,61,62,63,],[37,50,50,54,50,50,50,50,50,50,]),'assignment':([14,18,28,],[17,17,17,]),'function':([0,],[2,]),'type':([0,7,13,14,18,],[3,8,8,19,19,]),'const':([34,36,45,49,60,61,62,63,],[48,48,48,48,48,48,48,48,]),'arg':([7,13,],[10,10,]),'xassignment':([14,18,],[25,25,]),'assignmentlist':([14,18,28,],[20,20,41,]),'start':([0,],[5,]),'args':([7,13,],[9,15,]),'pointer':([14,18,19,27,28,34,36,38,42,43,45,49,60,61,62,63,],[21,21,30,39,21,51,51,55,30,30,51,51,51,51,51,51,]),'declaration':([14,18,],[16,16,]),'idlist':([19,42,43,],[32,57,58,]),'var':([14,18,27,28,34,36,38,45,49,60,61,62,63,],[24,24,40,24,52,52,56,52,52,52,52,52,52,]),'statement':([14,18,],[18,18,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,45 +26,45 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> start","S'",1,None,None,None),
-  ('start -> function','start',1,'p_start','assign2.py',84),
-  ('function -> type MAIN LPAREN args RPAREN LBRACE statements RBRACE','function',8,'p_function','assign2.py',93),
-  ('type -> INT','type',1,'p_function','assign2.py',94),
-  ('type -> VOID','type',1,'p_function','assign2.py',95),
-  ('args -> arg COMMA args','args',3,'p_args','assign2.py',101),
-  ('args -> arg','args',1,'p_args','assign2.py',102),
-  ('args -> <empty>','args',0,'p_args','assign2.py',103),
-  ('arg -> type ID','arg',2,'p_args','assign2.py',104),
-  ('var -> ID','var',1,'p_var','assign2.py',110),
-  ('const -> NUMBER','const',1,'p_const','assign2.py',116),
-  ('pointer -> TIMES pointer','pointer',2,'p_pointer','assign2.py',123),
-  ('pointer -> TIMES address','pointer',2,'p_pointer','assign2.py',124),
-  ('pointer -> TIMES var','pointer',2,'p_pointer','assign2.py',125),
-  ('address -> AMPERSAND pointer','address',2,'p_address','assign2.py',131),
-  ('address -> AMPERSAND address','address',2,'p_address','assign2.py',132),
-  ('address -> AMPERSAND var','address',2,'p_address','assign2.py',133),
-  ('statements -> statement statements','statements',2,'p_statements','assign2.py',139),
-  ('statements -> <empty>','statements',0,'p_statements','assign2.py',140),
-  ('statement -> declaration','statement',1,'p_statements','assign2.py',141),
-  ('statement -> xassignment','statement',1,'p_statements','assign2.py',142),
-  ('statement -> COMMENT','statement',1,'p_statements','assign2.py',143),
-  ('declaration -> type idlist SEMICOLON','declaration',3,'p_declaration','assign2.py',149),
-  ('idlist -> pointer COMMA idlist','idlist',3,'p_idlist','assign2.py',155),
-  ('idlist -> ID COMMA idlist','idlist',3,'p_idlist','assign2.py',156),
-  ('idlist -> ID','idlist',1,'p_idlist','assign2.py',157),
-  ('idlist -> pointer','idlist',1,'p_idlist','assign2.py',158),
-  ('xassignment -> assignmentlist SEMICOLON','xassignment',2,'p_xassignment','assign2.py',164),
-  ('assignmentlist -> assignment COMMA assignmentlist','assignmentlist',3,'p_assignmentlist','assign2.py',170),
-  ('assignmentlist -> assignment','assignmentlist',1,'p_assignmentlist','assign2.py',171),
-  ('assignment -> var EQUALS address','assignment',3,'p_assignment','assign2.py',177),
-  ('assignment -> var EQUALS var','assignment',3,'p_assignment','assign2.py',178),
-  ('assignment -> pointer EQUALS expression','assignment',3,'p_assignment','assign2.py',179),
-  ('expression -> expression PLUS expression','expression',3,'p_expression','assign2.py',186),
-  ('expression -> expression MINUS expression','expression',3,'p_expression','assign2.py',187),
-  ('expression -> expression TIMES expression','expression',3,'p_expression','assign2.py',188),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression','assign2.py',189),
-  ('expression -> pointer','expression',1,'p_expression','assign2.py',190),
-  ('expression -> address','expression',1,'p_expression','assign2.py',191),
-  ('expression -> const','expression',1,'p_expression','assign2.py',192),
-  ('expression -> var','expression',1,'p_expression','assign2.py',193),
-  ('expression -> MINUS expression','expression',2,'p_expression_uminus','assign2.py',208),
+  ('start -> function','start',1,'p_start','assign2.py',85),
+  ('function -> type MAIN LPAREN args RPAREN LBRACE statements RBRACE','function',8,'p_function','assign2.py',98),
+  ('type -> INT','type',1,'p_function','assign2.py',99),
+  ('type -> VOID','type',1,'p_function','assign2.py',100),
+  ('args -> arg COMMA args','args',3,'p_args','assign2.py',106),
+  ('args -> arg','args',1,'p_args','assign2.py',107),
+  ('args -> <empty>','args',0,'p_args','assign2.py',108),
+  ('arg -> type ID','arg',2,'p_args','assign2.py',109),
+  ('var -> ID','var',1,'p_var','assign2.py',115),
+  ('const -> NUMBER','const',1,'p_const','assign2.py',121),
+  ('pointer -> TIMES pointer','pointer',2,'p_pointer','assign2.py',128),
+  ('pointer -> TIMES address','pointer',2,'p_pointer','assign2.py',129),
+  ('pointer -> TIMES var','pointer',2,'p_pointer','assign2.py',130),
+  ('address -> AMPERSAND pointer','address',2,'p_address','assign2.py',136),
+  ('address -> AMPERSAND address','address',2,'p_address','assign2.py',137),
+  ('address -> AMPERSAND var','address',2,'p_address','assign2.py',138),
+  ('statements -> statement statements','statements',2,'p_statements','assign2.py',144),
+  ('statements -> <empty>','statements',0,'p_statements','assign2.py',145),
+  ('statement -> declaration','statement',1,'p_statements','assign2.py',146),
+  ('statement -> xassignment','statement',1,'p_statements','assign2.py',147),
+  ('statement -> COMMENT','statement',1,'p_statements','assign2.py',148),
+  ('declaration -> type idlist SEMICOLON','declaration',3,'p_declaration','assign2.py',154),
+  ('idlist -> pointer COMMA idlist','idlist',3,'p_idlist','assign2.py',160),
+  ('idlist -> ID COMMA idlist','idlist',3,'p_idlist','assign2.py',161),
+  ('idlist -> ID','idlist',1,'p_idlist','assign2.py',162),
+  ('idlist -> pointer','idlist',1,'p_idlist','assign2.py',163),
+  ('xassignment -> assignmentlist SEMICOLON','xassignment',2,'p_xassignment','assign2.py',169),
+  ('assignmentlist -> assignment COMMA assignmentlist','assignmentlist',3,'p_assignmentlist','assign2.py',175),
+  ('assignmentlist -> assignment','assignmentlist',1,'p_assignmentlist','assign2.py',176),
+  ('assignment -> pointer EQUALS expression','assignment',3,'p_assignment','assign2.py',182),
+  ('assignment -> var EQUALS expression','assignment',3,'p_assignment','assign2.py',183),
+  ('expression -> expression PLUS expression','expression',3,'p_expression','assign2.py',190),
+  ('expression -> expression MINUS expression','expression',3,'p_expression','assign2.py',191),
+  ('expression -> expression TIMES expression','expression',3,'p_expression','assign2.py',192),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression','assign2.py',193),
+  ('expression -> pointer','expression',1,'p_expression','assign2.py',194),
+  ('expression -> address','expression',1,'p_expression','assign2.py',195),
+  ('expression -> const','expression',1,'p_expression','assign2.py',196),
+  ('expression -> var','expression',1,'p_expression','assign2.py',197),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression','assign2.py',198),
+  ('expression -> MINUS expression','expression',2,'p_expression_uminus','assign2.py',213),
 ]
