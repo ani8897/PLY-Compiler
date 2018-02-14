@@ -95,20 +95,20 @@ def p_start(p):
 
 def p_function(p):
 	'''
-	function : type MAIN LPAREN args RPAREN LBRACE statements RBRACE
+	function : VOID MAIN LPAREN RPAREN LBRACE statements RBRACE
 	type : INT
 		| VOID		
 	'''
 	pass
 
-def p_args(p):
-	'''
-		args : arg COMMA args
-			| arg
-			| 
-		arg : type ID
-	'''
-	pass
+# def p_args(p):
+# 	'''
+# 		args : arg COMMA args
+# 			| arg
+# 			| 
+# 		arg : type ID
+# 	'''
+# 	pass
 
 def p_var(p):
 	'''
@@ -257,5 +257,5 @@ if __name__ == "__main__":
 
 	globals()["line"] = 1
 	globals()["trees"] = []
-	globals()["output_file"] = open(sys.argv[1] + '.out','w')
+	globals()["output_file"] = open('Parser_ast_' + sys.argv[1] + '.txt','w')
 	process(data)
