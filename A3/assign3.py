@@ -87,7 +87,8 @@ precedence = (
 	('left', 'TIMES', 'DIVIDE'),
 	('right', 'UMINUS'),
 	('right', 'AMPERSAND','STAR'),
-
+	('left', 'IFX'),
+	('left', 'ELSE')
 )
 
 def yaccprint(p):
@@ -206,7 +207,7 @@ def p_controlbody(p):
 
 def p_ifstatement(p):
 	'''
-	ifstatement : IF LPAREN condition RPAREN controlbody
+	ifstatement : IF LPAREN condition RPAREN controlbody %prec IFX
 				| IF LPAREN condition RPAREN controlbody ELSE controlbody
 	'''
 	pass
