@@ -1,0 +1,50 @@
+ASGN
+(
+	DEREF
+	(
+		VAR(n)
+	)
+	,
+	CONST(3)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(cntr)
+	)
+	,
+	CONST(1)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(cntr)
+	)
+	,
+	CONST(2)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(cntr)
+	)
+	,
+	CONST(3)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(cntr)
+	)
+	,
+	CONST(4)
+)
+

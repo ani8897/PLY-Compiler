@@ -1,0 +1,66 @@
+ASGN
+(
+	VAR(i2)
+	,
+	ADDR
+	(
+		VAR(i1)
+	)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(f2)
+	)
+	,
+	CONST(4)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(iftmp0)
+	)
+	,
+	CONST(1)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(iftmp0)
+	)
+	,
+	CONST(0)
+)
+
+ASGN
+(
+	DEREF
+	(
+		VAR(iftmp0)
+	)
+	,
+	CONST(0)
+)
+
+ASGN
+(
+	DEREF
+	(
+		DEREF
+		(
+			VAR(i1)
+		)
+	)
+	,
+	DEREF
+	(
+		VAR(iftmp0)
+	)
+)
+
