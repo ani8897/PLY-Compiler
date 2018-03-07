@@ -101,9 +101,9 @@ def p_start(p):
 	start : function
 	'''
 	for t in globals()["trees"]:
-		if t.is_const and t.children[0].token[0:3] == 'VAR':
-			print("Syntax error at ",t.children[0].token[4:-1]," =")
-			exit(0)
+		# if t.is_const and t.children[0].token[0:3] == 'VAR':
+		# 	print("Syntax error at ",t.children[0].token[4:-1]," =")
+		# 	exit(0)
 		t.print_node(0,rfile = globals()["output_file"])
 		print('',file = globals()["output_file"])
 	print("Successfully Parsed")
@@ -115,6 +115,7 @@ def p_function(p):
 	type : INT
 		| VOID		
 	'''
+	globals()["trees"].append(p[6])
 	pass
 
 def p_var(p):
@@ -156,12 +157,18 @@ def p_statements(p):
 			| whilestatement
 			| COMMENT
 	'''
-	pass
+	if len(p) == 2:
+		if not (p[1].token == "DECL") and not (p[1].type == 'COMMENT'):
+			# globals()["trees"].append(p[1])
+			p[0] = p[1]
+	if len(p) == 3: 
+		p[0] = Node("STMTS",p[2].children.insert(0,p[1]))
 
 def p_declaration(p):
 	'''
 	declaration : type idlist SEMICOLON
 	'''
+	p[0] = Node("DECL",[])
 	pass
 
 def p_idlist(p):
@@ -179,7 +186,6 @@ def p_assignment(p):
 				| var EQUALS expression SEMICOLON
 	'''
 	p[0] = Node('ASGN',[p[1],p[3]],p[3].is_const)
-	globals()["trees"].append(p[0])
 
 
 
