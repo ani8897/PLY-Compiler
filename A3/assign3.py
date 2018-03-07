@@ -101,7 +101,8 @@ def p_start(p):
 	'''
 	start : function
 	'''
-	p[1].print_node(0,rfile = globals()["output_file"])
+	p[1].print_node(0,rfile = globals()["ast_file"])
+	p[1].print_cfg(rfile = globals()["cfg_file"])
 	print("Successfully Parsed")
 
 def p_function(p):
@@ -316,6 +317,30 @@ class Node():
 					if(i < len(self.children)): print('\t'*(depth+1) + ',', file=rfile)
 				print('\t'*depth + ')', file=rfile)
 
+	def reconstruct_node(self):
+		if self.token[0:3] == 'VAR' : return self.token[4:-1]
+		elif self.token[0:5] == 'CONST': return self.token[6:-1]
+		elif self.token == 'DEREF': return '*' + self.children[0].reconstruct_node()
+		elif self.token == 'ADDR': return '&' + self.children[0].reconstruct_node()
+		elif self.token == 'ASGN': return self.children[0].reconstruct_node() + '=' + self.children[1].reconstruct_node()
+
+	def print_cfg(self,rfile=1):
+		for c in self.children:
+			if c.token == 'STMTS': c.print_cfg()
+			elif c.token == 'ASGN':
+				globals()["contents"].append(c.reconstruct_node())
+			elif c.token == 'IF':
+			elif c.token == 'WHILE':
+
+
+class Block():
+	def __init__(self,index,contents):
+		self.index = index
+		self.contents = contents
+
+
+
+
 def process(data):
 	lex.lex()
 	yacc.yacc()
@@ -331,5 +356,10 @@ if __name__ == "__main__":
 
 	globals()["line"] = 1
 	globals()["trees"] = []
-	globals()["output_file"] = open(sys.argv[1] + '.ast','w')
+	globals()["ast_file"] = open(sys.argv[1] + '.ast','w')
+	globals()["cfg_file"] = open(sys.argv[1] + '.cfg','w')
+	globals()["block_index"] = 1
+	globals()["condition_index"] = 1
+	globals()["contents"] = []
+	
 	process(data)
