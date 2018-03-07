@@ -102,7 +102,11 @@ def p_start(p):
 	start : function
 	'''
 	p[1].print_node(0,rfile = globals()["ast_file"])
-	p[1].print_cfg(rfile = globals()["cfg_file"])
+	construct_cfg(p[1])
+	globals()["cfg"].blocks[globals()["block_index"]] = Block(globals()["block_index"],'',["End"],-1,[])
+	globals()["block_index"] = 1
+	update_cfg(p[1])
+	globals()["cfg"].cfg_print(rfile = globals()["cfg_file"])
 	print("Successfully Parsed")
 
 def p_function(p):
@@ -228,9 +232,9 @@ def p_controlbody(p):
 	if len(p) == 4:
 		p[0] = p[2]
 	elif p[1] == ';':
-		p[0] = Node('NULL',[])
+		p[0] = Node('STMTS',[])
 	else:
-		p[0] = p[2]
+		p[0] = Node('STMTS',[p[1]])
 
 def p_ifstatement(p):
 	'''
@@ -318,27 +322,198 @@ class Node():
 				print('\t'*depth + ')', file=rfile)
 
 	def reconstruct_node(self):
+		tokenMap = {
+			'ASGN' 	: '=',
+			'PLUS'	: '+',
+			'MINUS'	: '-',
+			'MUL'	: '*',
+			'DIV'	: '/',
+			'LT'	: '<',
+			'LE'	: '<=',
+			'GT'	: '>',
+			'GE'	: '>=',
+			'EQ'	: '==',
+			'AND'	: '&&',
+			'OR'	: '||'
+		}
 		if self.token[0:3] == 'VAR' : return self.token[4:-1]
 		elif self.token[0:5] == 'CONST': return self.token[6:-1]
 		elif self.token == 'DEREF': return '*' + self.children[0].reconstruct_node()
 		elif self.token == 'ADDR': return '&' + self.children[0].reconstruct_node()
-		elif self.token == 'ASGN': return self.children[0].reconstruct_node() + '=' + self.children[1].reconstruct_node()
+		elif self.token == 'NOT': return '!' + self.children[0].reconstruct_node()
+		elif self.token in tokenMap : return self.children[0].reconstruct_node() + tokenMap[self.token] + self.children[1].reconstruct_node()
 
-	def print_cfg(self,rfile=1):
-		for c in self.children:
-			if c.token == 'STMTS': c.print_cfg()
-			elif c.token == 'ASGN':
-				globals()["contents"].append(c.reconstruct_node())
-			elif c.token == 'IF':
-			elif c.token == 'WHILE':
 
+def construct_cfg(ast,parent_index=-1):
+
+	stmts,num_stmts = ast.children,len(ast.children)
+	
+	if num_stmts == 0: return
+	block = Block(globals()["block_index"],'',[],-1,[])
+	globals()["block_index"] += 1
+	globals()["block_bool"] = True
+
+	for i in range(num_stmts):
+
+		if stmts[i].token == 'ASGN':
+			if not(globals()["block_bool"]):
+				block = Block(globals()["block_index"],'AS',[],-1,[])
+				globals()["block_index"] += 1
+				globals()["block_bool"] = True
+			curr_index = globals()["block_index"]
+			block.contents.append(stmts[i].reconstruct_node())
+			if i+1<num_stmts and stmts[i+1].token != 'ASGN':
+				block.goto.append(curr_index)
+				globals()["cfg"].blocks[block.index] = block
+				globals()["block_bool"] = False
+			if i+1 == num_stmts:
+				if parent_index == -1:
+					block.goto.append(curr_index)
+				else:
+					block.goto.append(parent_index)
+				globals()["cfg"].blocks[block.index] = block
+				globals()["block_bool"] = False
+
+		elif stmts[i].token == 'WHILE':
+			if not(globals()["block_bool"]):
+				block = Block(globals()["block_index"],'WH',[],-1,[])
+				globals()["block_index"] += 1
+				globals()["block_bool"] = True
+			curr_index = globals()["block_index"]
+
+			while_children = stmts[i].children
+			block.contents.append(while_children[0].reconstruct_node())
+			block.goto.append(curr_index)
+			
+			construct_cfg(while_children[1],curr_index-1)
+			
+			if i+1 == num_stmts and parent_index != -1:
+				block.goto.append(parent_index)
+			else:
+				block.goto.append(globals()["block_index"])
+			
+			globals()["cfg"].blocks[block.index] = block
+			globals()["block_bool"] = False
+
+
+		elif stmts[i].token == 'IF':
+			if not(globals()["block_bool"]):
+				block = Block(globals()["block_index"],'IF',[],-1,[])
+				globals()["block_index"] += 1
+				globals()["block_bool"] = True
+			curr_index = globals()["block_index"]
+
+			if_children = stmts[i].children
+			block.contents.append(if_children[0].reconstruct_node())
+			block.goto.append(curr_index)
+
+			construct_cfg(if_children[1],parent_index)
+			block.goto.append(globals()["block_index"])
+			
+			if len(if_children)==3:
+				construct_cfg(if_children[2],parent_index)
+
+			block.end = globals()["block_index"]
+			globals()["cfg"].blocks[block.index] = block
+			globals()["block_bool"] = False
+
+def update_cfg(ast,parent_index=-1,parent_if = False,parent_while = False):
+
+	stmts,num_stmts = ast.children,len(ast.children)
+	
+	if num_stmts == 0: return
+	block = globals()["cfg"].blocks[globals()["block_index"]]
+	globals()["block_index"] += 1
+	globals()["block_bool"] = True
+
+	for i in range(num_stmts):
+
+		if stmts[i].token == 'ASGN':
+			if not(globals()["block_bool"]):
+				block = globals()["cfg"].blocks[globals()["block_index"]]
+				globals()["block_index"] += 1
+				globals()["block_bool"] = True
+			curr_index = globals()["block_index"]
+			if i+1<num_stmts and stmts[i+1].token != 'ASGN':
+				globals()["block_bool"] = False
+			if i+1 == num_stmts:
+				if parent_if and not(parent_while):
+					block.goto[0] = parent_index
+					globals()["cfg"].blocks[block.index] = block
+				globals()["block_bool"] = False
+
+
+		elif stmts[i].token == 'WHILE':
+			if not(globals()["block_bool"]):
+				block = globals()["cfg"].blocks[globals()["block_index"]]
+				globals()["block_index"] += 1
+				globals()["block_bool"] = True
+			curr_index = globals()["block_index"]
+
+			while_children = stmts[i].children
+			update_cfg(while_children[1],parent_index,False,True)
+			
+			if i+1 == num_stmts and parent_if:
+				block.goto[1] = parent_index
+
+			globals()["cfg"].blocks[block.index] = block
+			globals()["block_bool"] = False
+
+
+
+		elif stmts[i].token == 'IF':
+			if not(globals()["block_bool"]):
+				block = globals()["cfg"].blocks[globals()["block_index"]]
+				globals()["block_index"] += 1
+				globals()["block_bool"] = True
+			curr_index = globals()["block_index"]
+
+			if_children = stmts[i].children
+
+			if parent_if and i+1 == num_stmts:
+				update_cfg(if_children[1],parent_index,True,parent_while)
+			
+				if len(if_children)==3:
+					update_cfg(if_children[2],parent_index,True,parent_while)
+				else:
+					block.goto[1] = parent_index
+				globals()["cfg"].blocks[block.index] = block
+			else:
+				update_cfg(if_children[1],block.end,True,parent_while)
+			
+				if len(if_children)==3:
+					update_cfg(if_children[2],block.end,True,parent_while)
+			globals()["block_bool"] = False
 
 class Block():
-	def __init__(self,index,contents):
+
+	def __init__(self,index,btype,contents,end,goto):
 		self.index = index
+		self.btype = btype
 		self.contents = contents
+		self.end = end
+		self.goto = goto
 
+	def block_print(self,rfile):
+		print("<bb %d>"%self.index, file = rfile)
+		for c in self.contents:
+			print(c,file=rfile)
+		if len(self.goto) == 0: return
+		if len(self.goto) == 1:
+			print("goto <bb %d>"%self.goto[0], file = rfile)
+		else:
+			print("if goto <bb %d>"%self.goto[0],file = rfile)
+			print("else goto <bb %d>"%self.goto[1],file = rfile)
+		print("",file=rfile)
 
+class CFG():
+
+	def __init__(self):
+		self.blocks = {}
+
+	def cfg_print(self,rfile=1):
+		for b in self.blocks:
+			self.blocks[b].block_print(rfile)
 
 
 def process(data):
@@ -359,7 +534,9 @@ if __name__ == "__main__":
 	globals()["ast_file"] = open(sys.argv[1] + '.ast','w')
 	globals()["cfg_file"] = open(sys.argv[1] + '.cfg','w')
 	globals()["block_index"] = 1
-	globals()["condition_index"] = 1
+	globals()["block_bool"] = False
+	globals()["temp_index"] = 1
+	globals()["cfg"] = CFG()
 	globals()["contents"] = []
 	
 	process(data)
