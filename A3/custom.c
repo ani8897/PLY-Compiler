@@ -1,10 +1,12 @@
 void main()
 {
-   int *a;
-	
+   int *a, e;
+
+   a = &e;
+
    while(*a<=12){
 		
-       *a=*a+1;
+       e=5;
    
    }
 

@@ -1,12 +1,15 @@
 
 void main()
 {
-   int *n;
-   int *cntr;	
+   int a, b, *n, *cntr;	
+
+   n = &a;
+   cntr = &b;
+
    *n = 3;
 
  
-   if ( *n & 1 == 0 )
+   if ( *n> 5 || 1 == 0 )
       *cntr = 1;
    else 
       *cntr = 2;

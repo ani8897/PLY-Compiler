@@ -1,0 +1,21 @@
+ASGN
+(
+	VAR(a)
+	,
+	ADDR
+	(
+		VAR(e)
+	)
+)
+WHILE
+(
+	LE
+	(
+		DEREF
+		(
+			VAR(a)
+		)
+		,
+		CONST(12)
+	)
+	,

@@ -10,11 +10,11 @@ tokens = (
 		'ID', 'NUMBER',
 		'COMMENT',
 		'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
-		'SEMICOLON','AND','OR', 'COMMA',
+		'SEMICOLON', 'AMPERSAND', 'COMMA',
 		'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS', 
 		'INT', 'VOID', 'MAIN', 
 		'IF', 'ELSE', 'WHILE',
-		'LESSER','GREATER','LESSEREQUAL','GREATEREQUAL','EQUALITY','UNEQUAL',
+		'LT','GT','LE','GE','EQ','NOT', 'AND', 'OR'
 )
 
 t_ignore = " \t"
@@ -23,12 +23,12 @@ def t_newline(t):
 	r'\n|\r\n'
 	globals()["line"] += len(t.value)
 
-t_LESSEREQUAL = r'<='
-t_GREATEREQUAL = r'>='
-t_EQUALITY = r'=='
-t_UNEQUAL = r'!='
-t_LESSER = r'<'
-t_GREATER = r'>'
+t_LE = r'<='
+t_GE = r'>='
+t_EQ = r'=='
+t_NOT = r'\!'
+t_LT = r'<'
+t_GT = r'>'
 
 t_PLUS = r'\+'
 t_MINUS = r'-'
@@ -41,8 +41,9 @@ t_RPAREN = r'\)'
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
 t_SEMICOLON = r';'
-t_AND = r'\&'
-t_OR = r'\|'
+t_AND = r'\&\&'
+t_OR = r'\|\|'
+t_AMPERSAND = r'\&'
 t_COMMA = r','
 
 reserved = {
@@ -81,8 +82,8 @@ precedence = (
 	('right', 'EQUALS'),
 	('left', 'OR'),
 	('left', 'AND'),
-	('left', 'EQUALITY', 'UNEQUAL'),
-	('left', 'LESSER', 'GREATER', 'LESSEREQUAL', 'GREATEREQUAL'),
+	('left', 'EQ', 'NOT'),
+	('left', 'LT', 'GT', 'LE', 'GE'),
 	('left', 'PLUS', 'MINUS'),
 	('left', 'TIMES', 'DIVIDE'),
 	('right', 'UMINUS'),
@@ -100,14 +101,8 @@ def p_start(p):
 	'''
 	start : function
 	'''
-	for t in globals()["trees"]:
-		# if t.is_const and t.children[0].token[0:3] == 'VAR':
-		# 	print("Syntax error at ",t.children[0].token[4:-1]," =")
-		# 	exit(0)
-		t.print_node(0,rfile = globals()["output_file"])
-		print('',file = globals()["output_file"])
+	p[1].print_node(0,rfile = globals()["output_file"])
 	print("Successfully Parsed")
-	pass
 
 def p_function(p):
 	'''
@@ -115,8 +110,8 @@ def p_function(p):
 	type : INT
 		| VOID		
 	'''
-	globals()["trees"].append(p[6])
-	pass
+	if len(p) != 2:
+		p[0] = p[6]
 
 def p_var(p):
 	'''
@@ -141,35 +136,40 @@ def p_pointer(p):
 
 def p_address(p):
 	'''
-	address : AND pointer %prec AMPERSAND
-			| AND address %prec AMPERSAND
-			| AND var %prec AMPERSAND
+	address : AMPERSAND pointer
+			| AMPERSAND address
+			| AMPERSAND var
 	'''
 	p[0] = Node('ADDR',[p[2]],False)
 
 def p_statements(p):
 	'''
 	statements :  statement statements
-				| 
-	statement : declaration
-			| assignment
+				| COMMENT statements
+				| declaration statements
+				|
+	statement : assignment
 			| ifstatement
 			| whilestatement
-			| COMMENT
 	'''
 	if len(p) == 2:
-		if not (p[1].token == "DECL") and not (p[1].type == 'COMMENT'):
-			# globals()["trees"].append(p[1])
-			p[0] = p[1]
-	if len(p) == 3: 
-		p[0] = Node("STMTS",p[2].children.insert(0,p[1]))
+		p[0] = p[1]
+	elif (len(p) == 3):
+		try:
+			if p[1].token != 'DECL':
+				p[0] = Node('STMTS',[p[1]] + p[2].children)
+			else:
+				p[0] = p[2]
+		except:
+			p[0] = p[2]
+	else:
+		p[0] = Node('STMTS',[])
 
 def p_declaration(p):
 	'''
 	declaration : type idlist SEMICOLON
 	'''
-	p[0] = Node("DECL",[])
-	pass
+	p[0] = Node('DECL',[])
 
 def p_idlist(p):
 	'''
@@ -187,21 +187,36 @@ def p_assignment(p):
 	'''
 	p[0] = Node('ASGN',[p[1],p[3]],p[3].is_const)
 
-
-
 def p_condition(p):
 	'''
-	condition :	condition LESSER condition
-				| condition GREATER condition
-				| condition LESSEREQUAL condition
-				| condition GREATEREQUAL condition
-				| condition EQUALITY condition
-				| condition UNEQUAL condition
+	condition :	expression LT expression
+				| expression GT expression
+				| expression LE expression
+				| expression GE expression
+				| expression EQ expression
 				| condition AND condition
 				| condition OR condition
-				| expression
+				| NOT condition
+				| LPAREN condition RPAREN
 	'''
-	pass
+	if len(p) == 2:
+		p[0] = Node('NOT',[p[2]],p[2].is_const)
+	if p[2] == '<':
+		p[0] = Node('LT',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '>':
+		p[0] = Node('GT',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '<=':
+		p[0] = Node('LE',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '>=':
+		p[0] = Node('GE',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '==':
+		p[0] = Node('EQ',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '&&':
+		p[0] = Node('AND',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '||':
+		p[0] = Node('OR',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	else :
+		p[0] = p[2]
 
 def p_controlbody(p):
 	'''
@@ -209,21 +224,28 @@ def p_controlbody(p):
 			| statement
 			| SEMICOLON
 	'''
-	pass
+	if len(p) == 4:
+		p[0] = p[2]
+	elif p[1] == ';':
+		p[0] = Node('NULL',[])
+	else:
+		p[0] = p[2]
 
 def p_ifstatement(p):
 	'''
 	ifstatement : IF LPAREN condition RPAREN controlbody %prec IFX
 				| IF LPAREN condition RPAREN controlbody ELSE controlbody
 	'''
-	pass
+	if len(p) == 6:
+		p[0] = Node('IF',[p[3],p[5]])
+	else:
+		p[0] = Node('IF',[p[3],p[5],p[7]])
 
 def p_whilestatement(p):
 	'''
 	whilestatement : WHILE LPAREN condition RPAREN controlbody
 	'''
-	pass
-
+	p[0] = Node('WHILE',[p[3],p[5]])
 
 
 def p_expression(p):
@@ -266,22 +288,33 @@ def p_error(p):
 
 ####################### END ####################
 
-class Node:
-	def __init__(self,token,children,is_const):
+class Node():
+	def __init__(self,token,children,is_const=False):
 		self.token = token
 		self.children = children
 		self.is_const = is_const
 
 	def print_node(self,depth,rfile=1):
-		print('\t'*depth + self.token, file=rfile)
-		if len(self.children) != 0:
-			i = 0
-			print('\t'*depth + '(', file=rfile)
-			for child in self.children:
-				i+=1
-				child.print_node(depth+1,rfile)
-				if(i < len(self.children)): print('\t'*(depth+1) + ',', file=rfile)
-			print('\t'*depth + ')', file=rfile)
+		if self.token == "ASGN" and self.is_const and self.children[0].token[0:3] == 'VAR':
+			print("Syntax error at ",self.children[0].token[4:-1]," =")
+			exit(0)
+
+		if(self.token == 'STMTS'):
+			if len(self.children) != 0:
+				i = 0
+				for child in self.children:
+					i+=1
+					child.print_node(depth,rfile)
+		else:
+			print('\t'*depth + self.token, file=rfile)
+			if len(self.children) != 0:
+				i = 0
+				print('\t'*depth + '(', file=rfile)
+				for child in self.children:
+					i+=1
+					child.print_node(depth+1,rfile)
+					if(i < len(self.children)): print('\t'*(depth+1) + ',', file=rfile)
+				print('\t'*depth + ')', file=rfile)
 
 def process(data):
 	lex.lex()
@@ -291,12 +324,12 @@ def process(data):
 if __name__ == "__main__":
 	import sys
 	if len(sys.argv) < 2:
-		print("Format: python assign1.py <filename>")
+		print("Format: python assign3.py <filename>")
 		exit(0)
 	with open(sys.argv[1], 'r') as f:
 		data = f.read()
 
 	globals()["line"] = 1
 	globals()["trees"] = []
-	globals()["output_file"] = open('Parser_ast_' + sys.argv[1] + '.txt','w')
+	globals()["output_file"] = open(sys.argv[1] + '.ast','w')
 	process(data)
