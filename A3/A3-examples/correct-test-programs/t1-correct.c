@@ -5,7 +5,7 @@ void main()
         a = &e;
         b = &f;
 
-	if (*a >= - *b && f > 5)
+	if (*a >= - *b)
 		*a = *a+1;
 	else
 		*b = *b+1;

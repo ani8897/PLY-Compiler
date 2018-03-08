@@ -1,21 +1,86 @@
-ASGN
+IF
 (
-	VAR(a)
-	,
-	ADDR
-	(
-		VAR(e)
-	)
-)
-WHILE
-(
-	LE
+	GT
 	(
 		DEREF
 		(
 			VAR(a)
 		)
 		,
-		CONST(12)
+		CONST(5)
 	)
 	,
+	ASGN
+	(
+		VAR(a)
+		,
+		ADDR
+		(
+			VAR(e)
+		)
+	)
+	IF
+	(
+		LT
+		(
+			DEREF
+			(
+				VAR(b)
+			)
+			,
+			CONST(6)
+		)
+		,
+		ASGN
+		(
+			VAR(b)
+			,
+			ADDR
+			(
+				VAR(e)
+			)
+		)
+		IF
+		(
+			GT
+			(
+				DEREF
+				(
+					VAR(c)
+				)
+				,
+				CONST(8)
+			)
+			,
+			ASGN
+			(
+				VAR(c)
+				,
+				ADDR
+				(
+					VAR(e)
+				)
+			)
+		)
+		,
+		ASGN
+		(
+			VAR(b)
+			,
+			ADDR
+			(
+				VAR(f)
+			)
+		)
+	)
+	,
+	ASGN
+	(
+		VAR(a)
+		,
+		ADDR
+		(
+			VAR(f)
+		)
+	)
+)

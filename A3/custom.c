@@ -1,15 +1,20 @@
-void main()
-{
-   int *a, e;
+void main(){
 
-   a = &e;
+	int *a,*b,*c,e,f;
 
-   while(*a<=12){
-		
-       e=5;
-   
-   }
-
-
+	if(*a > 5){
+		a = &e;
+		if(*b < 6){
+			b = &e;
+			if(*c >8){
+				c = &e;
+			}
+		}
+		else{
+			b = &f;
+		}
+	}
+	else{
+		a = &f;
+	}
 }
-

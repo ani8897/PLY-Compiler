@@ -14,7 +14,7 @@ tokens = (
 		'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS', 
 		'INT', 'VOID', 'MAIN', 
 		'IF', 'ELSE', 'WHILE',
-		'LT','GT','LE','GE','EQ','NOT', 'AND', 'OR'
+		'LT','GT','LE','GE','EQ','NE','NOT', 'AND', 'OR'
 )
 
 t_ignore = " \t"
@@ -26,6 +26,7 @@ def t_newline(t):
 t_LE = r'<='
 t_GE = r'>='
 t_EQ = r'=='
+t_NE = r'\!\='
 t_NOT = r'\!'
 t_LT = r'<'
 t_GT = r'>'
@@ -82,7 +83,7 @@ precedence = (
 	('right', 'EQUALS'),
 	('left', 'OR'),
 	('left', 'AND'),
-	('left', 'EQ', 'NOT'),
+	('left', 'EQ', 'NE','NOT'),
 	('left', 'LT', 'GT', 'LE', 'GE'),
 	('left', 'PLUS', 'MINUS'),
 	('left', 'TIMES', 'DIVIDE'),
@@ -199,6 +200,7 @@ def p_condition(p):
 				| expression LE expression
 				| expression GE expression
 				| expression EQ expression
+				| expression NE expression
 				| condition AND condition
 				| condition OR condition
 				| NOT condition
@@ -216,6 +218,8 @@ def p_condition(p):
 		p[0] = Node('GE',[p[1],p[3]],p[1].is_const and p[3].is_const)
 	elif p[2] == '==':
 		p[0] = Node('EQ',[p[1],p[3]],p[1].is_const and p[3].is_const)
+	elif p[2] == '!=':
+		p[0] = Node('NE',[p[1],p[3]],p[1].is_const and p[3].is_const)
 	elif p[2] == '&&':
 		p[0] = Node('AND',[p[1],p[3]],p[1].is_const and p[3].is_const)
 	elif p[2] == '||':
@@ -323,7 +327,6 @@ class Node():
 
 	def reconstruct_node(self):
 		tokenMap = {
-			'ASGN' 	: '=',
 			'PLUS'	: '+',
 			'MINUS'	: '-',
 			'MUL'	: '*',
@@ -333,16 +336,60 @@ class Node():
 			'GT'	: '>',
 			'GE'	: '>=',
 			'EQ'	: '==',
+			'NE'	: '!=',
 			'AND'	: '&&',
 			'OR'	: '||'
 		}
-		if self.token[0:3] == 'VAR' : return self.token[4:-1]
-		elif self.token[0:5] == 'CONST': return self.token[6:-1]
-		elif self.token == 'DEREF': return '*' + self.children[0].reconstruct_node()
-		elif self.token == 'ADDR': return '&' + self.children[0].reconstruct_node()
-		elif self.token == 'NOT': return '!' + self.children[0].reconstruct_node()
-		elif self.token in tokenMap : return self.children[0].reconstruct_node() + tokenMap[self.token] + self.children[1].reconstruct_node()
+		
+		if self.token[0:3] == 'VAR' : 
+			return ([],self.token[4:-1])
+		
+		elif self.token[0:5] == 'CONST': 
+			return ([],self.token[6:-1])
+		
+		elif self.token == 'DEREF': 
+			child = self.children[0].reconstruct_node()
+			return ([],'*' + child[1])
+		
+		elif self.token == 'ADDR': 
+			child = self.children[0].reconstruct_node()
+			return ([],'&' + child[1])
 
+		elif self.token == 'UMINUS': 
+			child = self.children[0].reconstruct_node()
+			return ([],'-' + child[1])
+		
+		elif self.token == 'NOT': 
+			child = self.children[0].reconstruct_node()
+			
+			new_temp = globals()["temp_index"]
+			new_temp_variable = "t"+str(new_temp)
+			globals()["temp_index"] +=1
+			
+			code = new_temp_variable + " = !" + child[1]
+			child[0].append(code)
+			return (child[0],new_temp_variable)
+
+		elif self.token == 'ASGN':
+			left_child = self.children[0].reconstruct_node() 
+			right_child = self.children[1].reconstruct_node()
+
+			code = left_child[1] + " = " + right_child[1]
+			right_child[0].append(code)
+			return (right_child[0],left_child[1])
+
+		elif self.token in tokenMap : 
+			left_child = self.children[0].reconstruct_node() 
+			right_child = self.children[1].reconstruct_node()
+
+			new_temp = globals()["temp_index"]
+			new_temp_variable = "t"+str(new_temp)
+			globals()["temp_index"] +=1
+
+			code = new_temp_variable + " = " + left_child[1] + " " + tokenMap[self.token] + " " + right_child[1]
+			left_child[0].extend(right_child[0])
+			left_child[0].append(code)
+			return (left_child[0],new_temp_variable)
 
 def construct_cfg(ast,parent_index=-1):
 
@@ -361,7 +408,8 @@ def construct_cfg(ast,parent_index=-1):
 				globals()["block_index"] += 1
 				globals()["block_bool"] = True
 			curr_index = globals()["block_index"]
-			block.contents.append(stmts[i].reconstruct_node())
+			node = stmts[i].reconstruct_node()
+			block.contents.extend(node[0])
 			if i+1<num_stmts and stmts[i+1].token != 'ASGN':
 				block.goto.append(curr_index)
 				globals()["cfg"].blocks[block.index] = block
@@ -382,7 +430,9 @@ def construct_cfg(ast,parent_index=-1):
 			curr_index = globals()["block_index"]
 
 			while_children = stmts[i].children
-			block.contents.append(while_children[0].reconstruct_node())
+			node = while_children[0].reconstruct_node()
+			block.cond = node[1]
+			block.contents.extend(node[0])
 			block.goto.append(curr_index)
 			
 			construct_cfg(while_children[1],curr_index-1)
@@ -395,7 +445,6 @@ def construct_cfg(ast,parent_index=-1):
 			globals()["cfg"].blocks[block.index] = block
 			globals()["block_bool"] = False
 
-
 		elif stmts[i].token == 'IF':
 			if not(globals()["block_bool"]):
 				block = Block(globals()["block_index"],'IF',[],-1,[])
@@ -404,14 +453,22 @@ def construct_cfg(ast,parent_index=-1):
 			curr_index = globals()["block_index"]
 
 			if_children = stmts[i].children
-			block.contents.append(if_children[0].reconstruct_node())
+			node = if_children[0].reconstruct_node()
+			block.cond = node[1]
+			block.contents.extend(node[0])
 			block.goto.append(curr_index)
 
-			construct_cfg(if_children[1],parent_index)
+			if i+1 == num_stmts:
+				construct_cfg(if_children[1],parent_index)
+			else:
+				construct_cfg(if_children[1],-1)
 			block.goto.append(globals()["block_index"])
 			
 			if len(if_children)==3:
-				construct_cfg(if_children[2],parent_index)
+				if i+1 == num_stmts:
+					construct_cfg(if_children[2],parent_index)
+				else:
+					construct_cfg(if_children[2],-1)
 
 			block.end = globals()["block_index"]
 			globals()["cfg"].blocks[block.index] = block
@@ -478,21 +535,27 @@ def update_cfg(ast,parent_index=-1,parent_if = False,parent_while = False):
 				else:
 					block.goto[1] = parent_index
 				globals()["cfg"].blocks[block.index] = block
-			else:
+			elif not(parent_if) and i+1 == num_stmts:
 				update_cfg(if_children[1],block.end,True,parent_while)
 			
 				if len(if_children)==3:
 					update_cfg(if_children[2],block.end,True,parent_while)
+			else:
+				update_cfg(if_children[1],block.end,True,False)
+			
+				if len(if_children)==3:
+					update_cfg(if_children[2],block.end,True,False)
 			globals()["block_bool"] = False
 
 class Block():
 
-	def __init__(self,index,btype,contents,end,goto):
+	def __init__(self,index,btype,contents,end,goto,cond=""):
 		self.index = index
 		self.btype = btype
 		self.contents = contents
 		self.end = end
 		self.goto = goto
+		self.cond = cond
 
 	def block_print(self,rfile):
 		print("<bb %d>"%self.index, file = rfile)
@@ -502,7 +565,7 @@ class Block():
 		if len(self.goto) == 1:
 			print("goto <bb %d>"%self.goto[0], file = rfile)
 		else:
-			print("if goto <bb %d>"%self.goto[0],file = rfile)
+			print("if("+self.cond+") goto <bb %d>"%self.goto[0],file = rfile)
 			print("else goto <bb %d>"%self.goto[1],file = rfile)
 		print("",file=rfile)
 
@@ -535,7 +598,7 @@ if __name__ == "__main__":
 	globals()["cfg_file"] = open(sys.argv[1] + '.cfg','w')
 	globals()["block_index"] = 1
 	globals()["block_bool"] = False
-	globals()["temp_index"] = 1
+	globals()["temp_index"] = 0
 	globals()["cfg"] = CFG()
 	globals()["contents"] = []
 	

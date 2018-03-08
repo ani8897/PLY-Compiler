@@ -1,0 +1,227 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ASGN
+(
+	VAR(a)
+	,
+	ADDR
+	(
+		VAR(e)
+	)
+)
+ASGN
+(
+	VAR(b)
+	,
+	ADDR
+	(
+		VAR(f)
+	)
+)
+ASGN
+(
+	VAR(x)
+	,
+	ADDR
+	(
+		VAR(h)
+	)
+)
+ASGN
+(
+	VAR(y)
+	,
+	ADDR
+	(
+		VAR(i)
+	)
+)
+ASGN
+(
+	VAR(t)
+	,
+	ADDR
+	(
+		VAR(j)
+	)
+)
+ASGN
+(
+	VAR(gcd)
+	,
+	ADDR
+	(
+		VAR(k)
+	)
+)
+ASGN
+(
+	VAR(lcm)
+	,
+	ADDR
+	(
+		VAR(l)
+	)
+)
+ASGN
+(
+	DEREF
+	(
+		VAR(x)
+	)
+	,
+	CONST(14)
+)
+ASGN
+(
+	DEREF
+	(
+		VAR(y)
+	)
+	,
+	CONST(36)
+)
+ASGN
+(
+	DEREF
+	(
+		VAR(a)
+	)
+	,
+	DEREF
+	(
+		VAR(x)
+	)
+)
+ASGN
+(
+	DEREF
+	(
+		VAR(b)
+	)
+	,
+	DEREF
+	(
+		VAR(y)
+	)
+)
+WHILE
+(
+	NE
+	(
+		DEREF
+		(
+			VAR(b)
+		)
+		,
+		CONST(0)
+	)
+	,
+	ASGN
+	(
+		DEREF
+		(
+			VAR(t)
+		)
+		,
+		DEREF
+		(
+			VAR(b)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(b)
+		)
+		,
+		MUL
+		(
+			DIV
+			(
+				DEREF
+				(
+					VAR(a)
+				)
+				,
+				DEREF
+				(
+					VAR(b)
+				)
+			)
+			,
+			DEREF
+			(
+				VAR(b)
+			)
+		)
+	)
+	ASGN
+	(
+		DEREF
+		(
+			VAR(a)
+		)
+		,
+		DEREF
+		(
+			VAR(t)
+		)
+	)
+
+)
+ASGN
+(
+	DEREF
+	(
+		VAR(gcd)
+	)
+	,
+	DEREF
+	(
+		VAR(a)
+	)
+)
+ASGN
+(
+	DEREF
+	(
+		VAR(lcm)
+	)
+	,
+	DIV
+	(
+		MUL
+		(
+			DEREF
+			(
+				VAR(x)
+			)
+			,
+			DEREF
+			(
+				VAR(y)
+			)
+		)
+		,
+		DEREF
+		(
+			VAR(gcd)
+		)
+	)
+)
