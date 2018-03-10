@@ -3,5 +3,5 @@
 for value in *.c
 do
 	echo $value
-	python3 assign3.py $value
+	python3 grammar.py $value
 done
