@@ -118,22 +118,22 @@ state 0
     (1) start -> . function
     (2) function -> . VOID MAIN LPAREN RPAREN LBRACE statements RBRACE
 
-    VOID            shift and go to state 1
+    VOID            shift and go to state 2
 
-    start                          shift and go to state 2
+    start                          shift and go to state 1
     function                       shift and go to state 3
 
 state 1
 
-    (2) function -> VOID . MAIN LPAREN RPAREN LBRACE statements RBRACE
+    (0) S' -> start .
 
-    MAIN            shift and go to state 4
 
 
 state 2
 
-    (0) S' -> start .
+    (2) function -> VOID . MAIN LPAREN RPAREN LBRACE statements RBRACE
 
+    MAIN            shift and go to state 4
 
 
 state 3
@@ -187,175 +187,26 @@ state 7
     (9) pointer -> . TIMES var
     (5) var -> . ID
 
-    COMMENT         shift and go to state 15
+    COMMENT         shift and go to state 8
     RBRACE          reduce using rule 16 (statements -> .)
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    INT             shift and go to state 23
-    VOID            shift and go to state 21
-    TIMES           shift and go to state 12
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    INT             shift and go to state 21
+    VOID            shift and go to state 15
+    TIMES           shift and go to state 17
     ID              shift and go to state 22
 
-    ifstatement                    shift and go to state 8
-    assignment                     shift and go to state 9
     var                            shift and go to state 10
-    statement                      shift and go to state 11
-    declaration                    shift and go to state 13
     type                           shift and go to state 19
-    whilestatement                 shift and go to state 20
-    statements                     shift and go to state 14
-    pointer                        shift and go to state 16
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 20
+    statements                     shift and go to state 16
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
+    declaration                    shift and go to state 14
+    ifstatement                    shift and go to state 23
 
 state 8
-
-    (18) statement -> ifstatement .
-
-    COMMENT         reduce using rule 18 (statement -> ifstatement .)
-    IF              reduce using rule 18 (statement -> ifstatement .)
-    WHILE           reduce using rule 18 (statement -> ifstatement .)
-    INT             reduce using rule 18 (statement -> ifstatement .)
-    VOID            reduce using rule 18 (statement -> ifstatement .)
-    TIMES           reduce using rule 18 (statement -> ifstatement .)
-    ID              reduce using rule 18 (statement -> ifstatement .)
-    RBRACE          reduce using rule 18 (statement -> ifstatement .)
-    ELSE            reduce using rule 18 (statement -> ifstatement .)
-
-
-state 9
-
-    (17) statement -> assignment .
-
-    COMMENT         reduce using rule 17 (statement -> assignment .)
-    IF              reduce using rule 17 (statement -> assignment .)
-    WHILE           reduce using rule 17 (statement -> assignment .)
-    INT             reduce using rule 17 (statement -> assignment .)
-    VOID            reduce using rule 17 (statement -> assignment .)
-    TIMES           reduce using rule 17 (statement -> assignment .)
-    ID              reduce using rule 17 (statement -> assignment .)
-    RBRACE          reduce using rule 17 (statement -> assignment .)
-    ELSE            reduce using rule 17 (statement -> assignment .)
-
-
-state 10
-
-    (26) assignment -> var . EQUALS expression SEMICOLON
-
-    EQUALS          shift and go to state 24
-
-
-state 11
-
-    (13) statements -> statement . statements
-    (13) statements -> . statement statements
-    (14) statements -> . COMMENT statements
-    (15) statements -> . declaration statements
-    (16) statements -> .
-    (17) statement -> . assignment
-    (18) statement -> . ifstatement
-    (19) statement -> . whilestatement
-    (20) declaration -> . type idlist SEMICOLON
-    (25) assignment -> . pointer EQUALS expression SEMICOLON
-    (26) assignment -> . var EQUALS expression SEMICOLON
-    (40) ifstatement -> . IF LPAREN condition RPAREN controlbody
-    (41) ifstatement -> . IF LPAREN condition RPAREN controlbody ELSE controlbody
-    (42) whilestatement -> . WHILE LPAREN condition RPAREN controlbody
-    (3) type -> . INT
-    (4) type -> . VOID
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (5) var -> . ID
-
-    COMMENT         shift and go to state 15
-    RBRACE          reduce using rule 16 (statements -> .)
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    INT             shift and go to state 23
-    VOID            shift and go to state 21
-    TIMES           shift and go to state 12
-    ID              shift and go to state 22
-
-    ifstatement                    shift and go to state 8
-    assignment                     shift and go to state 9
-    var                            shift and go to state 10
-    statement                      shift and go to state 11
-    declaration                    shift and go to state 13
-    type                           shift and go to state 19
-    whilestatement                 shift and go to state 20
-    statements                     shift and go to state 25
-    pointer                        shift and go to state 16
-
-state 12
-
-    (7) pointer -> TIMES . pointer
-    (8) pointer -> TIMES . address
-    (9) pointer -> TIMES . var
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (5) var -> . ID
-
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    ID              shift and go to state 22
-
-    address                        shift and go to state 26
-    var                            shift and go to state 29
-    pointer                        shift and go to state 28
-
-state 13
-
-    (15) statements -> declaration . statements
-    (13) statements -> . statement statements
-    (14) statements -> . COMMENT statements
-    (15) statements -> . declaration statements
-    (16) statements -> .
-    (17) statement -> . assignment
-    (18) statement -> . ifstatement
-    (19) statement -> . whilestatement
-    (20) declaration -> . type idlist SEMICOLON
-    (25) assignment -> . pointer EQUALS expression SEMICOLON
-    (26) assignment -> . var EQUALS expression SEMICOLON
-    (40) ifstatement -> . IF LPAREN condition RPAREN controlbody
-    (41) ifstatement -> . IF LPAREN condition RPAREN controlbody ELSE controlbody
-    (42) whilestatement -> . WHILE LPAREN condition RPAREN controlbody
-    (3) type -> . INT
-    (4) type -> . VOID
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (5) var -> . ID
-
-    COMMENT         shift and go to state 15
-    RBRACE          reduce using rule 16 (statements -> .)
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    INT             shift and go to state 23
-    VOID            shift and go to state 21
-    TIMES           shift and go to state 12
-    ID              shift and go to state 22
-
-    ifstatement                    shift and go to state 8
-    assignment                     shift and go to state 9
-    var                            shift and go to state 10
-    statement                      shift and go to state 11
-    declaration                    shift and go to state 13
-    type                           shift and go to state 19
-    whilestatement                 shift and go to state 20
-    statements                     shift and go to state 30
-    pointer                        shift and go to state 16
-
-state 14
-
-    (2) function -> VOID MAIN LPAREN RPAREN LBRACE statements . RBRACE
-
-    RBRACE          shift and go to state 31
-
-
-state 15
 
     (14) statements -> COMMENT . statements
     (13) statements -> . statement statements
@@ -378,65 +229,63 @@ state 15
     (9) pointer -> . TIMES var
     (5) var -> . ID
 
-    COMMENT         shift and go to state 15
+    COMMENT         shift and go to state 8
     RBRACE          reduce using rule 16 (statements -> .)
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    INT             shift and go to state 23
-    VOID            shift and go to state 21
-    TIMES           shift and go to state 12
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    INT             shift and go to state 21
+    VOID            shift and go to state 15
+    TIMES           shift and go to state 17
     ID              shift and go to state 22
 
-    ifstatement                    shift and go to state 8
-    assignment                     shift and go to state 9
     var                            shift and go to state 10
-    statement                      shift and go to state 11
-    declaration                    shift and go to state 13
     type                           shift and go to state 19
-    whilestatement                 shift and go to state 20
-    statements                     shift and go to state 32
-    pointer                        shift and go to state 16
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 20
+    statements                     shift and go to state 24
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
+    declaration                    shift and go to state 14
+    ifstatement                    shift and go to state 23
 
-state 16
-
-    (25) assignment -> pointer . EQUALS expression SEMICOLON
-
-    EQUALS          shift and go to state 33
-
-
-state 17
-
-    (42) whilestatement -> WHILE . LPAREN condition RPAREN controlbody
-
-    LPAREN          shift and go to state 34
-
-
-state 18
+state 9
 
     (40) ifstatement -> IF . LPAREN condition RPAREN controlbody
     (41) ifstatement -> IF . LPAREN condition RPAREN controlbody ELSE controlbody
 
-    LPAREN          shift and go to state 35
+    LPAREN          shift and go to state 25
 
 
-state 19
+state 10
 
-    (20) declaration -> type . idlist SEMICOLON
-    (21) idlist -> . pointer COMMA idlist
-    (22) idlist -> . ID COMMA idlist
-    (23) idlist -> . ID
-    (24) idlist -> . pointer
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
+    (26) assignment -> var . EQUALS expression SEMICOLON
 
-    ID              shift and go to state 36
-    TIMES           shift and go to state 12
+    EQUALS          shift and go to state 26
 
-    idlist                         shift and go to state 38
-    pointer                        shift and go to state 37
 
-state 20
+state 11
+
+    (17) statement -> assignment .
+
+    COMMENT         reduce using rule 17 (statement -> assignment .)
+    IF              reduce using rule 17 (statement -> assignment .)
+    WHILE           reduce using rule 17 (statement -> assignment .)
+    INT             reduce using rule 17 (statement -> assignment .)
+    VOID            reduce using rule 17 (statement -> assignment .)
+    TIMES           reduce using rule 17 (statement -> assignment .)
+    ID              reduce using rule 17 (statement -> assignment .)
+    RBRACE          reduce using rule 17 (statement -> assignment .)
+    ELSE            reduce using rule 17 (statement -> assignment .)
+
+
+state 12
+
+    (25) assignment -> pointer . EQUALS expression SEMICOLON
+
+    EQUALS          shift and go to state 27
+
+
+state 13
 
     (19) statement -> whilestatement .
 
@@ -451,7 +300,49 @@ state 20
     ELSE            reduce using rule 19 (statement -> whilestatement .)
 
 
-state 21
+state 14
+
+    (15) statements -> declaration . statements
+    (13) statements -> . statement statements
+    (14) statements -> . COMMENT statements
+    (15) statements -> . declaration statements
+    (16) statements -> .
+    (17) statement -> . assignment
+    (18) statement -> . ifstatement
+    (19) statement -> . whilestatement
+    (20) declaration -> . type idlist SEMICOLON
+    (25) assignment -> . pointer EQUALS expression SEMICOLON
+    (26) assignment -> . var EQUALS expression SEMICOLON
+    (40) ifstatement -> . IF LPAREN condition RPAREN controlbody
+    (41) ifstatement -> . IF LPAREN condition RPAREN controlbody ELSE controlbody
+    (42) whilestatement -> . WHILE LPAREN condition RPAREN controlbody
+    (3) type -> . INT
+    (4) type -> . VOID
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (5) var -> . ID
+
+    COMMENT         shift and go to state 8
+    RBRACE          reduce using rule 16 (statements -> .)
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    INT             shift and go to state 21
+    VOID            shift and go to state 15
+    TIMES           shift and go to state 17
+    ID              shift and go to state 22
+
+    var                            shift and go to state 10
+    type                           shift and go to state 19
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 20
+    statements                     shift and go to state 28
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
+    declaration                    shift and go to state 14
+    ifstatement                    shift and go to state 23
+
+state 15
 
     (4) type -> VOID .
 
@@ -459,10 +350,113 @@ state 21
     TIMES           reduce using rule 4 (type -> VOID .)
 
 
+state 16
+
+    (2) function -> VOID MAIN LPAREN RPAREN LBRACE statements . RBRACE
+
+    RBRACE          shift and go to state 29
+
+
+state 17
+
+    (7) pointer -> TIMES . pointer
+    (8) pointer -> TIMES . address
+    (9) pointer -> TIMES . var
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (5) var -> . ID
+
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    ID              shift and go to state 22
+
+    pointer                        shift and go to state 32
+    address                        shift and go to state 30
+    var                            shift and go to state 31
+
+state 18
+
+    (42) whilestatement -> WHILE . LPAREN condition RPAREN controlbody
+
+    LPAREN          shift and go to state 34
+
+
+state 19
+
+    (20) declaration -> type . idlist SEMICOLON
+    (21) idlist -> . pointer COMMA idlist
+    (22) idlist -> . ID COMMA idlist
+    (23) idlist -> . ID
+    (24) idlist -> . pointer
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+
+    ID              shift and go to state 36
+    TIMES           shift and go to state 17
+
+    pointer                        shift and go to state 35
+    idlist                         shift and go to state 37
+
+state 20
+
+    (13) statements -> statement . statements
+    (13) statements -> . statement statements
+    (14) statements -> . COMMENT statements
+    (15) statements -> . declaration statements
+    (16) statements -> .
+    (17) statement -> . assignment
+    (18) statement -> . ifstatement
+    (19) statement -> . whilestatement
+    (20) declaration -> . type idlist SEMICOLON
+    (25) assignment -> . pointer EQUALS expression SEMICOLON
+    (26) assignment -> . var EQUALS expression SEMICOLON
+    (40) ifstatement -> . IF LPAREN condition RPAREN controlbody
+    (41) ifstatement -> . IF LPAREN condition RPAREN controlbody ELSE controlbody
+    (42) whilestatement -> . WHILE LPAREN condition RPAREN controlbody
+    (3) type -> . INT
+    (4) type -> . VOID
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (5) var -> . ID
+
+    COMMENT         shift and go to state 8
+    RBRACE          reduce using rule 16 (statements -> .)
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    INT             shift and go to state 21
+    VOID            shift and go to state 15
+    TIMES           shift and go to state 17
+    ID              shift and go to state 22
+
+    var                            shift and go to state 10
+    type                           shift and go to state 19
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 20
+    statements                     shift and go to state 38
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
+    declaration                    shift and go to state 14
+    ifstatement                    shift and go to state 23
+
+state 21
+
+    (3) type -> INT .
+
+    ID              reduce using rule 3 (type -> INT .)
+    TIMES           reduce using rule 3 (type -> INT .)
+
+
 state 22
 
     (5) var -> ID .
 
+    RPAREN          reduce using rule 5 (var -> ID .)
     LT              reduce using rule 5 (var -> ID .)
     GT              reduce using rule 5 (var -> ID .)
     LE              reduce using rule 5 (var -> ID .)
@@ -473,23 +467,84 @@ state 22
     MINUS           reduce using rule 5 (var -> ID .)
     TIMES           reduce using rule 5 (var -> ID .)
     DIVIDE          reduce using rule 5 (var -> ID .)
-    EQUALS          reduce using rule 5 (var -> ID .)
-    RPAREN          reduce using rule 5 (var -> ID .)
     SEMICOLON       reduce using rule 5 (var -> ID .)
     AND             reduce using rule 5 (var -> ID .)
     OR              reduce using rule 5 (var -> ID .)
+    EQUALS          reduce using rule 5 (var -> ID .)
     COMMA           reduce using rule 5 (var -> ID .)
 
 
 state 23
 
-    (3) type -> INT .
+    (18) statement -> ifstatement .
 
-    ID              reduce using rule 3 (type -> INT .)
-    TIMES           reduce using rule 3 (type -> INT .)
+    COMMENT         reduce using rule 18 (statement -> ifstatement .)
+    IF              reduce using rule 18 (statement -> ifstatement .)
+    WHILE           reduce using rule 18 (statement -> ifstatement .)
+    INT             reduce using rule 18 (statement -> ifstatement .)
+    VOID            reduce using rule 18 (statement -> ifstatement .)
+    TIMES           reduce using rule 18 (statement -> ifstatement .)
+    ID              reduce using rule 18 (statement -> ifstatement .)
+    RBRACE          reduce using rule 18 (statement -> ifstatement .)
+    ELSE            reduce using rule 18 (statement -> ifstatement .)
 
 
 state 24
+
+    (14) statements -> COMMENT statements .
+
+    RBRACE          reduce using rule 14 (statements -> COMMENT statements .)
+
+
+state 25
+
+    (40) ifstatement -> IF LPAREN . condition RPAREN controlbody
+    (41) ifstatement -> IF LPAREN . condition RPAREN controlbody ELSE controlbody
+    (27) condition -> . expression LT expression
+    (28) condition -> . expression GT expression
+    (29) condition -> . expression LE expression
+    (30) condition -> . expression GE expression
+    (31) condition -> . expression EQ expression
+    (32) condition -> . expression NE expression
+    (33) condition -> . condition AND condition
+    (34) condition -> . condition OR condition
+    (35) condition -> . NOT condition
+    (36) condition -> . LPAREN condition RPAREN
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
+
+    NOT             shift and go to state 39
+    LPAREN          shift and go to state 43
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
+
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
+    const                          shift and go to state 46
+    var                            shift and go to state 44
+    condition                      shift and go to state 45
+    expression                     shift and go to state 42
+
+state 26
 
     (26) assignment -> var EQUALS . expression SEMICOLON
     (43) expression -> . expression PLUS expression
@@ -511,135 +566,20 @@ state 24
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    var                            shift and go to state 39
+    expression                     shift and go to state 50
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
     const                          shift and go to state 46
-    expression                     shift and go to state 45
-    address                        shift and go to state 42
-    pointer                        shift and go to state 44
-
-state 25
-
-    (13) statements -> statement statements .
-
-    RBRACE          reduce using rule 13 (statements -> statement statements .)
-
-
-state 26
-
-    (8) pointer -> TIMES address .
-
-    EQUALS          reduce using rule 8 (pointer -> TIMES address .)
-    PLUS            reduce using rule 8 (pointer -> TIMES address .)
-    MINUS           reduce using rule 8 (pointer -> TIMES address .)
-    TIMES           reduce using rule 8 (pointer -> TIMES address .)
-    DIVIDE          reduce using rule 8 (pointer -> TIMES address .)
-    RPAREN          reduce using rule 8 (pointer -> TIMES address .)
-    AND             reduce using rule 8 (pointer -> TIMES address .)
-    OR              reduce using rule 8 (pointer -> TIMES address .)
-    SEMICOLON       reduce using rule 8 (pointer -> TIMES address .)
-    LT              reduce using rule 8 (pointer -> TIMES address .)
-    GT              reduce using rule 8 (pointer -> TIMES address .)
-    LE              reduce using rule 8 (pointer -> TIMES address .)
-    GE              reduce using rule 8 (pointer -> TIMES address .)
-    EQ              reduce using rule 8 (pointer -> TIMES address .)
-    NE              reduce using rule 8 (pointer -> TIMES address .)
-    COMMA           reduce using rule 8 (pointer -> TIMES address .)
-
 
 state 27
-
-    (10) address -> AMPERSAND . pointer
-    (11) address -> AMPERSAND . address
-    (12) address -> AMPERSAND . var
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (5) var -> . ID
-
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    ID              shift and go to state 22
-
-    address                        shift and go to state 47
-    var                            shift and go to state 49
-    pointer                        shift and go to state 48
-
-state 28
-
-    (7) pointer -> TIMES pointer .
-
-    EQUALS          reduce using rule 7 (pointer -> TIMES pointer .)
-    PLUS            reduce using rule 7 (pointer -> TIMES pointer .)
-    MINUS           reduce using rule 7 (pointer -> TIMES pointer .)
-    TIMES           reduce using rule 7 (pointer -> TIMES pointer .)
-    DIVIDE          reduce using rule 7 (pointer -> TIMES pointer .)
-    RPAREN          reduce using rule 7 (pointer -> TIMES pointer .)
-    AND             reduce using rule 7 (pointer -> TIMES pointer .)
-    OR              reduce using rule 7 (pointer -> TIMES pointer .)
-    SEMICOLON       reduce using rule 7 (pointer -> TIMES pointer .)
-    LT              reduce using rule 7 (pointer -> TIMES pointer .)
-    GT              reduce using rule 7 (pointer -> TIMES pointer .)
-    LE              reduce using rule 7 (pointer -> TIMES pointer .)
-    GE              reduce using rule 7 (pointer -> TIMES pointer .)
-    EQ              reduce using rule 7 (pointer -> TIMES pointer .)
-    NE              reduce using rule 7 (pointer -> TIMES pointer .)
-    COMMA           reduce using rule 7 (pointer -> TIMES pointer .)
-
-
-state 29
-
-    (9) pointer -> TIMES var .
-
-    EQUALS          reduce using rule 9 (pointer -> TIMES var .)
-    PLUS            reduce using rule 9 (pointer -> TIMES var .)
-    MINUS           reduce using rule 9 (pointer -> TIMES var .)
-    TIMES           reduce using rule 9 (pointer -> TIMES var .)
-    DIVIDE          reduce using rule 9 (pointer -> TIMES var .)
-    RPAREN          reduce using rule 9 (pointer -> TIMES var .)
-    AND             reduce using rule 9 (pointer -> TIMES var .)
-    OR              reduce using rule 9 (pointer -> TIMES var .)
-    SEMICOLON       reduce using rule 9 (pointer -> TIMES var .)
-    LT              reduce using rule 9 (pointer -> TIMES var .)
-    GT              reduce using rule 9 (pointer -> TIMES var .)
-    LE              reduce using rule 9 (pointer -> TIMES var .)
-    GE              reduce using rule 9 (pointer -> TIMES var .)
-    EQ              reduce using rule 9 (pointer -> TIMES var .)
-    NE              reduce using rule 9 (pointer -> TIMES var .)
-    COMMA           reduce using rule 9 (pointer -> TIMES var .)
-
-
-state 30
-
-    (15) statements -> declaration statements .
-
-    RBRACE          reduce using rule 15 (statements -> declaration statements .)
-
-
-state 31
-
-    (2) function -> VOID MAIN LPAREN RPAREN LBRACE statements RBRACE .
-
-    $end            reduce using rule 2 (function -> VOID MAIN LPAREN RPAREN LBRACE statements RBRACE .)
-
-
-state 32
-
-    (14) statements -> COMMENT statements .
-
-    RBRACE          reduce using rule 14 (statements -> COMMENT statements .)
-
-
-state 33
 
     (25) assignment -> pointer EQUALS . expression SEMICOLON
     (43) expression -> . expression PLUS expression
@@ -661,18 +601,119 @@ state 33
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
+    expression                     shift and go to state 51
+    var                            shift and go to state 44
     const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 50
-    pointer                        shift and go to state 44
+
+state 28
+
+    (15) statements -> declaration statements .
+
+    RBRACE          reduce using rule 15 (statements -> declaration statements .)
+
+
+state 29
+
+    (2) function -> VOID MAIN LPAREN RPAREN LBRACE statements RBRACE .
+
+    $end            reduce using rule 2 (function -> VOID MAIN LPAREN RPAREN LBRACE statements RBRACE .)
+
+
+state 30
+
+    (8) pointer -> TIMES address .
+
+    COMMA           reduce using rule 8 (pointer -> TIMES address .)
+    SEMICOLON       reduce using rule 8 (pointer -> TIMES address .)
+    PLUS            reduce using rule 8 (pointer -> TIMES address .)
+    MINUS           reduce using rule 8 (pointer -> TIMES address .)
+    TIMES           reduce using rule 8 (pointer -> TIMES address .)
+    DIVIDE          reduce using rule 8 (pointer -> TIMES address .)
+    LT              reduce using rule 8 (pointer -> TIMES address .)
+    GT              reduce using rule 8 (pointer -> TIMES address .)
+    LE              reduce using rule 8 (pointer -> TIMES address .)
+    GE              reduce using rule 8 (pointer -> TIMES address .)
+    EQ              reduce using rule 8 (pointer -> TIMES address .)
+    NE              reduce using rule 8 (pointer -> TIMES address .)
+    RPAREN          reduce using rule 8 (pointer -> TIMES address .)
+    AND             reduce using rule 8 (pointer -> TIMES address .)
+    OR              reduce using rule 8 (pointer -> TIMES address .)
+    EQUALS          reduce using rule 8 (pointer -> TIMES address .)
+
+
+state 31
+
+    (9) pointer -> TIMES var .
+
+    COMMA           reduce using rule 9 (pointer -> TIMES var .)
+    SEMICOLON       reduce using rule 9 (pointer -> TIMES var .)
+    PLUS            reduce using rule 9 (pointer -> TIMES var .)
+    MINUS           reduce using rule 9 (pointer -> TIMES var .)
+    TIMES           reduce using rule 9 (pointer -> TIMES var .)
+    DIVIDE          reduce using rule 9 (pointer -> TIMES var .)
+    LT              reduce using rule 9 (pointer -> TIMES var .)
+    GT              reduce using rule 9 (pointer -> TIMES var .)
+    LE              reduce using rule 9 (pointer -> TIMES var .)
+    GE              reduce using rule 9 (pointer -> TIMES var .)
+    EQ              reduce using rule 9 (pointer -> TIMES var .)
+    NE              reduce using rule 9 (pointer -> TIMES var .)
+    RPAREN          reduce using rule 9 (pointer -> TIMES var .)
+    AND             reduce using rule 9 (pointer -> TIMES var .)
+    OR              reduce using rule 9 (pointer -> TIMES var .)
+    EQUALS          reduce using rule 9 (pointer -> TIMES var .)
+
+
+state 32
+
+    (7) pointer -> TIMES pointer .
+
+    COMMA           reduce using rule 7 (pointer -> TIMES pointer .)
+    SEMICOLON       reduce using rule 7 (pointer -> TIMES pointer .)
+    PLUS            reduce using rule 7 (pointer -> TIMES pointer .)
+    MINUS           reduce using rule 7 (pointer -> TIMES pointer .)
+    TIMES           reduce using rule 7 (pointer -> TIMES pointer .)
+    DIVIDE          reduce using rule 7 (pointer -> TIMES pointer .)
+    LT              reduce using rule 7 (pointer -> TIMES pointer .)
+    GT              reduce using rule 7 (pointer -> TIMES pointer .)
+    LE              reduce using rule 7 (pointer -> TIMES pointer .)
+    GE              reduce using rule 7 (pointer -> TIMES pointer .)
+    EQ              reduce using rule 7 (pointer -> TIMES pointer .)
+    NE              reduce using rule 7 (pointer -> TIMES pointer .)
+    RPAREN          reduce using rule 7 (pointer -> TIMES pointer .)
+    AND             reduce using rule 7 (pointer -> TIMES pointer .)
+    OR              reduce using rule 7 (pointer -> TIMES pointer .)
+    EQUALS          reduce using rule 7 (pointer -> TIMES pointer .)
+
+
+state 33
+
+    (10) address -> AMPERSAND . pointer
+    (11) address -> AMPERSAND . address
+    (12) address -> AMPERSAND . var
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (5) var -> . ID
+
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    ID              shift and go to state 22
+
+    pointer                        shift and go to state 54
+    address                        shift and go to state 52
+    var                            shift and go to state 53
 
 state 34
 
@@ -706,25 +747,56 @@ state 34
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    NOT             shift and go to state 53
-    LPAREN          shift and go to state 51
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    NOT             shift and go to state 39
+    LPAREN          shift and go to state 43
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
-    condition                      shift and go to state 52
-    pointer                        shift and go to state 44
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
     const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 54
+    var                            shift and go to state 44
+    condition                      shift and go to state 55
+    expression                     shift and go to state 42
 
 state 35
 
-    (40) ifstatement -> IF LPAREN . condition RPAREN controlbody
-    (41) ifstatement -> IF LPAREN . condition RPAREN controlbody ELSE controlbody
+    (21) idlist -> pointer . COMMA idlist
+    (24) idlist -> pointer .
+
+    COMMA           shift and go to state 56
+    SEMICOLON       reduce using rule 24 (idlist -> pointer .)
+
+
+state 36
+
+    (22) idlist -> ID . COMMA idlist
+    (23) idlist -> ID .
+
+    COMMA           shift and go to state 57
+    SEMICOLON       reduce using rule 23 (idlist -> ID .)
+
+
+state 37
+
+    (20) declaration -> type idlist . SEMICOLON
+
+    SEMICOLON       shift and go to state 58
+
+
+state 38
+
+    (13) statements -> statement statements .
+
+    RBRACE          reduce using rule 13 (statements -> statement statements .)
+
+
+state 39
+
+    (35) condition -> NOT . condition
     (27) condition -> . expression LT expression
     (28) condition -> . expression GT expression
     (29) condition -> . expression LE expression
@@ -754,65 +826,20 @@ state 35
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    NOT             shift and go to state 53
-    LPAREN          shift and go to state 51
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    NOT             shift and go to state 39
+    LPAREN          shift and go to state 43
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
-    condition                      shift and go to state 55
-    pointer                        shift and go to state 44
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
     const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 54
-
-state 36
-
-    (22) idlist -> ID . COMMA idlist
-    (23) idlist -> ID .
-
-    COMMA           shift and go to state 56
-    SEMICOLON       reduce using rule 23 (idlist -> ID .)
-
-
-state 37
-
-    (21) idlist -> pointer . COMMA idlist
-    (24) idlist -> pointer .
-
-    COMMA           shift and go to state 57
-    SEMICOLON       reduce using rule 24 (idlist -> pointer .)
-
-
-state 38
-
-    (20) declaration -> type idlist . SEMICOLON
-
-    SEMICOLON       shift and go to state 58
-
-
-state 39
-
-    (50) expression -> var .
-
-    RPAREN          reduce using rule 50 (expression -> var .)
-    PLUS            reduce using rule 50 (expression -> var .)
-    MINUS           reduce using rule 50 (expression -> var .)
-    TIMES           reduce using rule 50 (expression -> var .)
-    DIVIDE          reduce using rule 50 (expression -> var .)
-    SEMICOLON       reduce using rule 50 (expression -> var .)
-    LT              reduce using rule 50 (expression -> var .)
-    GT              reduce using rule 50 (expression -> var .)
-    LE              reduce using rule 50 (expression -> var .)
-    GE              reduce using rule 50 (expression -> var .)
-    EQ              reduce using rule 50 (expression -> var .)
-    NE              reduce using rule 50 (expression -> var .)
-    AND             reduce using rule 50 (expression -> var .)
-    OR              reduce using rule 50 (expression -> var .)
-
+    var                            shift and go to state 44
+    condition                      shift and go to state 59
+    expression                     shift and go to state 42
 
 state 40
 
@@ -822,245 +849,64 @@ state 40
     MINUS           reduce using rule 6 (const -> NUMBER .)
     TIMES           reduce using rule 6 (const -> NUMBER .)
     DIVIDE          reduce using rule 6 (const -> NUMBER .)
-    SEMICOLON       reduce using rule 6 (const -> NUMBER .)
+    RPAREN          reduce using rule 6 (const -> NUMBER .)
+    AND             reduce using rule 6 (const -> NUMBER .)
+    OR              reduce using rule 6 (const -> NUMBER .)
     LT              reduce using rule 6 (const -> NUMBER .)
     GT              reduce using rule 6 (const -> NUMBER .)
     LE              reduce using rule 6 (const -> NUMBER .)
     GE              reduce using rule 6 (const -> NUMBER .)
     EQ              reduce using rule 6 (const -> NUMBER .)
     NE              reduce using rule 6 (const -> NUMBER .)
-    RPAREN          reduce using rule 6 (const -> NUMBER .)
-    AND             reduce using rule 6 (const -> NUMBER .)
-    OR              reduce using rule 6 (const -> NUMBER .)
+    SEMICOLON       reduce using rule 6 (const -> NUMBER .)
 
 
 state 41
 
-    (52) expression -> MINUS . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
-
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
-
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 59
-    pointer                        shift and go to state 44
-
-state 42
-
-    (48) expression -> address .
-
-    RPAREN          reduce using rule 48 (expression -> address .)
-    PLUS            reduce using rule 48 (expression -> address .)
-    MINUS           reduce using rule 48 (expression -> address .)
-    TIMES           reduce using rule 48 (expression -> address .)
-    DIVIDE          reduce using rule 48 (expression -> address .)
-    SEMICOLON       reduce using rule 48 (expression -> address .)
-    LT              reduce using rule 48 (expression -> address .)
-    GT              reduce using rule 48 (expression -> address .)
-    LE              reduce using rule 48 (expression -> address .)
-    GE              reduce using rule 48 (expression -> address .)
-    EQ              reduce using rule 48 (expression -> address .)
-    NE              reduce using rule 48 (expression -> address .)
-    AND             reduce using rule 48 (expression -> address .)
-    OR              reduce using rule 48 (expression -> address .)
-
-
-state 43
-
-    (51) expression -> LPAREN . expression RPAREN
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
-
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
-
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 60
-    pointer                        shift and go to state 44
-
-state 44
-
     (47) expression -> pointer .
 
-    RPAREN          reduce using rule 47 (expression -> pointer .)
     PLUS            reduce using rule 47 (expression -> pointer .)
     MINUS           reduce using rule 47 (expression -> pointer .)
     TIMES           reduce using rule 47 (expression -> pointer .)
     DIVIDE          reduce using rule 47 (expression -> pointer .)
-    SEMICOLON       reduce using rule 47 (expression -> pointer .)
+    RPAREN          reduce using rule 47 (expression -> pointer .)
+    AND             reduce using rule 47 (expression -> pointer .)
+    OR              reduce using rule 47 (expression -> pointer .)
     LT              reduce using rule 47 (expression -> pointer .)
     GT              reduce using rule 47 (expression -> pointer .)
     LE              reduce using rule 47 (expression -> pointer .)
     GE              reduce using rule 47 (expression -> pointer .)
     EQ              reduce using rule 47 (expression -> pointer .)
     NE              reduce using rule 47 (expression -> pointer .)
-    AND             reduce using rule 47 (expression -> pointer .)
-    OR              reduce using rule 47 (expression -> pointer .)
+    SEMICOLON       reduce using rule 47 (expression -> pointer .)
 
 
-state 45
+state 42
 
-    (26) assignment -> var EQUALS expression . SEMICOLON
+    (27) condition -> expression . LT expression
+    (28) condition -> expression . GT expression
+    (29) condition -> expression . LE expression
+    (30) condition -> expression . GE expression
+    (31) condition -> expression . EQ expression
+    (32) condition -> expression . NE expression
     (43) expression -> expression . PLUS expression
     (44) expression -> expression . MINUS expression
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    SEMICOLON       shift and go to state 64
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
+    LT              shift and go to state 69
+    GT              shift and go to state 66
+    LE              shift and go to state 65
+    GE              shift and go to state 68
+    EQ              shift and go to state 60
+    NE              shift and go to state 64
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
     DIVIDE          shift and go to state 63
 
 
-state 46
-
-    (49) expression -> const .
-
-    RPAREN          reduce using rule 49 (expression -> const .)
-    PLUS            reduce using rule 49 (expression -> const .)
-    MINUS           reduce using rule 49 (expression -> const .)
-    TIMES           reduce using rule 49 (expression -> const .)
-    DIVIDE          reduce using rule 49 (expression -> const .)
-    SEMICOLON       reduce using rule 49 (expression -> const .)
-    LT              reduce using rule 49 (expression -> const .)
-    GT              reduce using rule 49 (expression -> const .)
-    LE              reduce using rule 49 (expression -> const .)
-    GE              reduce using rule 49 (expression -> const .)
-    EQ              reduce using rule 49 (expression -> const .)
-    NE              reduce using rule 49 (expression -> const .)
-    AND             reduce using rule 49 (expression -> const .)
-    OR              reduce using rule 49 (expression -> const .)
-
-
-state 47
-
-    (11) address -> AMPERSAND address .
-
-    PLUS            reduce using rule 11 (address -> AMPERSAND address .)
-    MINUS           reduce using rule 11 (address -> AMPERSAND address .)
-    TIMES           reduce using rule 11 (address -> AMPERSAND address .)
-    DIVIDE          reduce using rule 11 (address -> AMPERSAND address .)
-    RPAREN          reduce using rule 11 (address -> AMPERSAND address .)
-    AND             reduce using rule 11 (address -> AMPERSAND address .)
-    OR              reduce using rule 11 (address -> AMPERSAND address .)
-    SEMICOLON       reduce using rule 11 (address -> AMPERSAND address .)
-    LT              reduce using rule 11 (address -> AMPERSAND address .)
-    GT              reduce using rule 11 (address -> AMPERSAND address .)
-    LE              reduce using rule 11 (address -> AMPERSAND address .)
-    GE              reduce using rule 11 (address -> AMPERSAND address .)
-    EQ              reduce using rule 11 (address -> AMPERSAND address .)
-    NE              reduce using rule 11 (address -> AMPERSAND address .)
-    EQUALS          reduce using rule 11 (address -> AMPERSAND address .)
-    COMMA           reduce using rule 11 (address -> AMPERSAND address .)
-
-
-state 48
-
-    (10) address -> AMPERSAND pointer .
-
-    PLUS            reduce using rule 10 (address -> AMPERSAND pointer .)
-    MINUS           reduce using rule 10 (address -> AMPERSAND pointer .)
-    TIMES           reduce using rule 10 (address -> AMPERSAND pointer .)
-    DIVIDE          reduce using rule 10 (address -> AMPERSAND pointer .)
-    RPAREN          reduce using rule 10 (address -> AMPERSAND pointer .)
-    AND             reduce using rule 10 (address -> AMPERSAND pointer .)
-    OR              reduce using rule 10 (address -> AMPERSAND pointer .)
-    SEMICOLON       reduce using rule 10 (address -> AMPERSAND pointer .)
-    LT              reduce using rule 10 (address -> AMPERSAND pointer .)
-    GT              reduce using rule 10 (address -> AMPERSAND pointer .)
-    LE              reduce using rule 10 (address -> AMPERSAND pointer .)
-    GE              reduce using rule 10 (address -> AMPERSAND pointer .)
-    EQ              reduce using rule 10 (address -> AMPERSAND pointer .)
-    NE              reduce using rule 10 (address -> AMPERSAND pointer .)
-    EQUALS          reduce using rule 10 (address -> AMPERSAND pointer .)
-    COMMA           reduce using rule 10 (address -> AMPERSAND pointer .)
-
-
-state 49
-
-    (12) address -> AMPERSAND var .
-
-    PLUS            reduce using rule 12 (address -> AMPERSAND var .)
-    MINUS           reduce using rule 12 (address -> AMPERSAND var .)
-    TIMES           reduce using rule 12 (address -> AMPERSAND var .)
-    DIVIDE          reduce using rule 12 (address -> AMPERSAND var .)
-    RPAREN          reduce using rule 12 (address -> AMPERSAND var .)
-    AND             reduce using rule 12 (address -> AMPERSAND var .)
-    OR              reduce using rule 12 (address -> AMPERSAND var .)
-    SEMICOLON       reduce using rule 12 (address -> AMPERSAND var .)
-    LT              reduce using rule 12 (address -> AMPERSAND var .)
-    GT              reduce using rule 12 (address -> AMPERSAND var .)
-    LE              reduce using rule 12 (address -> AMPERSAND var .)
-    GE              reduce using rule 12 (address -> AMPERSAND var .)
-    EQ              reduce using rule 12 (address -> AMPERSAND var .)
-    NE              reduce using rule 12 (address -> AMPERSAND var .)
-    EQUALS          reduce using rule 12 (address -> AMPERSAND var .)
-    COMMA           reduce using rule 12 (address -> AMPERSAND var .)
-
-
-state 50
-
-    (25) assignment -> pointer EQUALS expression . SEMICOLON
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    SEMICOLON       shift and go to state 66
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
-
-state 51
+state 43
 
     (36) condition -> LPAREN . condition RPAREN
     (51) expression -> LPAREN . expression RPAREN
@@ -1093,45 +939,96 @@ state 51
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    NOT             shift and go to state 53
-    LPAREN          shift and go to state 51
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    NOT             shift and go to state 39
+    LPAREN          shift and go to state 43
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
-    condition                      shift and go to state 68
-    pointer                        shift and go to state 44
-    expression                     shift and go to state 67
-    var                            shift and go to state 39
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
     const                          shift and go to state 46
+    var                            shift and go to state 44
+    condition                      shift and go to state 71
+    expression                     shift and go to state 70
 
-state 52
+state 44
 
-    (42) whilestatement -> WHILE LPAREN condition . RPAREN controlbody
+    (50) expression -> var .
+
+    PLUS            reduce using rule 50 (expression -> var .)
+    MINUS           reduce using rule 50 (expression -> var .)
+    TIMES           reduce using rule 50 (expression -> var .)
+    DIVIDE          reduce using rule 50 (expression -> var .)
+    RPAREN          reduce using rule 50 (expression -> var .)
+    AND             reduce using rule 50 (expression -> var .)
+    OR              reduce using rule 50 (expression -> var .)
+    LT              reduce using rule 50 (expression -> var .)
+    GT              reduce using rule 50 (expression -> var .)
+    LE              reduce using rule 50 (expression -> var .)
+    GE              reduce using rule 50 (expression -> var .)
+    EQ              reduce using rule 50 (expression -> var .)
+    NE              reduce using rule 50 (expression -> var .)
+    SEMICOLON       reduce using rule 50 (expression -> var .)
+
+
+state 45
+
+    (40) ifstatement -> IF LPAREN condition . RPAREN controlbody
+    (41) ifstatement -> IF LPAREN condition . RPAREN controlbody ELSE controlbody
     (33) condition -> condition . AND condition
     (34) condition -> condition . OR condition
 
-    RPAREN          shift and go to state 70
-    AND             shift and go to state 71
-    OR              shift and go to state 69
+    RPAREN          shift and go to state 73
+    AND             shift and go to state 74
+    OR              shift and go to state 72
 
 
-state 53
+state 46
 
-    (35) condition -> NOT . condition
-    (27) condition -> . expression LT expression
-    (28) condition -> . expression GT expression
-    (29) condition -> . expression LE expression
-    (30) condition -> . expression GE expression
-    (31) condition -> . expression EQ expression
-    (32) condition -> . expression NE expression
-    (33) condition -> . condition AND condition
-    (34) condition -> . condition OR condition
-    (35) condition -> . NOT condition
-    (36) condition -> . LPAREN condition RPAREN
+    (49) expression -> const .
+
+    PLUS            reduce using rule 49 (expression -> const .)
+    MINUS           reduce using rule 49 (expression -> const .)
+    TIMES           reduce using rule 49 (expression -> const .)
+    DIVIDE          reduce using rule 49 (expression -> const .)
+    RPAREN          reduce using rule 49 (expression -> const .)
+    AND             reduce using rule 49 (expression -> const .)
+    OR              reduce using rule 49 (expression -> const .)
+    LT              reduce using rule 49 (expression -> const .)
+    GT              reduce using rule 49 (expression -> const .)
+    LE              reduce using rule 49 (expression -> const .)
+    GE              reduce using rule 49 (expression -> const .)
+    EQ              reduce using rule 49 (expression -> const .)
+    NE              reduce using rule 49 (expression -> const .)
+    SEMICOLON       reduce using rule 49 (expression -> const .)
+
+
+state 47
+
+    (48) expression -> address .
+
+    PLUS            reduce using rule 48 (expression -> address .)
+    MINUS           reduce using rule 48 (expression -> address .)
+    TIMES           reduce using rule 48 (expression -> address .)
+    DIVIDE          reduce using rule 48 (expression -> address .)
+    RPAREN          reduce using rule 48 (expression -> address .)
+    AND             reduce using rule 48 (expression -> address .)
+    OR              reduce using rule 48 (expression -> address .)
+    LT              reduce using rule 48 (expression -> address .)
+    GT              reduce using rule 48 (expression -> address .)
+    LE              reduce using rule 48 (expression -> address .)
+    GE              reduce using rule 48 (expression -> address .)
+    EQ              reduce using rule 48 (expression -> address .)
+    NE              reduce using rule 48 (expression -> address .)
+    SEMICOLON       reduce using rule 48 (expression -> address .)
+
+
+state 48
+
+    (52) expression -> MINUS . expression
     (43) expression -> . expression PLUS expression
     (44) expression -> . expression MINUS expression
     (45) expression -> . expression TIMES expression
@@ -1151,76 +1048,162 @@ state 53
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    NOT             shift and go to state 53
-    LPAREN          shift and go to state 51
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
-    condition                      shift and go to state 72
-    pointer                        shift and go to state 44
-    expression                     shift and go to state 54
-    var                            shift and go to state 39
+    expression                     shift and go to state 75
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
     const                          shift and go to state 46
 
-state 54
+state 49
 
-    (27) condition -> expression . LT expression
-    (28) condition -> expression . GT expression
-    (29) condition -> expression . LE expression
-    (30) condition -> expression . GE expression
-    (31) condition -> expression . EQ expression
-    (32) condition -> expression . NE expression
+    (51) expression -> LPAREN . expression RPAREN
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
+
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
+
+    expression                     shift and go to state 76
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
+
+state 50
+
+    (26) assignment -> var EQUALS expression . SEMICOLON
     (43) expression -> expression . PLUS expression
     (44) expression -> expression . MINUS expression
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    LT              shift and go to state 77
-    GT              shift and go to state 75
-    LE              shift and go to state 73
-    GE              shift and go to state 78
-    EQ              shift and go to state 76
-    NE              shift and go to state 74
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
+    SEMICOLON       shift and go to state 77
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
     DIVIDE          shift and go to state 63
+
+
+state 51
+
+    (25) assignment -> pointer EQUALS expression . SEMICOLON
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    SEMICOLON       shift and go to state 78
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+
+state 52
+
+    (11) address -> AMPERSAND address .
+
+    PLUS            reduce using rule 11 (address -> AMPERSAND address .)
+    MINUS           reduce using rule 11 (address -> AMPERSAND address .)
+    TIMES           reduce using rule 11 (address -> AMPERSAND address .)
+    DIVIDE          reduce using rule 11 (address -> AMPERSAND address .)
+    RPAREN          reduce using rule 11 (address -> AMPERSAND address .)
+    AND             reduce using rule 11 (address -> AMPERSAND address .)
+    OR              reduce using rule 11 (address -> AMPERSAND address .)
+    LT              reduce using rule 11 (address -> AMPERSAND address .)
+    GT              reduce using rule 11 (address -> AMPERSAND address .)
+    LE              reduce using rule 11 (address -> AMPERSAND address .)
+    GE              reduce using rule 11 (address -> AMPERSAND address .)
+    EQ              reduce using rule 11 (address -> AMPERSAND address .)
+    NE              reduce using rule 11 (address -> AMPERSAND address .)
+    SEMICOLON       reduce using rule 11 (address -> AMPERSAND address .)
+    EQUALS          reduce using rule 11 (address -> AMPERSAND address .)
+    COMMA           reduce using rule 11 (address -> AMPERSAND address .)
+
+
+state 53
+
+    (12) address -> AMPERSAND var .
+
+    PLUS            reduce using rule 12 (address -> AMPERSAND var .)
+    MINUS           reduce using rule 12 (address -> AMPERSAND var .)
+    TIMES           reduce using rule 12 (address -> AMPERSAND var .)
+    DIVIDE          reduce using rule 12 (address -> AMPERSAND var .)
+    RPAREN          reduce using rule 12 (address -> AMPERSAND var .)
+    AND             reduce using rule 12 (address -> AMPERSAND var .)
+    OR              reduce using rule 12 (address -> AMPERSAND var .)
+    LT              reduce using rule 12 (address -> AMPERSAND var .)
+    GT              reduce using rule 12 (address -> AMPERSAND var .)
+    LE              reduce using rule 12 (address -> AMPERSAND var .)
+    GE              reduce using rule 12 (address -> AMPERSAND var .)
+    EQ              reduce using rule 12 (address -> AMPERSAND var .)
+    NE              reduce using rule 12 (address -> AMPERSAND var .)
+    SEMICOLON       reduce using rule 12 (address -> AMPERSAND var .)
+    EQUALS          reduce using rule 12 (address -> AMPERSAND var .)
+    COMMA           reduce using rule 12 (address -> AMPERSAND var .)
+
+
+state 54
+
+    (10) address -> AMPERSAND pointer .
+
+    PLUS            reduce using rule 10 (address -> AMPERSAND pointer .)
+    MINUS           reduce using rule 10 (address -> AMPERSAND pointer .)
+    TIMES           reduce using rule 10 (address -> AMPERSAND pointer .)
+    DIVIDE          reduce using rule 10 (address -> AMPERSAND pointer .)
+    RPAREN          reduce using rule 10 (address -> AMPERSAND pointer .)
+    AND             reduce using rule 10 (address -> AMPERSAND pointer .)
+    OR              reduce using rule 10 (address -> AMPERSAND pointer .)
+    LT              reduce using rule 10 (address -> AMPERSAND pointer .)
+    GT              reduce using rule 10 (address -> AMPERSAND pointer .)
+    LE              reduce using rule 10 (address -> AMPERSAND pointer .)
+    GE              reduce using rule 10 (address -> AMPERSAND pointer .)
+    EQ              reduce using rule 10 (address -> AMPERSAND pointer .)
+    NE              reduce using rule 10 (address -> AMPERSAND pointer .)
+    SEMICOLON       reduce using rule 10 (address -> AMPERSAND pointer .)
+    EQUALS          reduce using rule 10 (address -> AMPERSAND pointer .)
+    COMMA           reduce using rule 10 (address -> AMPERSAND pointer .)
 
 
 state 55
 
-    (40) ifstatement -> IF LPAREN condition . RPAREN controlbody
-    (41) ifstatement -> IF LPAREN condition . RPAREN controlbody ELSE controlbody
+    (42) whilestatement -> WHILE LPAREN condition . RPAREN controlbody
     (33) condition -> condition . AND condition
     (34) condition -> condition . OR condition
 
     RPAREN          shift and go to state 79
-    AND             shift and go to state 71
-    OR              shift and go to state 69
+    AND             shift and go to state 74
+    OR              shift and go to state 72
 
 
 state 56
-
-    (22) idlist -> ID COMMA . idlist
-    (21) idlist -> . pointer COMMA idlist
-    (22) idlist -> . ID COMMA idlist
-    (23) idlist -> . ID
-    (24) idlist -> . pointer
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-
-    ID              shift and go to state 36
-    TIMES           shift and go to state 12
-
-    idlist                         shift and go to state 80
-    pointer                        shift and go to state 37
-
-state 57
 
     (21) idlist -> pointer COMMA . idlist
     (21) idlist -> . pointer COMMA idlist
@@ -1232,10 +1215,27 @@ state 57
     (9) pointer -> . TIMES var
 
     ID              shift and go to state 36
-    TIMES           shift and go to state 12
+    TIMES           shift and go to state 17
 
+    pointer                        shift and go to state 35
+    idlist                         shift and go to state 80
+
+state 57
+
+    (22) idlist -> ID COMMA . idlist
+    (21) idlist -> . pointer COMMA idlist
+    (22) idlist -> . ID COMMA idlist
+    (23) idlist -> . ID
+    (24) idlist -> . pointer
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+
+    ID              shift and go to state 36
+    TIMES           shift and go to state 17
+
+    pointer                        shift and go to state 35
     idlist                         shift and go to state 81
-    pointer                        shift and go to state 37
 
 state 58
 
@@ -1253,51 +1253,21 @@ state 58
 
 state 59
 
-    (52) expression -> MINUS expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
+    (35) condition -> NOT condition .
+    (33) condition -> condition . AND condition
+    (34) condition -> condition . OR condition
 
-    RPAREN          reduce using rule 52 (expression -> MINUS expression .)
-    PLUS            reduce using rule 52 (expression -> MINUS expression .)
-    MINUS           reduce using rule 52 (expression -> MINUS expression .)
-    TIMES           reduce using rule 52 (expression -> MINUS expression .)
-    DIVIDE          reduce using rule 52 (expression -> MINUS expression .)
-    SEMICOLON       reduce using rule 52 (expression -> MINUS expression .)
-    LT              reduce using rule 52 (expression -> MINUS expression .)
-    GT              reduce using rule 52 (expression -> MINUS expression .)
-    LE              reduce using rule 52 (expression -> MINUS expression .)
-    GE              reduce using rule 52 (expression -> MINUS expression .)
-    EQ              reduce using rule 52 (expression -> MINUS expression .)
-    NE              reduce using rule 52 (expression -> MINUS expression .)
-    AND             reduce using rule 52 (expression -> MINUS expression .)
-    OR              reduce using rule 52 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 35 (condition -> NOT condition .)
+    AND             reduce using rule 35 (condition -> NOT condition .)
+    OR              reduce using rule 35 (condition -> NOT condition .)
 
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 65 ]
-  ! TIMES           [ shift and go to state 62 ]
-  ! DIVIDE          [ shift and go to state 63 ]
+  ! AND             [ shift and go to state 74 ]
+  ! OR              [ shift and go to state 72 ]
 
 
 state 60
 
-    (51) expression -> LPAREN expression . RPAREN
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    RPAREN          shift and go to state 82
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
-
-state 61
-
-    (43) expression -> expression PLUS . expression
+    (31) condition -> expression EQ . expression
     (43) expression -> . expression PLUS expression
     (44) expression -> . expression MINUS expression
     (45) expression -> . expression TIMES expression
@@ -1317,20 +1287,20 @@ state 61
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
+    expression                     shift and go to state 82
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
     const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 83
-    pointer                        shift and go to state 44
 
-state 62
+state 61
 
     (45) expression -> expression TIMES . expression
     (43) expression -> . expression PLUS expression
@@ -1352,18 +1322,53 @@ state 62
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
+    expression                     shift and go to state 83
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
     const                          shift and go to state 46
-    var                            shift and go to state 39
+
+state 62
+
+    (43) expression -> expression PLUS . expression
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
+
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
+
     expression                     shift and go to state 84
-    pointer                        shift and go to state 44
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
 
 state 63
 
@@ -1387,35 +1392,125 @@ state 63
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
     expression                     shift and go to state 85
-    pointer                        shift and go to state 44
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
 
 state 64
 
-    (26) assignment -> var EQUALS expression SEMICOLON .
+    (32) condition -> expression NE . expression
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
 
-    COMMENT         reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    IF              reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    WHILE           reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    INT             reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    VOID            reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    TIMES           reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    ID              reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    RBRACE          reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
-    ELSE            reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
 
+    expression                     shift and go to state 86
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
 
 state 65
+
+    (29) condition -> expression LE . expression
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
+
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
+
+    expression                     shift and go to state 87
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
+
+state 66
+
+    (28) condition -> expression GT . expression
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
+
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
+
+    expression                     shift and go to state 88
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
+
+state 67
 
     (44) expression -> expression MINUS . expression
     (43) expression -> . expression PLUS expression
@@ -1437,35 +1532,90 @@ state 65
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
+    expression                     shift and go to state 89
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
     const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 86
-    pointer                        shift and go to state 44
 
-state 66
+state 68
 
-    (25) assignment -> pointer EQUALS expression SEMICOLON .
+    (30) condition -> expression GE . expression
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
 
-    COMMENT         reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    IF              reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    WHILE           reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    INT             reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    VOID            reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    TIMES           reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    ID              reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    RBRACE          reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
-    ELSE            reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
 
+    expression                     shift and go to state 90
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
 
-state 67
+state 69
+
+    (27) condition -> expression LT . expression
+    (43) expression -> . expression PLUS expression
+    (44) expression -> . expression MINUS expression
+    (45) expression -> . expression TIMES expression
+    (46) expression -> . expression DIVIDE expression
+    (47) expression -> . pointer
+    (48) expression -> . address
+    (49) expression -> . const
+    (50) expression -> . var
+    (51) expression -> . LPAREN expression RPAREN
+    (52) expression -> . MINUS expression
+    (7) pointer -> . TIMES pointer
+    (8) pointer -> . TIMES address
+    (9) pointer -> . TIMES var
+    (10) address -> . AMPERSAND pointer
+    (11) address -> . AMPERSAND address
+    (12) address -> . AMPERSAND var
+    (6) const -> . NUMBER
+    (5) var -> . ID
+
+    LPAREN          shift and go to state 49
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
+    NUMBER          shift and go to state 40
+    ID              shift and go to state 22
+
+    expression                     shift and go to state 91
+    address                        shift and go to state 47
+    pointer                        shift and go to state 41
+    var                            shift and go to state 44
+    const                          shift and go to state 46
+
+state 70
 
     (51) expression -> LPAREN expression . RPAREN
     (27) condition -> expression . LT expression
@@ -1479,31 +1629,31 @@ state 67
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    RPAREN          shift and go to state 82
-    LT              shift and go to state 77
-    GT              shift and go to state 75
-    LE              shift and go to state 73
-    GE              shift and go to state 78
-    EQ              shift and go to state 76
-    NE              shift and go to state 74
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
+    RPAREN          shift and go to state 92
+    LT              shift and go to state 69
+    GT              shift and go to state 66
+    LE              shift and go to state 65
+    GE              shift and go to state 68
+    EQ              shift and go to state 60
+    NE              shift and go to state 64
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
     DIVIDE          shift and go to state 63
 
 
-state 68
+state 71
 
     (36) condition -> LPAREN condition . RPAREN
     (33) condition -> condition . AND condition
     (34) condition -> condition . OR condition
 
-    RPAREN          shift and go to state 87
-    AND             shift and go to state 71
-    OR              shift and go to state 69
+    RPAREN          shift and go to state 93
+    AND             shift and go to state 74
+    OR              shift and go to state 72
 
 
-state 69
+state 72
 
     (34) condition -> condition OR . condition
     (27) condition -> . expression LT expression
@@ -1535,24 +1685,25 @@ state 69
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    NOT             shift and go to state 53
-    LPAREN          shift and go to state 51
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    NOT             shift and go to state 39
+    LPAREN          shift and go to state 43
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
-    condition                      shift and go to state 88
-    pointer                        shift and go to state 44
-    expression                     shift and go to state 54
-    var                            shift and go to state 39
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
     const                          shift and go to state 46
+    var                            shift and go to state 44
+    condition                      shift and go to state 94
+    expression                     shift and go to state 42
 
-state 70
+state 73
 
-    (42) whilestatement -> WHILE LPAREN condition RPAREN . controlbody
+    (40) ifstatement -> IF LPAREN condition RPAREN . controlbody
+    (41) ifstatement -> IF LPAREN condition RPAREN . controlbody ELSE controlbody
     (37) controlbody -> . LBRACE statements RBRACE
     (38) controlbody -> . statement
     (39) controlbody -> . SEMICOLON
@@ -1569,22 +1720,22 @@ state 70
     (9) pointer -> . TIMES var
     (5) var -> . ID
 
-    LBRACE          shift and go to state 92
-    SEMICOLON       shift and go to state 90
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    TIMES           shift and go to state 12
+    LBRACE          shift and go to state 95
+    SEMICOLON       shift and go to state 96
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    TIMES           shift and go to state 17
     ID              shift and go to state 22
 
-    controlbody                    shift and go to state 89
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
     var                            shift and go to state 10
-    assignment                     shift and go to state 9
-    pointer                        shift and go to state 16
-    statement                      shift and go to state 91
-    ifstatement                    shift and go to state 8
-    whilestatement                 shift and go to state 20
+    ifstatement                    shift and go to state 23
+    controlbody                    shift and go to state 97
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 98
 
-state 71
+state 74
 
     (33) condition -> condition AND . condition
     (27) condition -> . expression LT expression
@@ -1616,249 +1767,98 @@ state 71
     (6) const -> . NUMBER
     (5) var -> . ID
 
-    NOT             shift and go to state 53
-    LPAREN          shift and go to state 51
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
-
-    address                        shift and go to state 42
-    condition                      shift and go to state 93
-    pointer                        shift and go to state 44
-    expression                     shift and go to state 54
-    var                            shift and go to state 39
-    const                          shift and go to state 46
-
-state 72
-
-    (35) condition -> NOT condition .
-    (33) condition -> condition . AND condition
-    (34) condition -> condition . OR condition
-
-    RPAREN          reduce using rule 35 (condition -> NOT condition .)
-    AND             reduce using rule 35 (condition -> NOT condition .)
-    OR              reduce using rule 35 (condition -> NOT condition .)
-
-  ! AND             [ shift and go to state 71 ]
-  ! OR              [ shift and go to state 69 ]
-
-
-state 73
-
-    (29) condition -> expression LE . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
-
+    NOT             shift and go to state 39
     LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
+    MINUS           shift and go to state 48
+    TIMES           shift and go to state 17
+    AMPERSAND       shift and go to state 33
     NUMBER          shift and go to state 40
     ID              shift and go to state 22
 
-    address                        shift and go to state 42
+    pointer                        shift and go to state 41
+    address                        shift and go to state 47
     const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 94
-    pointer                        shift and go to state 44
-
-state 74
-
-    (32) condition -> expression NE . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
-
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
-
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 95
-    pointer                        shift and go to state 44
+    var                            shift and go to state 44
+    condition                      shift and go to state 99
+    expression                     shift and go to state 42
 
 state 75
 
-    (28) condition -> expression GT . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
+    (52) expression -> MINUS expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
+    PLUS            reduce using rule 52 (expression -> MINUS expression .)
+    MINUS           reduce using rule 52 (expression -> MINUS expression .)
+    TIMES           reduce using rule 52 (expression -> MINUS expression .)
+    DIVIDE          reduce using rule 52 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 52 (expression -> MINUS expression .)
+    AND             reduce using rule 52 (expression -> MINUS expression .)
+    OR              reduce using rule 52 (expression -> MINUS expression .)
+    LT              reduce using rule 52 (expression -> MINUS expression .)
+    GT              reduce using rule 52 (expression -> MINUS expression .)
+    LE              reduce using rule 52 (expression -> MINUS expression .)
+    GE              reduce using rule 52 (expression -> MINUS expression .)
+    EQ              reduce using rule 52 (expression -> MINUS expression .)
+    NE              reduce using rule 52 (expression -> MINUS expression .)
+    SEMICOLON       reduce using rule 52 (expression -> MINUS expression .)
 
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 96
-    pointer                        shift and go to state 44
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 67 ]
+  ! TIMES           [ shift and go to state 61 ]
+  ! DIVIDE          [ shift and go to state 63 ]
+
 
 state 76
 
-    (31) condition -> expression EQ . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
+    (51) expression -> LPAREN expression . RPAREN
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
+    RPAREN          shift and go to state 92
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
 
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 97
-    pointer                        shift and go to state 44
 
 state 77
 
-    (27) condition -> expression LT . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
+    (26) assignment -> var EQUALS expression SEMICOLON .
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
+    ELSE            reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    COMMENT         reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    IF              reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    WHILE           reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    INT             reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    VOID            reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    TIMES           reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    ID              reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
+    RBRACE          reduce using rule 26 (assignment -> var EQUALS expression SEMICOLON .)
 
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 98
-    pointer                        shift and go to state 44
 
 state 78
 
-    (30) condition -> expression GE . expression
-    (43) expression -> . expression PLUS expression
-    (44) expression -> . expression MINUS expression
-    (45) expression -> . expression TIMES expression
-    (46) expression -> . expression DIVIDE expression
-    (47) expression -> . pointer
-    (48) expression -> . address
-    (49) expression -> . const
-    (50) expression -> . var
-    (51) expression -> . LPAREN expression RPAREN
-    (52) expression -> . MINUS expression
-    (7) pointer -> . TIMES pointer
-    (8) pointer -> . TIMES address
-    (9) pointer -> . TIMES var
-    (10) address -> . AMPERSAND pointer
-    (11) address -> . AMPERSAND address
-    (12) address -> . AMPERSAND var
-    (6) const -> . NUMBER
-    (5) var -> . ID
+    (25) assignment -> pointer EQUALS expression SEMICOLON .
 
-    LPAREN          shift and go to state 43
-    MINUS           shift and go to state 41
-    TIMES           shift and go to state 12
-    AMPERSAND       shift and go to state 27
-    NUMBER          shift and go to state 40
-    ID              shift and go to state 22
+    ELSE            reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    COMMENT         reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    IF              reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    WHILE           reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    INT             reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    VOID            reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    TIMES           reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    ID              reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
+    RBRACE          reduce using rule 25 (assignment -> pointer EQUALS expression SEMICOLON .)
 
-    address                        shift and go to state 42
-    const                          shift and go to state 46
-    var                            shift and go to state 39
-    expression                     shift and go to state 99
-    pointer                        shift and go to state 44
 
 state 79
 
-    (40) ifstatement -> IF LPAREN condition RPAREN . controlbody
-    (41) ifstatement -> IF LPAREN condition RPAREN . controlbody ELSE controlbody
+    (42) whilestatement -> WHILE LPAREN condition RPAREN . controlbody
     (37) controlbody -> . LBRACE statements RBRACE
     (38) controlbody -> . statement
     (39) controlbody -> . SEMICOLON
@@ -1875,85 +1875,53 @@ state 79
     (9) pointer -> . TIMES var
     (5) var -> . ID
 
-    LBRACE          shift and go to state 92
-    SEMICOLON       shift and go to state 90
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    TIMES           shift and go to state 12
+    LBRACE          shift and go to state 95
+    SEMICOLON       shift and go to state 96
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    TIMES           shift and go to state 17
     ID              shift and go to state 22
 
-    controlbody                    shift and go to state 100
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
     var                            shift and go to state 10
-    assignment                     shift and go to state 9
-    pointer                        shift and go to state 16
-    statement                      shift and go to state 91
-    ifstatement                    shift and go to state 8
-    whilestatement                 shift and go to state 20
+    ifstatement                    shift and go to state 23
+    controlbody                    shift and go to state 100
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 98
 
 state 80
-
-    (22) idlist -> ID COMMA idlist .
-
-    SEMICOLON       reduce using rule 22 (idlist -> ID COMMA idlist .)
-
-
-state 81
 
     (21) idlist -> pointer COMMA idlist .
 
     SEMICOLON       reduce using rule 21 (idlist -> pointer COMMA idlist .)
 
 
+state 81
+
+    (22) idlist -> ID COMMA idlist .
+
+    SEMICOLON       reduce using rule 22 (idlist -> ID COMMA idlist .)
+
+
 state 82
 
-    (51) expression -> LPAREN expression RPAREN .
-
-    RPAREN          reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    TIMES           reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    SEMICOLON       reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    LT              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    GT              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    LE              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    GE              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    EQ              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    NE              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    AND             reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-    OR              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
-
-
-state 83
-
-    (43) expression -> expression PLUS expression .
+    (31) condition -> expression EQ expression .
     (43) expression -> expression . PLUS expression
     (44) expression -> expression . MINUS expression
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    RPAREN          reduce using rule 43 (expression -> expression PLUS expression .)
-    PLUS            reduce using rule 43 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 43 (expression -> expression PLUS expression .)
-    SEMICOLON       reduce using rule 43 (expression -> expression PLUS expression .)
-    LT              reduce using rule 43 (expression -> expression PLUS expression .)
-    GT              reduce using rule 43 (expression -> expression PLUS expression .)
-    LE              reduce using rule 43 (expression -> expression PLUS expression .)
-    GE              reduce using rule 43 (expression -> expression PLUS expression .)
-    EQ              reduce using rule 43 (expression -> expression PLUS expression .)
-    NE              reduce using rule 43 (expression -> expression PLUS expression .)
-    AND             reduce using rule 43 (expression -> expression PLUS expression .)
-    OR              reduce using rule 43 (expression -> expression PLUS expression .)
-    TIMES           shift and go to state 62
+    RPAREN          reduce using rule 31 (condition -> expression EQ expression .)
+    AND             reduce using rule 31 (condition -> expression EQ expression .)
+    OR              reduce using rule 31 (condition -> expression EQ expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
     DIVIDE          shift and go to state 63
 
-  ! TIMES           [ reduce using rule 43 (expression -> expression PLUS expression .) ]
-  ! DIVIDE          [ reduce using rule 43 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 65 ]
 
-
-state 84
+state 83
 
     (45) expression -> expression TIMES expression .
     (43) expression -> expression . PLUS expression
@@ -1961,25 +1929,54 @@ state 84
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    RPAREN          reduce using rule 45 (expression -> expression TIMES expression .)
     PLUS            reduce using rule 45 (expression -> expression TIMES expression .)
     MINUS           reduce using rule 45 (expression -> expression TIMES expression .)
     TIMES           reduce using rule 45 (expression -> expression TIMES expression .)
     DIVIDE          reduce using rule 45 (expression -> expression TIMES expression .)
-    SEMICOLON       reduce using rule 45 (expression -> expression TIMES expression .)
+    RPAREN          reduce using rule 45 (expression -> expression TIMES expression .)
+    AND             reduce using rule 45 (expression -> expression TIMES expression .)
+    OR              reduce using rule 45 (expression -> expression TIMES expression .)
     LT              reduce using rule 45 (expression -> expression TIMES expression .)
     GT              reduce using rule 45 (expression -> expression TIMES expression .)
     LE              reduce using rule 45 (expression -> expression TIMES expression .)
     GE              reduce using rule 45 (expression -> expression TIMES expression .)
     EQ              reduce using rule 45 (expression -> expression TIMES expression .)
     NE              reduce using rule 45 (expression -> expression TIMES expression .)
-    AND             reduce using rule 45 (expression -> expression TIMES expression .)
-    OR              reduce using rule 45 (expression -> expression TIMES expression .)
+    SEMICOLON       reduce using rule 45 (expression -> expression TIMES expression .)
 
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 65 ]
-  ! TIMES           [ shift and go to state 62 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 67 ]
+  ! TIMES           [ shift and go to state 61 ]
   ! DIVIDE          [ shift and go to state 63 ]
+
+
+state 84
+
+    (43) expression -> expression PLUS expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    PLUS            reduce using rule 43 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 43 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 43 (expression -> expression PLUS expression .)
+    AND             reduce using rule 43 (expression -> expression PLUS expression .)
+    OR              reduce using rule 43 (expression -> expression PLUS expression .)
+    LT              reduce using rule 43 (expression -> expression PLUS expression .)
+    GT              reduce using rule 43 (expression -> expression PLUS expression .)
+    LE              reduce using rule 43 (expression -> expression PLUS expression .)
+    GE              reduce using rule 43 (expression -> expression PLUS expression .)
+    EQ              reduce using rule 43 (expression -> expression PLUS expression .)
+    NE              reduce using rule 43 (expression -> expression PLUS expression .)
+    SEMICOLON       reduce using rule 43 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+  ! TIMES           [ reduce using rule 43 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 43 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 67 ]
 
 
 state 85
@@ -1990,28 +1987,79 @@ state 85
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    RPAREN          reduce using rule 46 (expression -> expression DIVIDE expression .)
     PLUS            reduce using rule 46 (expression -> expression DIVIDE expression .)
     MINUS           reduce using rule 46 (expression -> expression DIVIDE expression .)
     TIMES           reduce using rule 46 (expression -> expression DIVIDE expression .)
     DIVIDE          reduce using rule 46 (expression -> expression DIVIDE expression .)
-    SEMICOLON       reduce using rule 46 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 46 (expression -> expression DIVIDE expression .)
+    AND             reduce using rule 46 (expression -> expression DIVIDE expression .)
+    OR              reduce using rule 46 (expression -> expression DIVIDE expression .)
     LT              reduce using rule 46 (expression -> expression DIVIDE expression .)
     GT              reduce using rule 46 (expression -> expression DIVIDE expression .)
     LE              reduce using rule 46 (expression -> expression DIVIDE expression .)
     GE              reduce using rule 46 (expression -> expression DIVIDE expression .)
     EQ              reduce using rule 46 (expression -> expression DIVIDE expression .)
     NE              reduce using rule 46 (expression -> expression DIVIDE expression .)
-    AND             reduce using rule 46 (expression -> expression DIVIDE expression .)
-    OR              reduce using rule 46 (expression -> expression DIVIDE expression .)
+    SEMICOLON       reduce using rule 46 (expression -> expression DIVIDE expression .)
 
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 65 ]
-  ! TIMES           [ shift and go to state 62 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 67 ]
+  ! TIMES           [ shift and go to state 61 ]
   ! DIVIDE          [ shift and go to state 63 ]
 
 
 state 86
+
+    (32) condition -> expression NE expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    RPAREN          reduce using rule 32 (condition -> expression NE expression .)
+    AND             reduce using rule 32 (condition -> expression NE expression .)
+    OR              reduce using rule 32 (condition -> expression NE expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+
+state 87
+
+    (29) condition -> expression LE expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    RPAREN          reduce using rule 29 (condition -> expression LE expression .)
+    AND             reduce using rule 29 (condition -> expression LE expression .)
+    OR              reduce using rule 29 (condition -> expression LE expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+
+state 88
+
+    (28) condition -> expression GT expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    RPAREN          reduce using rule 28 (condition -> expression GT expression .)
+    AND             reduce using rule 28 (condition -> expression GT expression .)
+    OR              reduce using rule 28 (condition -> expression GT expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+
+state 89
 
     (44) expression -> expression MINUS expression .
     (43) expression -> expression . PLUS expression
@@ -2019,28 +2067,82 @@ state 86
     (45) expression -> expression . TIMES expression
     (46) expression -> expression . DIVIDE expression
 
-    RPAREN          reduce using rule 44 (expression -> expression MINUS expression .)
     PLUS            reduce using rule 44 (expression -> expression MINUS expression .)
     MINUS           reduce using rule 44 (expression -> expression MINUS expression .)
-    SEMICOLON       reduce using rule 44 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 44 (expression -> expression MINUS expression .)
+    AND             reduce using rule 44 (expression -> expression MINUS expression .)
+    OR              reduce using rule 44 (expression -> expression MINUS expression .)
     LT              reduce using rule 44 (expression -> expression MINUS expression .)
     GT              reduce using rule 44 (expression -> expression MINUS expression .)
     LE              reduce using rule 44 (expression -> expression MINUS expression .)
     GE              reduce using rule 44 (expression -> expression MINUS expression .)
     EQ              reduce using rule 44 (expression -> expression MINUS expression .)
     NE              reduce using rule 44 (expression -> expression MINUS expression .)
-    AND             reduce using rule 44 (expression -> expression MINUS expression .)
-    OR              reduce using rule 44 (expression -> expression MINUS expression .)
-    TIMES           shift and go to state 62
+    SEMICOLON       reduce using rule 44 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 61
     DIVIDE          shift and go to state 63
 
   ! TIMES           [ reduce using rule 44 (expression -> expression MINUS expression .) ]
   ! DIVIDE          [ reduce using rule 44 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 65 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 67 ]
 
 
-state 87
+state 90
+
+    (30) condition -> expression GE expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    RPAREN          reduce using rule 30 (condition -> expression GE expression .)
+    AND             reduce using rule 30 (condition -> expression GE expression .)
+    OR              reduce using rule 30 (condition -> expression GE expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+
+state 91
+
+    (27) condition -> expression LT expression .
+    (43) expression -> expression . PLUS expression
+    (44) expression -> expression . MINUS expression
+    (45) expression -> expression . TIMES expression
+    (46) expression -> expression . DIVIDE expression
+
+    RPAREN          reduce using rule 27 (condition -> expression LT expression .)
+    AND             reduce using rule 27 (condition -> expression LT expression .)
+    OR              reduce using rule 27 (condition -> expression LT expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 67
+    TIMES           shift and go to state 61
+    DIVIDE          shift and go to state 63
+
+
+state 92
+
+    (51) expression -> LPAREN expression RPAREN .
+
+    PLUS            reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    AND             reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    OR              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    LT              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    GT              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    LE              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    GE              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    EQ              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    NE              reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 51 (expression -> LPAREN expression RPAREN .)
+
+
+state 93
 
     (36) condition -> LPAREN condition RPAREN .
 
@@ -2049,7 +2151,7 @@ state 87
     OR              reduce using rule 36 (condition -> LPAREN condition RPAREN .)
 
 
-state 88
+state 94
 
     (34) condition -> condition OR condition .
     (33) condition -> condition . AND condition
@@ -2057,58 +2159,13 @@ state 88
 
     RPAREN          reduce using rule 34 (condition -> condition OR condition .)
     OR              reduce using rule 34 (condition -> condition OR condition .)
-    AND             shift and go to state 71
+    AND             shift and go to state 74
 
   ! AND             [ reduce using rule 34 (condition -> condition OR condition .) ]
-  ! OR              [ shift and go to state 69 ]
+  ! OR              [ shift and go to state 72 ]
 
 
-state 89
-
-    (42) whilestatement -> WHILE LPAREN condition RPAREN controlbody .
-
-    COMMENT         reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    IF              reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    WHILE           reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    INT             reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    VOID            reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    TIMES           reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    ID              reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    RBRACE          reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-    ELSE            reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
-
-
-state 90
-
-    (39) controlbody -> SEMICOLON .
-
-    COMMENT         reduce using rule 39 (controlbody -> SEMICOLON .)
-    IF              reduce using rule 39 (controlbody -> SEMICOLON .)
-    WHILE           reduce using rule 39 (controlbody -> SEMICOLON .)
-    INT             reduce using rule 39 (controlbody -> SEMICOLON .)
-    VOID            reduce using rule 39 (controlbody -> SEMICOLON .)
-    TIMES           reduce using rule 39 (controlbody -> SEMICOLON .)
-    ID              reduce using rule 39 (controlbody -> SEMICOLON .)
-    RBRACE          reduce using rule 39 (controlbody -> SEMICOLON .)
-    ELSE            reduce using rule 39 (controlbody -> SEMICOLON .)
-
-
-state 91
-
-    (38) controlbody -> statement .
-
-    COMMENT         reduce using rule 38 (controlbody -> statement .)
-    IF              reduce using rule 38 (controlbody -> statement .)
-    WHILE           reduce using rule 38 (controlbody -> statement .)
-    INT             reduce using rule 38 (controlbody -> statement .)
-    VOID            reduce using rule 38 (controlbody -> statement .)
-    TIMES           reduce using rule 38 (controlbody -> statement .)
-    ID              reduce using rule 38 (controlbody -> statement .)
-    RBRACE          reduce using rule 38 (controlbody -> statement .)
-    ELSE            reduce using rule 38 (controlbody -> statement .)
-
-
-state 92
+state 95
 
     (37) controlbody -> LBRACE . statements RBRACE
     (13) statements -> . statement statements
@@ -2131,142 +2188,41 @@ state 92
     (9) pointer -> . TIMES var
     (5) var -> . ID
 
-    COMMENT         shift and go to state 15
+    COMMENT         shift and go to state 8
     RBRACE          reduce using rule 16 (statements -> .)
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    INT             shift and go to state 23
-    VOID            shift and go to state 21
-    TIMES           shift and go to state 12
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    INT             shift and go to state 21
+    VOID            shift and go to state 15
+    TIMES           shift and go to state 17
     ID              shift and go to state 22
 
-    ifstatement                    shift and go to state 8
-    assignment                     shift and go to state 9
     var                            shift and go to state 10
-    statement                      shift and go to state 11
-    declaration                    shift and go to state 13
     type                           shift and go to state 19
-    whilestatement                 shift and go to state 20
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 20
     statements                     shift and go to state 101
-    pointer                        shift and go to state 16
-
-state 93
-
-    (33) condition -> condition AND condition .
-    (33) condition -> condition . AND condition
-    (34) condition -> condition . OR condition
-
-    RPAREN          reduce using rule 33 (condition -> condition AND condition .)
-    AND             reduce using rule 33 (condition -> condition AND condition .)
-    OR              reduce using rule 33 (condition -> condition AND condition .)
-
-  ! AND             [ shift and go to state 71 ]
-  ! OR              [ shift and go to state 69 ]
-
-
-state 94
-
-    (29) condition -> expression LE expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    RPAREN          reduce using rule 29 (condition -> expression LE expression .)
-    AND             reduce using rule 29 (condition -> expression LE expression .)
-    OR              reduce using rule 29 (condition -> expression LE expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
-
-state 95
-
-    (32) condition -> expression NE expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    RPAREN          reduce using rule 32 (condition -> expression NE expression .)
-    AND             reduce using rule 32 (condition -> expression NE expression .)
-    OR              reduce using rule 32 (condition -> expression NE expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
+    declaration                    shift and go to state 14
+    ifstatement                    shift and go to state 23
 
 state 96
 
-    (28) condition -> expression GT expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
+    (39) controlbody -> SEMICOLON .
 
-    RPAREN          reduce using rule 28 (condition -> expression GT expression .)
-    AND             reduce using rule 28 (condition -> expression GT expression .)
-    OR              reduce using rule 28 (condition -> expression GT expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
+    ELSE            reduce using rule 39 (controlbody -> SEMICOLON .)
+    COMMENT         reduce using rule 39 (controlbody -> SEMICOLON .)
+    IF              reduce using rule 39 (controlbody -> SEMICOLON .)
+    WHILE           reduce using rule 39 (controlbody -> SEMICOLON .)
+    INT             reduce using rule 39 (controlbody -> SEMICOLON .)
+    VOID            reduce using rule 39 (controlbody -> SEMICOLON .)
+    TIMES           reduce using rule 39 (controlbody -> SEMICOLON .)
+    ID              reduce using rule 39 (controlbody -> SEMICOLON .)
+    RBRACE          reduce using rule 39 (controlbody -> SEMICOLON .)
 
 
 state 97
-
-    (31) condition -> expression EQ expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    RPAREN          reduce using rule 31 (condition -> expression EQ expression .)
-    AND             reduce using rule 31 (condition -> expression EQ expression .)
-    OR              reduce using rule 31 (condition -> expression EQ expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
-
-state 98
-
-    (27) condition -> expression LT expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    RPAREN          reduce using rule 27 (condition -> expression LT expression .)
-    AND             reduce using rule 27 (condition -> expression LT expression .)
-    OR              reduce using rule 27 (condition -> expression LT expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
-
-state 99
-
-    (30) condition -> expression GE expression .
-    (43) expression -> expression . PLUS expression
-    (44) expression -> expression . MINUS expression
-    (45) expression -> expression . TIMES expression
-    (46) expression -> expression . DIVIDE expression
-
-    RPAREN          reduce using rule 30 (condition -> expression GE expression .)
-    AND             reduce using rule 30 (condition -> expression GE expression .)
-    OR              reduce using rule 30 (condition -> expression GE expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 65
-    TIMES           shift and go to state 62
-    DIVIDE          shift and go to state 63
-
-
-state 100
 
     (40) ifstatement -> IF LPAREN condition RPAREN controlbody .
     (41) ifstatement -> IF LPAREN condition RPAREN controlbody . ELSE controlbody
@@ -2282,6 +2238,50 @@ state 100
     ELSE            shift and go to state 102
 
   ! ELSE            [ reduce using rule 40 (ifstatement -> IF LPAREN condition RPAREN controlbody .) ]
+
+
+state 98
+
+    (38) controlbody -> statement .
+
+    ELSE            reduce using rule 38 (controlbody -> statement .)
+    COMMENT         reduce using rule 38 (controlbody -> statement .)
+    IF              reduce using rule 38 (controlbody -> statement .)
+    WHILE           reduce using rule 38 (controlbody -> statement .)
+    INT             reduce using rule 38 (controlbody -> statement .)
+    VOID            reduce using rule 38 (controlbody -> statement .)
+    TIMES           reduce using rule 38 (controlbody -> statement .)
+    ID              reduce using rule 38 (controlbody -> statement .)
+    RBRACE          reduce using rule 38 (controlbody -> statement .)
+
+
+state 99
+
+    (33) condition -> condition AND condition .
+    (33) condition -> condition . AND condition
+    (34) condition -> condition . OR condition
+
+    RPAREN          reduce using rule 33 (condition -> condition AND condition .)
+    AND             reduce using rule 33 (condition -> condition AND condition .)
+    OR              reduce using rule 33 (condition -> condition AND condition .)
+
+  ! AND             [ shift and go to state 74 ]
+  ! OR              [ shift and go to state 72 ]
+
+
+state 100
+
+    (42) whilestatement -> WHILE LPAREN condition RPAREN controlbody .
+
+    COMMENT         reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    IF              reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    WHILE           reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    INT             reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    VOID            reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    TIMES           reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    ID              reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    RBRACE          reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
+    ELSE            reduce using rule 42 (whilestatement -> WHILE LPAREN condition RPAREN controlbody .)
 
 
 state 101
@@ -2310,25 +2310,26 @@ state 102
     (9) pointer -> . TIMES var
     (5) var -> . ID
 
-    LBRACE          shift and go to state 92
-    SEMICOLON       shift and go to state 90
-    IF              shift and go to state 18
-    WHILE           shift and go to state 17
-    TIMES           shift and go to state 12
+    LBRACE          shift and go to state 95
+    SEMICOLON       shift and go to state 96
+    IF              shift and go to state 9
+    WHILE           shift and go to state 18
+    TIMES           shift and go to state 17
     ID              shift and go to state 22
 
-    controlbody                    shift and go to state 104
+    pointer                        shift and go to state 12
+    whilestatement                 shift and go to state 13
     var                            shift and go to state 10
-    assignment                     shift and go to state 9
-    pointer                        shift and go to state 16
-    statement                      shift and go to state 91
-    ifstatement                    shift and go to state 8
-    whilestatement                 shift and go to state 20
+    ifstatement                    shift and go to state 23
+    controlbody                    shift and go to state 104
+    assignment                     shift and go to state 11
+    statement                      shift and go to state 98
 
 state 103
 
     (37) controlbody -> LBRACE statements RBRACE .
 
+    ELSE            reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
     COMMENT         reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
     IF              reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
     WHILE           reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
@@ -2337,13 +2338,13 @@ state 103
     TIMES           reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
     ID              reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
     RBRACE          reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
-    ELSE            reduce using rule 37 (controlbody -> LBRACE statements RBRACE .)
 
 
 state 104
 
     (41) ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .
 
+    ELSE            reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
     COMMENT         reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
     IF              reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
     WHILE           reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
@@ -2352,5 +2353,4 @@ state 104
     TIMES           reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
     ID              reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
     RBRACE          reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
-    ELSE            reduce using rule 41 (ifstatement -> IF LPAREN condition RPAREN controlbody ELSE controlbody .)
 

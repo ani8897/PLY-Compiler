@@ -10,77 +10,34 @@ IF
 		CONST(5)
 	)
 	,
-	ASGN
+)
+ASGN
+(
+	DEREF
 	(
 		VAR(a)
-		,
-		ADDR
-		(
-			VAR(e)
-		)
-	)
-	IF
-	(
-		LT
-		(
-			DEREF
-			(
-				VAR(b)
-			)
-			,
-			CONST(6)
-		)
-		,
-		ASGN
-		(
-			VAR(b)
-			,
-			ADDR
-			(
-				VAR(e)
-			)
-		)
-		IF
-		(
-			GT
-			(
-				DEREF
-				(
-					VAR(c)
-				)
-				,
-				CONST(8)
-			)
-			,
-			ASGN
-			(
-				VAR(c)
-				,
-				ADDR
-				(
-					VAR(e)
-				)
-			)
-		)
-		,
-		ASGN
-		(
-			VAR(b)
-			,
-			ADDR
-			(
-				VAR(f)
-			)
-		)
 	)
 	,
-	ASGN
+	UMINUS
 	(
-		VAR(a)
-		,
-		ADDR
+		UMINUS
 		(
-			VAR(f)
+			UMINUS
+			(
+				UMINUS
+				(
+					UMINUS
+					(
+						UMINUS
+						(
+							DEREF
+							(
+								VAR(b)
+							)
+						)
+					)
+				)
+			)
 		)
 	)
 )
