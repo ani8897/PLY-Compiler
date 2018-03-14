@@ -2,7 +2,7 @@
 int a;
 int b;
 
-int don(int a, int b, void c)
+int don(int a, int **b, void ****c)
 {
 	*a = *b + don(5.56438349,6);
 	don();
