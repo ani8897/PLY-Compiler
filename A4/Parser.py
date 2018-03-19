@@ -8,6 +8,7 @@ import ply.yacc as yacc
 from ast import Node
 from cfg import *
 from symtable import *
+from errors import *
 import glob
 
 tokens = (
@@ -115,9 +116,7 @@ def p_program(p):
 	'''
 	program : declarations funcdefs
 	'''
-	for i in range(len(p[1])):
-		glob.curr_sym_table.globals[p[1][i].var_name] = p[1][i]
-	
+	# glob.curr_sym_table.add_globallist(p[1])	
 	glob.ast = Node('PROG',p[2])
 	
 
@@ -138,18 +137,20 @@ def p_declarations(p):
 	declarations : declarations declaration
 				|
 	'''
-	if len(p) == 1:
-		p[0] = []
-	else:
-		p[1].extend(p[2].syminfo)
-		p[0] = p[1]
+	# if len(p) == 1:
+	# 	p[0] = []
+	# else:
+	# 	p[1].extend(p[2].syminfo)
+	# 	p[0] = p[1]
 
 def p_function(p):
 	'''
 	function : type fname LPAREN args RPAREN LBRACE statements RBRACE
 	'''
-	for i in range(len(p[7].syminfo)):
-		glob.curr_sym_table.locals[p[7].syminfo[i].var_name] = p[7].syminfo[i]
+	# for i in range(len(p[7].syminfo)):
+	# 	glob.curr_sym_table.locals[p[7].syminfo[i].var_name] = p[7].syminfo[i]
+
+	glob.curr_sym_table.ftype = p[1]
 	glob.curr_sym_table = glob.curr_sym_table.parent
 	p[0] = Node('FUNC',[p[7].node])
 
@@ -168,8 +169,8 @@ def p_fname(p):
 	fname : ID
 		  | MAIN
 	'''
-	glob.curr_sym_table = SymbolTable(glob.root_table)
-	glob.root_table.funclist[p[1]] = glob.curr_sym_table
+	(glob.curr_sym_table,status) = glob.root_table.add_function(p[1])
+	if not status: raiseError(p[1],glob.line_number)
 	p[0] = p[1]
 
 
@@ -193,8 +194,8 @@ def p_arg(p):
 		p[0] = p[1] # node + syminfo
 	else:
 		p[2].syminfo.type = p[1]
-		glob.curr_sym_table.locals[p[2].syminfo.var_name] = p[2].syminfo
-
+		(arg_name,status) = glob.curr_sym_table.add_arg(p[2].syminfo)
+		if not status: raiseError(arg_name,glob.line_number)
 
 def p_var(p):
 	'''
@@ -208,7 +209,7 @@ def p_const(p):
 	const : NUMBER
 		| FLOAT
 	'''
-	attribute = Attributes(p[1],indirection=-1)
+	attribute = Attributes(p[1],indirection=0)
 	p[0] = SDTS(Node('CONST('+str(p[1])+')',[],True),attribute)
 
 
@@ -245,7 +246,10 @@ def p_funcall(p):
 	callparam : param
 			| const
 	'''
-	p[0] = SDTS(Node('FUNCALL',[]))		
+	if len(p) == 5:
+		#check for params
+		attribute = Attributes(p[1].syminfo.var_name,indirection=0)
+		p[0] = SDTS(Node('FUNCALL',[]),attribute)		
 
 
 def p_statements(p):
@@ -278,16 +282,17 @@ def p_declaration(p):
 	declaration : type idlist SEMICOLON
 	'''
 	for i in range(len(p[2])):
-		p[2][i].type = p[1]
+		if glob.curr_sym_table == glob.root_table:
+			glob.curr_sym_table.globals[p[2][i].var_name].type = p[1]
+		else:
+			glob.curr_sym_table.locals[p[2][i].var_name].type = p[1]
 
 	p[0] = SDTS(Node('DECL',[]),p[2])
 
 def p_idlist(p):
 	'''
-	idlist : pointer COMMA idlist 
-			| var COMMA idlist
-			| var
-			| pointer
+	idlist : decl_var COMMA idlist 
+			| decl_var
 	'''
 	if len(p) == 2:
 		p[0] = [p[1].syminfo]
@@ -295,11 +300,22 @@ def p_idlist(p):
 		p[3].insert(0,p[1].syminfo)
 		p[0] = p[3]
 
+def p_decl_var(p):
+	'''
+	decl_var : var
+			| pointer
+	'''
+	(var_name,status) = glob.curr_sym_table.add_symbol(p[1].syminfo)
+	if not status: raiseError(var_name,glob.line_number)
+	p[0] = p[1]
+
 def p_assignment(p):
 	'''
 	assignment : pointer EQUALS expression SEMICOLON
 				| var EQUALS expression SEMICOLON
 	'''
+	(symtype,symindirection,status) = lookup(glob.curr_sym_table, p[1].syminfo)
+	if not status: raiseNotDeclared(p[1].syminfo.var_name,glob.line_number) 
 	p[0] = SDTS(Node('ASGN',[p[1].node,p[3].node],p[3].node.is_const))
 
 def p_condition(p):
@@ -380,6 +396,10 @@ def p_expression(p):
 				| LPAREN expression RPAREN
 	'''
 	if len(p) == 2:
+		#lookup and return type,indirection
+		#Dont do lookup for const and funcall
+		(symtype,symindirection,status) = lookup(glob.curr_sym_table, p[1].syminfo)
+		if not status: raiseNotDeclared(p[1].syminfo.var_name,glob.line_number) 
 		p[0] = p[1]
 	elif p[2] == '+':
 		p[0] = SDTS(Node('PLUS',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))

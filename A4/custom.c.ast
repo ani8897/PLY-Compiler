@@ -2,44 +2,7 @@ PROG
 (
 	FUNC
 	(
-		ASGN
-		(
-			DEREF
-			(
-				VAR(a)
-			)
-			,
-			PLUS
-			(
-				DEREF
-				(
-					VAR(b)
-				)
-				,
-				FUNCALL
-			)
-		)
-		FUNCALL
-		ASGN
-		(
-			DEREF
-			(
-				VAR(a)
-			)
-			,
-			MUL
-			(
-				DEREF
-				(
-					VAR(c)
-				)
-				,
-				DEREF
-				(
-					VAR(b)
-				)
-			)
-		)
+		DECL
 	)
 	,
 	FUNC

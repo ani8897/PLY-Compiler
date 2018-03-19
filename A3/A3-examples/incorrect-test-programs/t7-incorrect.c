@@ -9,6 +9,7 @@ void main(){
 	pb=&b;
 	pu=&u;
 	pv=&v;
+	
 	if(*pl){
 		while(*pt<50){
 			*pa=10;

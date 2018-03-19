@@ -24,7 +24,7 @@ t_ignore = " \t"
 
 def t_newline(t):
 	r'\n|\r\n'
-	glob.line_number += len(t.value)
+	glob.line_number += 1
 
 t_LE = r'<='
 t_GE = r'>='
