@@ -145,14 +145,14 @@ def p_declarations(p):
 
 def p_function(p):
 	'''
-	function : type fname LPAREN args RPAREN LBRACE statements RBRACE
+	function : ftypename LPAREN args RPAREN LBRACE statements RBRACE
+	ftypename : type fname
 	'''
-	# for i in range(len(p[7].syminfo)):
-	# 	glob.curr_sym_table.locals[p[7].syminfo[i].var_name] = p[7].syminfo[i]
-
-	glob.curr_sym_table.ftype = p[1]
-	glob.curr_sym_table = glob.curr_sym_table.parent
-	p[0] = Node('FUNC',[p[7].node])
+	if len(p) == 3:
+		glob.curr_sym_table.ftype = p[1]
+	else:
+		glob.curr_sym_table = glob.curr_sym_table.parent
+		p[0] = Node('FUNC',[p[6].node])
 
 
 
@@ -170,7 +170,7 @@ def p_fname(p):
 		  | MAIN
 	'''
 	(glob.curr_sym_table,status) = glob.root_table.add_function(p[1])
-	if not status: raiseError(p[1],glob.line_number)
+	if not status: raisePreviouslyDeclared(p[1],glob.line_number)
 	p[0] = p[1]
 
 
@@ -195,7 +195,7 @@ def p_arg(p):
 	else:
 		p[2].syminfo.type = p[1]
 		(arg_name,status) = glob.curr_sym_table.add_arg(p[2].syminfo)
-		if not status: raiseError(arg_name,glob.line_number)
+		if not status: raisePreviouslyDeclared(arg_name,glob.line_number)
 
 def p_var(p):
 	'''
@@ -211,9 +211,9 @@ def p_const(p):
 	'''
 	attribute = Attributes(p[1],indirection=0)
 	if str(p[1]).find('.') < 0: 
-		attribute.is_int, attribute.type = True, 'INT'
+		attribute.is_int, attribute.type = True, 'int'
 	else: 
-		attribute.is_float, attribute.type = True, 'FLOAT'
+		attribute.is_float, attribute.type = True, 'float'
 	p[0] = SDTS(Node('CONST('+str(p[1])+')',[],True),attribute)
 
 
@@ -238,6 +238,8 @@ def p_voidfuncall(p):
 	'''
 	voidfuncall : funcall SEMICOLON
 	'''
+	if p[1].syminfo.type != 'VOID':
+		raiseReturnValueIgnored(p[1].syminfo.var_name,glob.line_number-1)
 	p[0] = p[1]
 
 def p_funcall(p):
@@ -248,8 +250,10 @@ def p_funcall(p):
 	'''
 	if len(p) == 5:
 		#check for params
-		status = function_lookup(glob.curr_sym_table,p[1].syminfo.var_name,p[3])
-		attribute = Attributes(p[1].syminfo.var_name,indirection=0)
+		(ftype,status) = function_lookup(glob.curr_sym_table,p[1].syminfo.var_name,p[3])
+		attribute = Attributes(p[1].syminfo.var_name,var_type=ftype,indirection=0)
+		if not status: 
+			attribute.type = glob.type_error
 		p[0] = SDTS(Node('FUNCALL',[]),attribute)		
 	elif len(p) == 3:
 		p[2].insert(0,p[1])
@@ -326,7 +330,7 @@ def p_decl_var(p):
 			| pointer
 	'''
 	(var_name,status) = glob.curr_sym_table.add_symbol(p[1].syminfo)
-	if not status: raiseError(var_name,glob.line_number)
+	if not status: raisePreviouslyDeclared(var_name,glob.line_number)
 	p[0] = p[1]
 
 def p_assignment(p):
@@ -335,7 +339,17 @@ def p_assignment(p):
 				| var EQUALS expression SEMICOLON
 	'''
 	(symtype,symindirection,status) = lookup(glob.curr_sym_table, p[1].syminfo)
-	if not status: raiseNotDeclared(p[1].syminfo.var_name,glob.line_number) 
+	if not status: 
+		raiseNotDeclared(p[1].syminfo.var_name,glob.line_number-1)
+		symtype,symindirection = glob.type_error,float("inf")
+	actual_indirection = symindirection - p[1].syminfo.indirection
+	if actual_indirection < 0:
+		raiseTooMuchIndirection(p[1].syminfo.var_name,glob.line_number-1)
+		symtype = glob.type_error
+	(rtype,rindirection) = p[3].syminfo
+	if (symtype != rtype) or actual_indirection != rindirection:
+		raiseTypeMismatch(symtype,rtype,actual_indirection,rindirection,glob.line_number-1)
+
 	p[0] = SDTS(Node('ASGN',[p[1].node,p[3].node],p[3].node.is_const))
 
 def p_condition(p):
@@ -351,24 +365,29 @@ def p_condition(p):
 				| NOT condition
 				| LPAREN condition RPAREN
 	'''
-	if len(p) == 2:
-		p[0] = SDTS(Node('NOT',[p[2].node],p[2].node.is_const))
-	if p[2] == '<':
-		p[0] = SDTS(Node('LT',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '>':
-		p[0] = SDTS(Node('GT',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '<=':
-		p[0] = SDTS(Node('LE',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '>=':
-		p[0] = SDTS(Node('GE',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '==':
-		p[0] = SDTS(Node('EQ',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '!=':
-		p[0] = SDTS(Node('NE',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '&&':
-		p[0] = SDTS(Node('AND',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '||':
-		p[0] = SDTS(Node('OR',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
+	comp_map = {
+		'<':'LT',
+		'>':'GT',
+		'<=':'LE',
+		'>=':'GE',
+		'==':'EQ',
+		'!=':'NE',
+		'&&':'AND',
+		'||':'OR'
+	}
+	if len(p) == 3:
+		p[0] = SDTS(Node('NOT',[p[2].node],p[2].node.is_const),p[2].syminfo)
+	if p[2] in comp_map:
+		ast_node = Node(comp_map[p[2]],[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const)
+		(ltype,lindirection),(rtype,rindirection) = p[1].syminfo,p[3].syminfo
+		if ltype == glob.type_error or rtype == glob.type_error:
+			p[0] = SDTS(ast_node,('BOOL',0))
+		elif ltype != rtype  or lindirection != rindirection:
+			raiseTypeMismatch(ltype,rtype,lindirection,rindirection,glob.line_number)
+			p[0] = SDTS(ast_node,('BOOL',0)) 
+		else:
+			p[0] = SDTS(ast_node,('BOOL',0))
+
 	else :
 		p[0] = p[2]
 
@@ -415,20 +434,38 @@ def p_expression(p):
 				| funcall
 				| LPAREN expression RPAREN
 	'''
+	op_map = {
+		'+':'PLUS',
+		'-':'MINUS',
+		'*':'MUL',
+		'/':'DIV'
+	}
 	if len(p) == 2:
-		#lookup and return type,indirection
-		#Dont do lookup for const and funcall
-		(symtype,symindirection,status) = lookup(glob.curr_sym_table, p[1].syminfo)
-		if not status: raiseNotDeclared(p[1].syminfo.var_name,glob.line_number) 
-		p[0] = p[1]
-	elif p[2] == '+':
-		p[0] = SDTS(Node('PLUS',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '-':
-		p[0] = SDTS(Node('MINUS',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '*':
-		p[0] = SDTS(Node('MUL',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
-	elif p[2] == '/':
-		p[0] = SDTS(Node('DIV',[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const))
+		#lookup and return (type,indirection)
+		if p[1].syminfo.type == None:
+			(symtype,symindirection,status) = lookup(glob.curr_sym_table, p[1].syminfo)
+			if not status: 
+				raiseNotDeclared(p[1].syminfo.var_name,glob.line_number)
+				symtype,symindirection = glob.type_error,float("inf") 
+			actual_indirection = symindirection - p[1].syminfo.indirection
+			if actual_indirection < 0:
+				raiseTooMuchIndirection(p[1].syminfo.var_name,glob.line_number)
+				symtype = glob.type_error
+			p[0] = SDTS(p[1].node,(symtype,actual_indirection))
+		else:
+			p[0] = SDTS(p[1].node,(p[1].syminfo.type,p[1].syminfo.indirection))
+
+	elif p[2] in op_map:
+		ast_node = Node(op_map[p[2]],[p[1].node,p[3].node],p[1].node.is_const and p[3].node.is_const)
+		(ltype,lindirection),(rtype,rindirection) = p[1].syminfo,p[3].syminfo
+		if ltype == glob.type_error or rtype == glob.type_error :
+			p[0] = SDTS(ast_node,(glob.type_error,0))
+		elif (ltype != rtype) or lindirection != rindirection:
+			raiseTypeMismatch(ltype,rtype,lindirection,rindirection,glob.line_number)
+			p[0] = SDTS(ast_node,(glob.type_error,0))
+		else:
+			p[0] = SDTS(ast_node,(ltype,lindirection))
+		
 	else :
 		p[0] = p[2]
 
@@ -436,7 +473,7 @@ def p_expression_uminus(p):
 	'''
 	expression : MINUS expression %prec UMINUS
 	'''
-	p[0] = SDTS(Node('UMINUS',[p[2].node],p[2].node.is_const))
+	p[0] = SDTS(Node('UMINUS',[p[2].node],p[2].node.is_const),p[2].syminfo)
 	pass
 
 def p_error(p):

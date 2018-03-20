@@ -52,7 +52,7 @@ class RootTable():
 
 	def check_function(self,fname):
 		if fname in self.funclist:
-			return (self.funclist[fname].args,True)
+			return (self.funclist[fname].ftype,self.funclist[fname].args,True)
 		else:
 			return (None,False)
 
@@ -137,21 +137,21 @@ def lookup(symtable,attr):
 
 def function_lookup(symtable,fname,paramlist):
 
-	(args,status) = glob.root_table.check_function(fname)
+	(ftype,args,status) = glob.root_table.check_function(fname)
 	
 	if not status:
 		raiseFunctionNotDefined(p[1].syminfo.var_name,glob.line_number)
-		return False
+		return (None,False)
 
 	arglist = args.items()
 	if len(arglist) != len(paramlist):
 		raiseNumParamMismatch(len(paramlist),len(arglist),fname,glob.line_number)
-		return False
-		
+		return (ftype,True)
+
 	for p in range(len(paramlist)):
 		(symtype,symindirection,status) = lookup(symtable,paramlist[p])
-		if arglist[p][1].type != symtype: #or arglist[p].indirection !=
+		if arglist[p][1].type != symtype or (arglist[p][1].indirection != symindirection - paramlist[p].indirection):
 			raiseParamTypeMismatch(paramlist[p].var_name,arglist[p][1].var_name,fname,glob.line_number) 
-			
+	return (ftype,True)	
 
 

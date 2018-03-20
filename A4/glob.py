@@ -13,6 +13,9 @@ block_bool = False
 cfg = None
 ast = []
 
+#Type error dummy
+type_error = "type_error"
+
 # Root global
 root_table = RootTable()
 

@@ -1,20 +1,19 @@
 
-int a;
-int b,d;
-
+int *a;
+int *b,*d;
 int don(int a, int **b, void ****c)
 {	
-	int x,z;
-	*a = *b + don(5.56438349,6);
+	int **x,*z;
+	void ****y;
+	**x = **b + don(a,x,y);
 	don();
-	*a = *c * *b;
+	**b = *z * **x;
 }
 
 void main()
 {
-	int *a,*b;
+	int *a,**b;
+	void *****c;
+	don(*a,b,*c);
 
-	if(*a > 5);
-	*c = *A;
-	*a = ------*b;
 }
