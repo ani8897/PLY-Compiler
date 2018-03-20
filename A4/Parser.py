@@ -210,6 +210,10 @@ def p_const(p):
 		| FLOAT
 	'''
 	attribute = Attributes(p[1],indirection=0)
+	if str(p[1]).find('.') < 0: 
+		attribute.is_int, attribute.type = True, 'INT'
+	else: 
+		attribute.is_float, attribute.type = True, 'FLOAT'
 	p[0] = SDTS(Node('CONST('+str(p[1])+')',[],True),attribute)
 
 
@@ -241,16 +245,32 @@ def p_funcall(p):
 	funcall : var LPAREN params RPAREN
 	params : callparam paramcomp
 			|
+	'''
+	if len(p) == 5:
+		#check for params
+		status = function_lookup(glob.curr_sym_table,p[1].syminfo.var_name,p[3])
+		attribute = Attributes(p[1].syminfo.var_name,indirection=0)
+		p[0] = SDTS(Node('FUNCALL',[]),attribute)		
+	elif len(p) == 3:
+		p[2].insert(0,p[1])
+		p[0] = p[2]
+	else:
+		p[0] = []
+
+def p_paramcomp(p):
+	'''
 	paramcomp : COMMA callparam paramcomp
 			| 
 	callparam : param
 			| const
 	'''
-	if len(p) == 5:
-		#check for params
-		attribute = Attributes(p[1].syminfo.var_name,indirection=0)
-		p[0] = SDTS(Node('FUNCALL',[]),attribute)		
-
+	if len(p) == 2:
+		p[0] = p[1].syminfo
+	elif len(p) == 4:
+		p[3].insert(0,p[2])
+		p[0] = p[3]
+	else:
+		p[0] = []
 
 def p_statements(p):
 	'''

@@ -1,5 +1,6 @@
 from __future__ import print_function
 import glob
+from errors import *
 from collections import OrderedDict
 
 class RootTable():
@@ -49,6 +50,12 @@ class RootTable():
 		else:
 			return (None,None,False)
 
+	def check_function(self,fname):
+		if fname in self.funclist:
+			return (self.funclist[fname].args,True)
+		else:
+			return (None,False)
+
 class SymbolTable():
 
 	def __init__(self,parent):
@@ -94,12 +101,14 @@ class SymbolTable():
 
 class Attributes():
 
-	def __init__(self,var_name,var_type = None ,width = None ,indirection = None ,offset = None):
+	def __init__(self,var_name,var_type = None ,width = None ,indirection = None ,offset = None,is_int = False,is_float = False):
 		self.var_name = var_name
 		self.type = var_type
 		self.width = width
 		self.indirection = indirection
 		self.offset = offset
+		self.is_int = is_int
+		self.is_float = is_float
 
 	def print_attr(self):
 		print("name: %s type: %s indirection: %d"%(self.var_name,self.type,self.indirection))
@@ -112,6 +121,11 @@ class SDTS():
 
 def lookup(symtable,attr):
 
+	if attr.is_int:
+		return ('INT',0,True)
+	if attr.is_float:
+		return ('FLOAT',0,True)
+
 	if symtable.parent == None:
 		return (None,None,False)
 	else:
@@ -120,3 +134,24 @@ def lookup(symtable,attr):
 			return (symtype,indirection,True)
 		else:
 			return lookup(symtable.parent,attr) 
+
+def function_lookup(symtable,fname,paramlist):
+
+	(args,status) = glob.root_table.check_function(fname)
+	
+	if not status:
+		raiseFunctionNotDefined(p[1].syminfo.var_name,glob.line_number)
+		return False
+
+	arglist = args.items()
+	if len(arglist) != len(paramlist):
+		raiseNumParamMismatch(len(paramlist),len(arglist),fname,glob.line_number)
+		return False
+		
+	for p in range(len(paramlist)):
+		(symtype,symindirection,status) = lookup(symtable,paramlist[p])
+		if arglist[p][1].type != symtype: #or arglist[p].indirection !=
+			raiseParamTypeMismatch(paramlist[p].var_name,arglist[p][1].var_name,fname,glob.line_number) 
+			
+
+
