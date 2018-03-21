@@ -20,12 +20,15 @@ class RootTable():
 			self.funclist[f].print_table()
 			print("!!!!!!!!!")
 
-	def add_function(self,fname):
+	def add_function(self,fname,findirection):
 		new_symtable = SymbolTable(self)
-		if fname in self.funclist:
+		if fname in self.funclist and self.funclist[fname].definition:
 			return (new_symtable,False)
+		elif fname in self.funclist and self.proto:
+			return (self.funclist[fname],True)
 		else: 
 			self.funclist[fname] = new_symtable
+			self.funclist[fname].findirection = findirection
 			return (new_symtable,True)
 
 	def add_symlist(self,symlist):
@@ -60,10 +63,16 @@ class SymbolTable():
 
 	def __init__(self,parent):
 		self.parent = parent
+		self.fname = None
 		self.ftype = None
+		self.findirection = None
+		self.protoargs = []
 		self.args = OrderedDict()
 		self.locals = OrderedDict()
 		self.scopelist = OrderedDict()
+		self.proto = False
+		self.definition = False
+
 
 	def print_table(self):
 		for arg in self.args:
@@ -83,12 +92,39 @@ class SymbolTable():
 			self.locals[symbol.var_name] = symbol
 			return (symbol.var_name,True)
 
-	def add_arg(self,arg):
-		if arg.var_name in self.args: 
-			return (arg.var_name,False)
+	def add_protoarglist(self,protoarglist):
+		for protoarg in protoarglist:
+			self.add_protoarg(protoarg[0])
+
+	def add_protoarg(self,arg):
+		self.protoargs.append((arg.type,arg.indirection))
+
+	def add_arglist(self,arglist):
+		for arg in arglist:
+			(arg_name,status) = self.add_arg(arg[0],arg[1])
+			if not status: 
+				raisePreviouslyDeclared(arg_name,arg[1])
+
+	def add_arg(self,arg,line_number):
+		args_added = len(self.args.items())
+		if self.proto:
+			if arg.var_name in self.args: 
+				return (arg.var_name,False)
+			else:
+				protoarg = self.protoargs[args_added]
+				if protoarg[0] != arg.type:
+					raiseProtoParamTypeMismatch(self.fname,arg.var_name,arg.type,protoarg[0],line_number)
+				elif protoarg[1] != arg.indirection:
+					raiseProtoParamIndirectionMismatch(self.fname,arg.var_name,arg.indirection,protoarg[1],line_number)
+				self.args[arg.var_name] = arg
+				return (arg.var_name,True) 
 		else:
-			self.args[arg.var_name] = arg
-			return (arg.var_name,True) 
+			if arg.var_name in self.args: 
+				return (arg.var_name,False)
+			else:
+				self.args[arg.var_name] = arg
+				return (arg.var_name,True) 
+
 
 	def lookup_table(self,attr):
 		var_name = attr.var_name

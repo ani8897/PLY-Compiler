@@ -24,3 +24,12 @@ def raiseTypeMismatch(ltype,rtype,lindirection,rindirection,line_number):
 		print("Incompatible types, %s and %s, at line %d"%(ltype,rtype,line_number))
 	else:
 		print("Incompatible dereferencing at line %d"%(line_number))
+
+def raiseProtoPreviouslyDeclared(fname,line_number):
+	print("prototype for function '%s' at line %d has been declared before"%(fname,line_number))
+
+def	raiseProtoParamTypeMismatch(fname,var_name,argtype,prototype,line_number):
+	print("type '%s' of argument '%s' does not match with expected type '%s' in prototype declaration of function '%s' at line %d"%(argtype, var_name, prototype,fname,line_number))
+
+def	raiseProtoParamIndirectionMismatch(fname,var_name,argindirection,protoindirection,line_number):
+	print("Indirection '%d' of argument '%s' does not match with expected indirection '%d' in prototype declaration of function '%s' at line %d"%(argindirection, var_name, protoindirection,fname,line_number))

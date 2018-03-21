@@ -135,25 +135,42 @@ def p_funcdefs(p):
 def p_declarations(p):
 	'''
 	declarations : declarations declaration
+				| declarations funcproto
 				|
 	'''
-	# if len(p) == 1:
-	# 	p[0] = []
-	# else:
-	# 	p[1].extend(p[2].syminfo)
-	# 	p[0] = p[1]
+	pass
 
-def p_function(p):
+def p_funcproto(p):
 	'''
-	function : ftypename LPAREN args RPAREN LBRACE statements RBRACE
+	funcproto : ftypename LPAREN args RPAREN SEMICOLON
 	ftypename : type fname
 	'''
 	if len(p) == 3:
 		glob.curr_sym_table.ftype = p[1]
 	else:
+		glob.curr_sym_table.proto = True
+		glob.curr_sym_table.add_protoarglist(p[3])
 		glob.curr_sym_table = glob.curr_sym_table.parent
-		p[0] = Node('FUNC',[p[6].node])
 
+def p_param(p):
+	'''
+	param : var 
+		| pointer 
+		| address
+	'''
+	p[0] = p[1] # node + syminfo
+
+def p_function(p):
+	'''
+	function : ftypename LPAREN dargs statements RBRACE
+	dargs : args RPAREN LBRACE
+	'''
+	if len(p) == 4:
+		glob.curr_sym_table.add_arglist(p[1])
+	else:
+		glob.curr_sym_table.definition = True
+		glob.curr_sym_table = glob.curr_sym_table.parent
+		p[0] = Node('FUNC',[p[4].node])
 
 
 def p_type(p):
@@ -164,13 +181,25 @@ def p_type(p):
 	'''
 	p[0] = p[1]
 
+def p_main(p):
+	'''
+	main : MAIN
+	'''
+	p[0] = SDTS(None,Attributes('main',indirection=0))
+
 def p_fname(p):
 	'''
-	fname : ID
-		  | MAIN
+	fname : var
+		| pointer
+		| main
 	'''
-	(glob.curr_sym_table,status) = glob.root_table.add_function(p[1])
-	if not status: raisePreviouslyDeclared(p[1],glob.line_number)
+	(glob.curr_sym_table,status) = glob.root_table.add_function(p[1].syminfo.var_name,p[1].syminfo.indirection)
+	if not status: 
+		raisePreviouslyDeclared(p[1],glob.line_number)
+	if glob.curr_sym_table.proto and not glob.curr_sym_table.definition:
+		raiseProtoPreviouslyDeclared(p[1].syminfo.var_name,glob.line_number)
+		glob.curr_sym_table = SymbolTable(glob.curr_sym_table.parent)
+	glob.curr_sym_table.fname = p[1].syminfo.var_name
 	p[0] = p[1]
 
 
@@ -178,24 +207,28 @@ def p_args(p):
 	'''
 	args : arg argcomp
 		|
-	argcomp : COMMA arg argcomp
-		|  
+	  
 	'''
-	pass
+	if len(p) == 1:
+		p[0] = []
+	else:
+		p[2].insert(0,p[1])
+		p[0] = p[2]
 
 def p_arg(p):
 	'''
+	argcomp : COMMA arg argcomp
+		|
 	arg : type param
-	param : var 
-		| pointer 
-		| address
 	'''
-	if len(p) == 2:
-		p[0] = p[1] # node + syminfo
-	else:
+	if len(p) == 3:
 		p[2].syminfo.type = p[1]
-		(arg_name,status) = glob.curr_sym_table.add_arg(p[2].syminfo)
-		if not status: raisePreviouslyDeclared(arg_name,glob.line_number)
+		p[0] = (p[2].syminfo,glob.line_number)
+	elif len(p) == 4:
+		p[3].insert(0,p[2])
+		p[0] = p[3]
+	else:
+		p[0] = []
 
 def p_var(p):
 	'''
