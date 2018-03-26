@@ -43,5 +43,5 @@ void main()
     {
         **f = 2.0;
     }   
-    *g = func1(*g3, *a2);
+    *g = func1(g3, a2);
 }

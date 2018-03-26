@@ -20,4 +20,5 @@ type_error = "type_error"
 root_table = RootTable()
 
 #Current function
+sym_file = ""
 curr_sym_table = root_table

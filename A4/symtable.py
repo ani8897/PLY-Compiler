@@ -24,7 +24,7 @@ class RootTable():
 		new_symtable = SymbolTable(self)
 		if fname in self.funclist and self.funclist[fname].definition:
 			return (new_symtable,False)
-		elif fname in self.funclist and self.proto:
+		elif fname in self.funclist and self.funclist[fname].proto:
 			return (self.funclist[fname],True)
 		else: 
 			self.funclist[fname] = new_symtable
@@ -55,9 +55,41 @@ class RootTable():
 
 	def check_function(self,fname):
 		if fname in self.funclist:
-			return (self.funclist[fname].ftype,self.funclist[fname].args,True)
+			return (self.funclist[fname].ftype,self.funclist[fname].findirection,self.funclist[fname].args,True)
 		else:
-			return (None,False)
+			return (None,None,None,False)
+
+	def print_symbol_table(self,rfile):
+		print("Procedure table :-",file=rfile)
+		print("-----------------------------------------------------------------",file=rfile)
+		print("Name\t\t|\tReturn Type\t|\tParameter List",file=rfile)
+		for function in self.funclist:
+			print("%s\t\t|\t %s%s\t|\t{"%(self.funclist[function].fname,'*'*self.funclist[function].findirection,self.funclist[function].ftype),end='',file=rfile)
+			funcargs = self.funclist[function].args.items()
+			for i in range(len(funcargs)):
+				if i == len(funcargs) - 1:
+					print("'%s': '%s'"%(funcargs[i][0],funcargs[i][1].type),end='',file=rfile)
+				else:	
+					print("'%s': '%s', "%(funcargs[i][0],funcargs[i][1].type),end = '',file=rfile)
+			print('}',file=rfile)
+		print("-----------------------------------------------------------------",file=rfile)
+		print("Variable table :-",file=rfile)
+		print("-----------------------------------------------------------------",file=rfile)
+		print("Name\t\t|\tScope\t\t|\tBase Type\t|\tDerived Type",file=rfile)
+		print("-----------------------------------------------------------------",file=rfile)
+		globe_list = self.globals
+		for gvar in globe_list:
+			print("%s\t\t|\tglobal\t|\t%s\t|\t%s"%(gvar,globe_list[gvar].type,"*"*globe_list[gvar].indirection),file=rfile)
+		for function in self.funclist:
+			symtable = self.funclist[function]
+			for arg in symtable.args:
+				print("%s\t\t|\tprocedure %s\t|\t%s\t|\t%s"%(symtable.args[arg].var_name,function,symtable.args[arg].type,"*"*symtable.args[arg].indirection),file=rfile)
+			for local in symtable.locals:
+				print("%s\t\t|\tprocedure %s\t|\t%s\t|\t%s"%(symtable.locals[local].var_name,function,symtable.locals[local].type,"*"*symtable.locals[local].indirection),file=rfile)
+		print("-----------------------------------------------------------------",file=rfile)
+		print("-----------------------------------------------------------------",file=rfile)
+
+
 
 class SymbolTable():
 
@@ -158,11 +190,11 @@ class SDTS():
 def lookup(symtable,attr):
 
 	if attr.is_int:
-		return ('INT',0,True)
+		return ('int',0,True)
 	if attr.is_float:
-		return ('FLOAT',0,True)
+		return ('float',0,True)
 
-	if symtable.parent == None:
+	if symtable == None:
 		return (None,None,False)
 	else:
 		(symtype,indirection,status) = symtable.lookup_table(attr)
@@ -173,21 +205,21 @@ def lookup(symtable,attr):
 
 def function_lookup(symtable,fname,paramlist):
 
-	(ftype,args,status) = glob.root_table.check_function(fname)
+	(ftype,findirection,args,status) = glob.root_table.check_function(fname)
 	
 	if not status:
 		raiseFunctionNotDefined(p[1].syminfo.var_name,glob.line_number)
-		return (None,False)
+		return (None,None,False)
 
 	arglist = args.items()
 	if len(arglist) != len(paramlist):
 		raiseNumParamMismatch(len(paramlist),len(arglist),fname,glob.line_number)
-		return (ftype,True)
+		return (ftype,findirection,True)
 
 	for p in range(len(paramlist)):
-		(symtype,symindirection,status) = lookup(symtable,paramlist[p])
-		if arglist[p][1].type != symtype or (arglist[p][1].indirection != symindirection - paramlist[p].indirection):
-			raiseParamTypeMismatch(paramlist[p].var_name,arglist[p][1].var_name,fname,glob.line_number) 
-	return (ftype,True)	
+		(symtype,symindirection) = paramlist[p]
+		if arglist[p][1].type != symtype or (arglist[p][1].indirection != symindirection):
+			raiseParamTypeMismatch('expression',arglist[p][1].var_name,fname,glob.line_number) 
+	return (ftype,findirection,True)	
 
 

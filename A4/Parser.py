@@ -12,13 +12,13 @@ from errors import *
 import glob
 
 tokens = (
-		'ID', 'NUMBER',
+		'ID', 'NUMBER','FLOATNUM',
 		'COMMENT',
 		'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
 		'SEMICOLON', 'AMPERSAND', 'COMMA',
 		'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'EQUALS', 
 		'INT', 'VOID', 'FLOAT', 'MAIN', 
-		'IF', 'ELSE', 'WHILE',
+		'IF', 'ELSE', 'WHILE', 'RETURN',
 		'LT','GT','LE','GE','EQ','NE','NOT', 'AND', 'OR'
 )
 
@@ -54,11 +54,13 @@ t_COMMA = r','
 
 reserved = {
 	'int' 	: 'INT',
+	'float'	: 'FLOAT',
 	'void' 	: 'VOID',
 	'main' 	: 'MAIN',
 	'if'	: 'IF',
 	'else'	: 'ELSE',
 	'while'	: 'WHILE',
+	'return' : 'RETURN'
 }
 
 def t_COMMENT(t):
@@ -70,7 +72,7 @@ def t_ID(t):
 	t.type = reserved.get(t.value, 'ID')
 	return t
 
-def t_FLOAT(t):
+def t_FLOATNUM(t):
 	r'\d+\.\d+'
 	try:
 		t.value = float(t.value)
@@ -116,10 +118,16 @@ def p_program(p):
 	'''
 	program : declarations funcdefs
 	'''
-	# glob.curr_sym_table.add_globallist(p[1])	
-	glob.ast = Node('PROG',p[2])
+	glob.ast = Node('PROGRAM',p[2])
 	
 
+def p_declarations(p):
+	'''
+	declarations : declarations declaration
+				| declarations funcproto
+				|
+	'''
+	pass
 
 def p_funcdefs(p):
 	'''
@@ -132,13 +140,6 @@ def p_funcdefs(p):
 		p[2].insert(0,p[1])
 		p[0] = p[2]
 
-def p_declarations(p):
-	'''
-	declarations : declarations declaration
-				| declarations funcproto
-				|
-	'''
-	pass
 
 def p_funcproto(p):
 	'''
@@ -146,19 +147,20 @@ def p_funcproto(p):
 	ftypename : type fname
 	'''
 	if len(p) == 3:
-		glob.curr_sym_table.ftype = p[1]
+		if glob.curr_sym_table.proto and (glob.curr_sym_table.ftype != p[1] or glob.curr_sym_table.findirection != p[2].syminfo.indirection):
+			raiseFunctionTypeMismatch(glob.curr_sym_table.fname,glob.curr_sym_table.ftype,p[1],glob.curr_sym_table.findirection,p[2].syminfo.indirection,glob.line_number)
+			glob.curr_sym_table = SymbolTable(glob.curr_sym_table.parent)
+		else:
+			glob.curr_sym_table.ftype = p[1]
 	else:
-		glob.curr_sym_table.proto = True
-		glob.curr_sym_table.add_protoarglist(p[3])
-		glob.curr_sym_table = glob.curr_sym_table.parent
+		if not glob.curr_sym_table.proto:
+			glob.curr_sym_table.proto = True
+			glob.curr_sym_table.add_protoarglist(p[3])
+			glob.curr_sym_table = glob.curr_sym_table.parent
+		else:
+			raiseProtoPreviouslyDeclared(glob.curr_sym_table.fname, glob.line_number)
+			glob.curr_sym_table = glob.curr_sym_table.parent
 
-def p_param(p):
-	'''
-	param : var 
-		| pointer 
-		| address
-	'''
-	p[0] = p[1] # node + syminfo
 
 def p_function(p):
 	'''
@@ -169,8 +171,9 @@ def p_function(p):
 		glob.curr_sym_table.add_arglist(p[1])
 	else:
 		glob.curr_sym_table.definition = True
+		st = glob.curr_sym_table
+		p[0] = Node('FUNCTION',[st.fname,st.args,st.findirection,st.ftype,p[4].node])
 		glob.curr_sym_table = glob.curr_sym_table.parent
-		p[0] = Node('FUNC',[p[4].node])
 
 
 def p_type(p):
@@ -193,13 +196,14 @@ def p_fname(p):
 		| pointer
 		| main
 	'''
-	(glob.curr_sym_table,status) = glob.root_table.add_function(p[1].syminfo.var_name,p[1].syminfo.indirection)
+	func_name = p[1].syminfo.var_name
+	(glob.curr_sym_table,status) = glob.root_table.add_function(func_name,p[1].syminfo.indirection)
 	if not status: 
 		raisePreviouslyDeclared(p[1],glob.line_number)
-	if glob.curr_sym_table.proto and not glob.curr_sym_table.definition:
-		raiseProtoPreviouslyDeclared(p[1].syminfo.var_name,glob.line_number)
-		glob.curr_sym_table = SymbolTable(glob.curr_sym_table.parent)
-	glob.curr_sym_table.fname = p[1].syminfo.var_name
+	# if glob.curr_sym_table.proto:
+	# 	raiseProtoPreviouslyDeclared(func_name,glob.line_number)
+	# 	glob.curr_sym_table = SymbolTable(glob.curr_sym_table.parent)
+	glob.curr_sym_table.fname = func_name
 	p[0] = p[1]
 
 
@@ -230,6 +234,14 @@ def p_arg(p):
 	else:
 		p[0] = []
 
+def p_param(p):
+	'''
+	param : var 
+		| pointer 
+		| address
+	'''
+	p[0] = p[1] # node + syminfo
+
 def p_var(p):
 	'''
 	var : ID
@@ -240,7 +252,7 @@ def p_var(p):
 def p_const(p):
 	'''
 	const : NUMBER
-		| FLOAT
+		| FLOATNUM
 	'''
 	attribute = Attributes(p[1],indirection=0)
 	if str(p[1]).find('.') < 0: 
@@ -261,17 +273,16 @@ def p_pointer(p):
 
 def p_address(p):
 	'''
-	address : AMPERSAND pointer
-			| AMPERSAND address
-			| AMPERSAND var
+	address : AMPERSAND var
 	'''
-	p[0] = SDTS(Node('ADDR',[p[2].node],False),p[2].syminfo) # Ask for indirection value
+	p[2].syminfo.indirection -= 1
+	p[0] = SDTS(Node('ADDR',[p[2].node],False),p[2].syminfo)
 
 def p_voidfuncall(p):
 	'''
 	voidfuncall : funcall SEMICOLON
 	'''
-	if p[1].syminfo.type != 'VOID':
+	if p[1].syminfo.type != 'void':
 		raiseReturnValueIgnored(p[1].syminfo.var_name,glob.line_number-1)
 	p[0] = p[1]
 
@@ -283,31 +294,32 @@ def p_funcall(p):
 	'''
 	if len(p) == 5:
 		#check for params
-		(ftype,status) = function_lookup(glob.curr_sym_table,p[1].syminfo.var_name,p[3])
-		attribute = Attributes(p[1].syminfo.var_name,var_type=ftype,indirection=0)
+		(ftype,findirection,status) = function_lookup(glob.curr_sym_table,p[1].syminfo.var_name,p[3].syminfo)
+		attribute = Attributes(p[1].syminfo.var_name,var_type=ftype,indirection=findirection)
 		if not status: 
 			attribute.type = glob.type_error
-		p[0] = SDTS(Node('FUNCALL',[]),attribute)		
+		p[0] = SDTS(Node('FUNCALL',p[3].node),attribute)		
 	elif len(p) == 3:
-		p[2].insert(0,p[1])
+		p[2].node.insert(0,p[1].node)
+		p[2].syminfo.insert(0,p[1].syminfo)
 		p[0] = p[2]
 	else:
-		p[0] = []
+		p[0] = SDTS([],[])
 
 def p_paramcomp(p):
 	'''
 	paramcomp : COMMA callparam paramcomp
 			| 
-	callparam : param
-			| const
+	callparam : expression
 	'''
 	if len(p) == 2:
-		p[0] = p[1].syminfo
+		p[0] = p[1]
 	elif len(p) == 4:
-		p[3].insert(0,p[2])
+		p[3].node.insert(0,p[2].node)
+		p[3].syminfo.insert(0,p[2].syminfo)
 		p[0] = p[3]
 	else:
-		p[0] = []
+		p[0] = SDTS([],[])
 
 def p_statements(p):
 	'''
@@ -315,6 +327,7 @@ def p_statements(p):
 				| COMMENT statements
 				| declaration statements
 				| voidfuncall statements
+				| retstatement statements
 				| 
 	statement : assignment
 			| ifstatement
@@ -325,14 +338,31 @@ def p_statements(p):
 	elif (len(p) == 3):
 		try:
 			if p[1].node.token != 'DECL':
-				p[0] = SDTS(Node('STMTS',[p[1].node] + p[2].node.children),p[2].syminfo)
+				p[0] = SDTS(Node('STMTS',[p[1].node] + p[2].node.children))
 			else:
-				p[1].syminfo.extend(p[2].syminfo)
-				p[0] = p[1]
+				p[0] = p[2]
 		except:
 			p[0] = p[2]
 	else:
-		p[0] = SDTS(Node('STMTS',[]),[])
+		p[0] = SDTS(Node('STMTS',[]))
+
+def p_retstatement(p):
+	'''
+	retstatement : RETURN expression SEMICOLON
+				| RETURN SEMICOLON
+	'''
+	## Check the return type and the function return type
+	if len(p) == 3 and glob.curr_sym_table.ftype != 'void':
+		raiseExpectedReturn(glob.curr_sym_table.fname,glob.curr_sym_table.ftype,'void',0,0,glob.line_number)
+	else:
+		# p[2] is a tuple of type, indirection
+		if glob.curr_sym_table.ftype != p[2].syminfo[0] or glob.curr_sym_table.findirection != p[2].syminfo[1]:
+			raiseExpectedReturn(glob.curr_sym_table.fname,glob.curr_sym_table.ftype,p[2].syminfo[0],glob.curr_sym_table.findirection,p[2].syminfo[1],glob.line_number)
+
+	if len(p) == 3:
+		p[0] = SDTS(Node('RET',[]))
+	else:
+		p[0] = SDTS(Node('RET',[p[2].node]))	
 
 def p_declaration(p):
 	'''
@@ -363,7 +393,8 @@ def p_decl_var(p):
 			| pointer
 	'''
 	(var_name,status) = glob.curr_sym_table.add_symbol(p[1].syminfo)
-	if not status: raisePreviouslyDeclared(var_name,glob.line_number)
+	if not status: 
+		raisePreviouslyDeclared(var_name,glob.line_number)
 	p[0] = p[1]
 
 def p_assignment(p):
@@ -446,7 +477,7 @@ def p_ifstatement(p):
 		p[0] = SDTS(Node('IF',[p[3].node,p[5].node]))
 	else:
 		p[0] = SDTS(Node('IF',[p[3].node,p[5].node,p[7].node]))
-#7664
+
 def p_whilestatement(p):
 	'''
 	whilestatement : WHILE LPAREN condition RPAREN controlbody
@@ -530,6 +561,7 @@ if __name__ == "__main__":
 
 	glob.ast_file = open(sys.argv[1] + '.ast','w')
 	glob.cfg_file = open(sys.argv[1] + '.cfg','w')
+	glob.sym_file = open(sys.argv[1] + '.sym','w')
 	glob.cfg = CFG()
 	
 	process(data)
@@ -541,6 +573,6 @@ if __name__ == "__main__":
 	# update_cfg(glob.ast)
 	# glob.cfg.cfg_print(rfile = glob.cfg_file)
 
-	glob.root_table.print_root()
+	glob.root_table.print_symbol_table(rfile=glob.sym_file)
 
 	print("Successfully Parsed")

@@ -12,7 +12,21 @@ class Node():
 			print("Syntax error at ",self.children[0].token[4:-1]," =")
 			exit(0)
 
-		if(self.token == 'STMTS'):
+		if self.token == 'FUNCTION':
+			print('FUNCTION %s'%(self.children[0]),file=rfile)
+			print('PARAMS {',end='',file=rfile)
+			children = self.children[1].items()
+			for i in range(len(children)):
+				if i == len(self.children[1]) - 1:
+					print("'%s': '%s'"%(children[i][0],children[i][1].type),end='',file=rfile)
+				else:	
+					print("'%s': '%s', "%(children[i][0],children[i][1].type),end = '',file=rfile)
+			print('}',file=rfile)
+			print('RETURNS '+'*'*self.children[2]+self.children[3],file=rfile)
+			self.children[4].print_node(depth+1,rfile)
+			print('',file=rfile)
+
+		elif self.token == 'STMTS' or self.token == 'PROGRAM':
 			if len(self.children) != 0:
 				i = 0
 				for child in self.children:
