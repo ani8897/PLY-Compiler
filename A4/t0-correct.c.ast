@@ -1,43 +1,16 @@
 FUNCTION func1
 PARAMS {'a': 'int', 'b': 'int'}
-RETURNS *int
-	ASGN
-	(
-		DEREF
-		(
-			VAR(g3)
-		)
-		,
-		CONST(4)
-	)
-	RET
-	(
-		VAR(g3)
-	)
-
-FUNCTION func2
-PARAMS {'b1': 'int', 'b2': 'float'}
-RETURNS *int
+RETURNS void
 	IF
 	(
 		EQ
 		(
 			DEREF
 			(
-				VAR(b1)
+				VAR(g3)
 			)
 			,
-			CONST(32)
-		)
-		,
-		ASGN
-		(
-			DEREF
-			(
-				VAR(var1)
-			)
-			,
-			CONST(3.0)
+			CONST(52)
 		)
 		,
 		WHILE
@@ -45,71 +18,11 @@ RETURNS *int
 			NE
 			(
 				DEREF
-				(
-					VAR(b2)
-				)
-				,
-				DEREF
-				(
-					VAR(var1)
-				)
-			)
-			,
-			ASGN
-			(
-				DEREF
-				(
-					VAR(b2)
-				)
-				,
-				MINUS
 				(
 					DEREF
 					(
-						VAR(b2)
+						VAR(h)
 					)
-					,
-					CONST(1.0)
-				)
-			)
-		)
-	)
-	RET
-	(
-		VAR(h1)
-	)
-
-FUNCTION main
-PARAMS {}
-RETURNS void
-	ASGN
-	(
-		DEREF
-		(
-			VAR(g)
-		)
-		,
-		CONST(4)
-	)
-	IF
-	(
-		EQ
-		(
-			DEREF
-			(
-				VAR(g)
-			)
-			,
-			CONST(4)
-		)
-		,
-		WHILE
-		(
-			NE
-			(
-				DEREF
-				(
-					VAR(g)
 				)
 				,
 				CONST(0)
@@ -119,58 +32,148 @@ RETURNS void
 			(
 				DEREF
 				(
-					VAR(g)
+					DEREF
+					(
+						VAR(h)
+					)
 				)
 				,
-				MINUS
+				PLUS
 				(
 					DEREF
 					(
-						VAR(g)
+						VAR(g3)
 					)
 					,
 					CONST(1)
 				)
 			)
 		)
-		ASGN
-		(
-			DEREF
-			(
-				DEREF
-				(
-					VAR(f)
-				)
-			)
-			,
-			CONST(3.0)
-		)
-		,
-		ASGN
-		(
-			DEREF
-			(
-				DEREF
-				(
-					VAR(f)
-				)
-			)
-			,
-			CONST(2.0)
-		)
 	)
+	RET
+
+FUNCTION main
+PARAMS {}
+RETURNS void
 	ASGN
 	(
-		DEREF
+		VAR(g3)
+		,
+		CALL func2
 		(
-			VAR(g)
+			PLUS
+			(
+				CONST(3)
+				,
+				DEREF
+				(
+					VAR(b)
+				)
+			)
+			,
+			PLUS
+			(
+				DEREF
+				(
+					VAR(a)
+				)
+				,
+				CONST(6)
+			)
+		)
+	)
+	IF
+	(
+		EQ
+		(
+			DEREF
+			(
+				VAR(g3)
+			)
+			,
+			CONST(52)
 		)
 		,
-		FUNCALL
+		WHILE
 		(
-			VAR(g3)
+			NE
+			(
+				DEREF
+				(
+					VAR(h)
+				)
+				,
+				CONST(0)
+			)
 			,
-			VAR(a2)
+			ASGN
+			(
+				DEREF
+				(
+					VAR(g3)
+				)
+				,
+				PLUS
+				(
+					DEREF
+					(
+						VAR(g3)
+					)
+					,
+					CONST(1)
+				)
+			)
 		)
+	)
+
+FUNCTION func2
+PARAMS {'a': 'int', 'b': 'int'}
+RETURNS *int
+	IF
+	(
+		EQ
+		(
+			DEREF
+			(
+				VAR(g3)
+			)
+			,
+			CONST(52)
+		)
+		,
+		WHILE
+		(
+			NE
+			(
+				DEREF
+				(
+					VAR(h)
+				)
+				,
+				CONST(0)
+			)
+			,
+			ASGN
+			(
+				DEREF
+				(
+					VAR(g3)
+				)
+				,
+				PLUS
+				(
+					DEREF
+					(
+						VAR(g3)
+					)
+					,
+					CONST(1)
+				)
+			)
+		)
+	)
+	RET
+	(
+		VAR(h)
 	)
 

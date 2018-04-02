@@ -298,7 +298,7 @@ def p_funcall(p):
 		attribute = Attributes(p[1].syminfo.var_name,var_type=ftype,indirection=findirection)
 		if not status: 
 			attribute.type = glob.type_error
-		p[0] = SDTS(Node('FUNCALL',p[3].node),attribute)		
+		p[0] = SDTS(Node('CALL %s'%p[1].syminfo.var_name,p[3].node),attribute)		
 	elif len(p) == 3:
 		p[2].node.insert(0,p[1].node)
 		p[2].syminfo.insert(0,p[1].syminfo)
@@ -354,7 +354,7 @@ def p_retstatement(p):
 	## Check the return type and the function return type
 	if len(p) == 3 and glob.curr_sym_table.ftype != 'void':
 		raiseExpectedReturn(glob.curr_sym_table.fname,glob.curr_sym_table.ftype,'void',0,0,glob.line_number)
-	else:
+	elif len(p) == 4:
 		# p[2] is a tuple of type, indirection
 		if glob.curr_sym_table.ftype != p[2].syminfo[0] or glob.curr_sym_table.findirection != p[2].syminfo[1]:
 			raiseExpectedReturn(glob.curr_sym_table.fname,glob.curr_sym_table.ftype,p[2].syminfo[0],glob.curr_sym_table.findirection,p[2].syminfo[1],glob.line_number)
@@ -567,7 +567,7 @@ if __name__ == "__main__":
 	process(data)
 
 	glob.ast.print_node(0,rfile = glob.ast_file)
-	# construct_cfg(glob.ast)
+	construct_cfg_prog(glob.ast, rfile = glob.cfg_file)
 	# glob.cfg.blocks[glob.block_index] = Block(glob.block_index,'',["End"],-1,[])
 	# glob.block_index = 1
 	# update_cfg(glob.ast)

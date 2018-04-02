@@ -1,8 +1,8 @@
 Procedure table :-
 -----------------------------------------------------------------
 Name		|	Return Type	|	Parameter List
-func1		|	 *int	|	{'a': 'int', 'b': 'int'}
-func2		|	 *int	|	{'b1': 'int', 'b2': 'float'}
+func2		|	 *int	|	{'a': 'int', 'b': 'int'}
+func1		|	 void	|	{'a': 'int', 'b': 'int'}
 main		|	 void	|	{}
 -----------------------------------------------------------------
 Variable table :-
@@ -11,18 +11,17 @@ Name		|	Scope		|	Base Type	|	Derived Type
 -----------------------------------------------------------------
 g3		|	global	|	int	|	*
 l3		|	global	|	int	|	
+g		|	global	|	int	|	*
 var1		|	global	|	float	|	*
 var2		|	global	|	float	|	
-a		|	procedure func1	|	int	|	*
-b		|	procedure func1	|	int	|	*
+a		|	procedure func2	|	int	|	
+b		|	procedure func2	|	int	|	
+h		|	procedure func2	|	int	|	*
+a		|	procedure func1	|	int	|	
+b		|	procedure func1	|	int	|	
 h		|	procedure func1	|	int	|	**
-b1		|	procedure func2	|	int	|	*
-b2		|	procedure func2	|	float	|	*
-h1		|	procedure func2	|	int	|	*
-g		|	procedure main	|	int	|	*
-a1		|	procedure main	|	int	|	**
-a2		|	procedure main	|	int	|	*
-a		|	procedure main	|	int	|	
-f		|	procedure main	|	float	|	**
+a		|	procedure main	|	int	|	*
+b		|	procedure main	|	int	|	*
+h		|	procedure main	|	int	|	*
 -----------------------------------------------------------------
 -----------------------------------------------------------------

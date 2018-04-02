@@ -1,0 +1,11 @@
+FUNCTION func1
+PARAMS {'a': 'int', 'b': 'int'}
+RETURNS *int
+	RET
+	(
+		DEREF
+		(
+			VAR(h)
+		)
+	)
+

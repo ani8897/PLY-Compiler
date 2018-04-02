@@ -114,6 +114,24 @@ class Node():
 			right_child[0].append(code)
 			return (right_child[0],left_child[1])
 
+		elif self.token[0:4] == 'CALL':
+			funcall_children, content, funcall_params = self.children, [], []
+
+			for exp in funcall_children:
+				node = exp.reconstruct_node()
+				content.extend(node[0])
+				funcall_params.append(node[1])
+
+			funcall_str = "%s("%self.token[5:]
+			for i in range(len(funcall_params)):
+				if i == len(funcall_params)-1:
+					funcall_str +=funcall_params[i]
+				else:
+					funcall_str += funcall_params[i] + ","
+			funcall_str += ")"
+
+			return(content,funcall_str)
+
 		elif self.token in tokenMap : 
 			left_child = self.children[0].reconstruct_node() 
 			right_child = self.children[1].reconstruct_node()

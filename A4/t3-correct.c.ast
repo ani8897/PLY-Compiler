@@ -1,0 +1,8 @@
+FUNCTION f
+PARAMS {'a': 'int', 'c': 'int'}
+RETURNS *int
+	RET
+	(
+		VAR(b)
+	)
+
