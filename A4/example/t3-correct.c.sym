@@ -1,15 +1,15 @@
 Procedure table :-
 -----------------------------------------------------------------
-Name		|	Return Type	|	Parameter List
-f		|	 int*	|	int  a, int * c
+Name		|	Return Type  |  Parameter List
+f		|	int*		|	int a, int aint *c
 -----------------------------------------------------------------
-Variable table :-
+Variable table :- 
 -----------------------------------------------------------------
-Name		|	Scope		|	Base Type	|	Derived Type
+Name	|	Scope		|	Base Type  |  Derived Type
 -----------------------------------------------------------------
-d		|	global	|	int	|	
-a		|	procedure f	|	int	|	
-c		|	procedure f	|	int	|	*
-b		|	procedure f	|	int	|	*
+b		|	f		|	int	   |	*
+a		|	f		|	int	   |	
+c		|	f		|	int	   |	*
+d		|	procedure global	|	int	   |	
 -----------------------------------------------------------------
 -----------------------------------------------------------------

@@ -360,9 +360,9 @@ def p_retstatement(p):
 			raiseExpectedReturn(glob.curr_sym_table.fname,glob.curr_sym_table.ftype,p[2].syminfo[0],glob.curr_sym_table.findirection,p[2].syminfo[1],glob.line_number)
 
 	if len(p) == 3:
-		p[0] = SDTS(Node('RET',[]))
+		p[0] = SDTS(Node('RETURN',[]))
 	else:
-		p[0] = SDTS(Node('RET',[p[2].node]))	
+		p[0] = SDTS(Node('RETURN',[p[2].node]))	
 
 def p_declaration(p):
 	'''
@@ -567,12 +567,8 @@ if __name__ == "__main__":
 	process(data)
 
 	glob.ast.print_node(0,rfile = glob.ast_file)
+	glob.ast.check_main_return()
 	construct_cfg_prog(glob.ast, rfile = glob.cfg_file)
-	# glob.cfg.blocks[glob.block_index] = Block(glob.block_index,'',["End"],-1,[])
-	# glob.block_index = 1
-	# update_cfg(glob.ast)
-	# glob.cfg.cfg_print(rfile = glob.cfg_file)
-
 	glob.root_table.print_symbol_table(rfile=glob.sym_file)
 
 	print("Successfully Parsed")

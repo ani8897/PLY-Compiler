@@ -1,9 +1,8 @@
 Procedure table :-
 -----------------------------------------------------------------
 Name		|	Return Type	|	Parameter List
-func2		|	 *int	|	{'a': 'int', 'b': 'int'}
-func1		|	 void	|	{'a': 'int', 'b': 'int'}
-main		|	 void	|	{}
+func2		|	 int*	|	int  x1, int  y1
+func1		|	 void	|	int  a, int  b
 -----------------------------------------------------------------
 Variable table :-
 -----------------------------------------------------------------

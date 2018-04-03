@@ -64,14 +64,24 @@ class RootTable():
 		print("-----------------------------------------------------------------",file=rfile)
 		print("Name\t\t|\tReturn Type\t|\tParameter List",file=rfile)
 		for function in self.funclist:
-			print("%s\t\t|\t %s%s\t|\t{"%(self.funclist[function].fname,'*'*self.funclist[function].findirection,self.funclist[function].ftype),end='',file=rfile)
-			funcargs = self.funclist[function].args.items()
-			for i in range(len(funcargs)):
-				if i == len(funcargs) - 1:
-					print("'%s': '%s'"%(funcargs[i][0],funcargs[i][1].type),end='',file=rfile)
-				else:	
-					print("'%s': '%s', "%(funcargs[i][0],funcargs[i][1].type),end = '',file=rfile)
-			print('}',file=rfile)
+			if function == 'main':	continue
+			print("%s\t\t|\t %s%s\t|\t"%(self.funclist[function].fname,self.funclist[function].ftype,'*'*self.funclist[function].findirection),end='',file=rfile)
+			if not self.funclist[function].proto:
+				funcargs = list(self.funclist[function].args.items())
+				for i in range(len(funcargs)):
+					if i == len(funcargs) - 1:
+						print("%s "%funcargs[i][1].type+"*"*funcargs[i][1].indirection+" %s"%funcargs[i][0],end='',file=rfile)
+					else:	
+						print("%s "%funcargs[i][1].type+"*"*funcargs[i][1].indirection+" %s"%funcargs[i][0],end=', ',file=rfile)
+				print("",file=rfile)
+			else:
+				funcargs = self.funclist[function].protoargs
+				for i in range(len(funcargs)):
+					if i == len(funcargs) - 1:
+						print("%s "%funcargs[i][0]+"*"*funcargs[i][1]+" %s"%funcargs[i][2],end='',file=rfile)
+					else:	
+						print("%s "%funcargs[i][0]+"*"*funcargs[i][1]+" %s"%funcargs[i][2],end=', ',file=rfile)
+				print("",file=rfile)
 		print("-----------------------------------------------------------------",file=rfile)
 		print("Variable table :-",file=rfile)
 		print("-----------------------------------------------------------------",file=rfile)
@@ -129,7 +139,7 @@ class SymbolTable():
 			self.add_protoarg(protoarg[0])
 
 	def add_protoarg(self,arg):
-		self.protoargs.append((arg.type,arg.indirection))
+		self.protoargs.append((arg.type,arg.indirection,arg.var_name))
 
 	def add_arglist(self,arglist):
 		for arg in arglist:

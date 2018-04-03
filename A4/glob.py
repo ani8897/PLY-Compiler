@@ -7,7 +7,7 @@ ast_file = ""
 
 # printing cfg
 cfg_file = ""
-block_index = 1
+block_index = 0
 temp_index = 0
 block_bool = False
 cfg = None

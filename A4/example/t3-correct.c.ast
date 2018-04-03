@@ -1,0 +1,7 @@
+FUNCTION f
+PARAMS (int a, int aint *c)
+RETURNS *int
+RETURN 
+(
+	VAR(b)
+)

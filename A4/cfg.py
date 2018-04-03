@@ -42,7 +42,15 @@ class FCFG():
 		self.cfg = None
 
 	def print_fcfg(self,rfile):
-		print("function %s"%self.fname,file=rfile)
+		print("function %s"%self.fname,file=rfile,end="")
+		print('(',end='',file=rfile)
+		children = list(glob.root_table.funclist[self.fname].args.items())
+		for i in range(len(children)):
+			if i == len(children) - 1:
+				print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s"%children[i][0],end='',file=rfile)
+			else:	
+				print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s, "%children[i][0],end = '',file=rfile)
+		print(')',file=rfile)
 		self.cfg.cfg_print(rfile)
 
 
@@ -160,9 +168,9 @@ def construct_cfg(ast,parent_index=-1):
 			glob.cfg.blocks[block.index] = block
 			glob.block_bool = False
 
-		elif stmts[i].token == 'RET':
+		elif stmts[i].token == 'RETURN':
 			if not(glob.block_bool):
-				block = Block(glob.block_index,'RET',[],-1,[])
+				block = Block(glob.block_index,'RETURN',[],-1,[])
 				glob.block_index += 1
 				glob.block_bool = True
 
@@ -269,7 +277,7 @@ def update_cfg(ast,parent_index=-1,parent_if = False,parent_while = False):
 					update_cfg(if_children[2],block.end,True,False)
 			glob.block_bool = False
 
-		elif stmts[i].token == 'RET':
+		elif stmts[i].token == 'RETURN':
 			if not(glob.block_bool):
 				glob.block_index += 1
 			glob.block_bool = False

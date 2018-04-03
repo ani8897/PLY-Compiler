@@ -1,7 +1,7 @@
 FUNCTION f
-PARAMS {'a': 'int', 'c': 'int'}
+PARAMS (int a, int *c)
 RETURNS *int
-	RET
+	RETURN
 	(
 		VAR(b)
 	)

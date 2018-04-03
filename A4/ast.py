@@ -7,6 +7,17 @@ class Node():
 		self.children = children
 		self.is_const = is_const
 
+	def check_main_return(self):
+		if self.token != 'FUNCTION':
+			for c in self.children:
+				c.check_main_return()
+		else:
+			if self.children[0] == 'main':
+				for stmt in self.children[4].children:
+					if stmt.token == 'RETURN':
+						return
+				self.children[4].children.append(Node("RETURN",[]))
+
 	def print_node(self,depth,rfile=1):
 		if self.token == "ASGN" and self.is_const and self.children[0].token[0:3] == 'VAR':
 			print("Syntax error at ",self.children[0].token[4:-1]," =")
@@ -14,14 +25,14 @@ class Node():
 
 		if self.token == 'FUNCTION':
 			print('FUNCTION %s'%(self.children[0]),file=rfile)
-			print('PARAMS {',end='',file=rfile)
-			children = self.children[1].items()
+			print('PARAMS (',end='',file=rfile)
+			children = list(self.children[1].items())
 			for i in range(len(children)):
 				if i == len(self.children[1]) - 1:
-					print("'%s': '%s'"%(children[i][0],children[i][1].type),end='',file=rfile)
+					print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s"%children[i][0],end='',file=rfile)
 				else:	
-					print("'%s': '%s', "%(children[i][0],children[i][1].type),end = '',file=rfile)
-			print('}',file=rfile)
+					print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s, "%children[i][0],end = '',file=rfile)
+			print(')',file=rfile)
 			print('RETURNS '+'*'*self.children[2]+self.children[3],file=rfile)
 			self.children[4].print_node(depth+1,rfile)
 			print('',file=rfile)

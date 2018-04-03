@@ -1,7 +1,7 @@
 FUNCTION func1
-PARAMS {'a': 'int', 'b': 'int'}
+PARAMS (int a, int b)
 RETURNS *int
-	RET
+	RETURN
 	(
 		DEREF
 		(
