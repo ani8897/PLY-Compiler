@@ -1,0 +1,4 @@
+Maintain a register list.
+Each temporary is used only once on the RHS
+Once the temporary occurs in the RHS, mark the register associated with that variable as free
+
