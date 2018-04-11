@@ -77,8 +77,29 @@ class Node():
 			return ([],self.token[6:-1])
 		
 		elif self.token == 'DEREF': 
+			# child = self.children[0].reconstruct_node()
+			# return ([],'*' + child[1])
+
 			child = self.children[0].reconstruct_node()
-			return ([],'*' + child[1])
+			if child[1][0] == '*':
+
+				new_temp1 = glob.temp_index
+				new_temp_variable1 = "t"+str(new_temp1)
+				glob.temp_index +=1
+				
+				code = new_temp_variable1 + " = " + child[1]
+				child[0].append(code)
+
+				new_temp2 = glob.temp_index
+				new_temp_variable2 = "t"+str(new_temp2)
+				glob.temp_index +=1
+
+				code = new_temp_variable2 + " = *" + new_temp_variable1
+				child[0].append(code)
+
+				return (child[0],new_temp_variable2)
+			else:
+				return (child[0],'*' + child[1])
 		
 		elif self.token == 'ADDR': 
 			child = self.children[0].reconstruct_node()

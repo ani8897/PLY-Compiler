@@ -2,3 +2,16 @@ Maintain a register list.
 Each temporary is used only once on the RHS
 Once the temporary occurs in the RHS, mark the register associated with that variable as free
 
+Order the local variables in sorted order
+
+Stack grows downwards
+d c a
+----->
+
+
+In a function call, the order of parameters is the order of passing
+f(e,a,d)
+d a e
+----->
+
+Star handling step wise just like uminus
