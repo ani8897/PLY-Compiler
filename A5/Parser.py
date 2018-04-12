@@ -9,6 +9,7 @@ from ast import Node
 from cfg import *
 from symtable import *
 from errors import *
+from read_sym import *
 import glob
 
 tokens = (
@@ -562,6 +563,7 @@ if __name__ == "__main__":
 	glob.ast_file = open(sys.argv[1] + '.ast','w')
 	glob.cfg_file = open(sys.argv[1] + '.cfg','w')
 	glob.sym_file = open(sys.argv[1] + '.sym','w')
+	glob.assembly_file = open(sys.argv[1] + '.s','w')
 	glob.cfg = CFG()
 	
 	process(data)
@@ -570,5 +572,14 @@ if __name__ == "__main__":
 	glob.ast.check_main_return()
 	construct_cfg_prog(glob.ast, rfile = glob.cfg_file)
 	glob.root_table.print_symbol_table(rfile=glob.sym_file)
+	glob.ast_file.close()
+	glob.cfg_file.close()
+	glob.sym_file.close()
+
+	glob.cfg_file = open(sys.argv[1] + '.cfg','r')	
+	generate_assembly(glob.assembly_file)
+
+	
+	glob.assembly_file.close()
 
 	print("Successfully Parsed")

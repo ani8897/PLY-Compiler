@@ -59,6 +59,15 @@ class RootTable():
 		else:
 			return (None,None,None,False)
 
+	def get_size(self,fname):
+		ftable = self.funclist[fname]
+		lsize = 0
+		for l in ftable.locals:
+			if ftable.locals[l].type == 'int' or ftable.locals[l].indirection != 0: lsize += 4
+			else: lsize += 8
+		return lsize
+
+
 	def print_symbol_table(self,rfile):
 		print("Procedure table :-",file=rfile)
 		print("-----------------------------------------------------------------",file=rfile)

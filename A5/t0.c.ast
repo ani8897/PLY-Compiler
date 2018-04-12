@@ -1,25 +1,8 @@
 FUNCTION func1
 PARAMS (int a, int b)
-RETURNS int
+RETURNS *int
 	RETURN
 	(
-		MINUS
-		(
-			DEREF
-			(
-				DEREF
-				(
-					DEREF
-					(
-						VAR(c)
-					)
-				)
-			)
-			,
-			DEREF
-			(
-				VAR(d)
-			)
-		)
+		VAR(c)
 	)
 

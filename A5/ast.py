@@ -54,7 +54,7 @@ class Node():
 					if(i < len(self.children)): print('\t'*(depth+1) + ',', file=rfile)
 				print('\t'*depth + ')', file=rfile)
 
-	def reconstruct_node(self):
+	def reconstruct_node(self,funcall=False):
 		tokenMap = {
 			'PLUS'	: '+',
 			'MINUS'	: '-',
@@ -77,29 +77,21 @@ class Node():
 			return ([],self.token[6:-1])
 		
 		elif self.token == 'DEREF': 
-			# child = self.children[0].reconstruct_node()
-			# return ([],'*' + child[1])
+			if not funcall:
+				child = self.children[0].reconstruct_node()
+				return ([],'*' + child[1])
+			else:
 
-			child = self.children[0].reconstruct_node()
-			if child[1][0] == '*':
+				child = self.children[0].reconstruct_node()
 
 				new_temp1 = glob.temp_index
-				new_temp_variable1 = "t"+str(new_temp1)
+				new_temp_variable = "t"+str(new_temp1)
 				glob.temp_index +=1
 				
-				code = new_temp_variable1 + " = " + child[1]
+				code = new_temp_variable + " = *" + child[1]
 				child[0].append(code)
 
-				new_temp2 = glob.temp_index
-				new_temp_variable2 = "t"+str(new_temp2)
-				glob.temp_index +=1
-
-				code = new_temp_variable2 + " = *" + new_temp_variable1
-				child[0].append(code)
-
-				return (child[0],new_temp_variable2)
-			else:
-				return (child[0],'*' + child[1])
+				return (child[0],new_temp_variable)
 		
 		elif self.token == 'ADDR': 
 			child = self.children[0].reconstruct_node()
@@ -143,6 +135,7 @@ class Node():
 			right_child = self.children[1].reconstruct_node()
 
 			code = left_child[1] + " = " + right_child[1]
+			right_child[0].extend(left_child[0])
 			right_child[0].append(code)
 			return (right_child[0],left_child[1])
 
@@ -150,7 +143,7 @@ class Node():
 			funcall_children, content, funcall_params = self.children, [], []
 
 			for exp in funcall_children:
-				node = exp.reconstruct_node()
+				node = exp.reconstruct_node(funcall=True)
 				content.extend(node[0])
 				funcall_params.append(node[1])
 
