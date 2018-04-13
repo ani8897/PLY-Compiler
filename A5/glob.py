@@ -59,6 +59,7 @@ if_parser = 'if(t'+Word(nums)("temp_num")+') goto <bb '+Word(nums)("block_num")+
 else_parser = 'else goto <bb '+Word(nums)("block_num")+'>'
 goto_parser = 'goto <bb '+Word(nums)("block_num")+'>'
 return_parser = 'return '+Regex(r'\**[a-zA-Z_]*[a-zA-Z0-9_]*')("ret_token")
-# temp_assign_parser = 
+temp_assign_bin_parser = 't'+Word(nums)("temp_res")+' = '+Regex(r'[\*\&\-]*')("pre_op1")+'t'Word(nums)("temp_op1")+Regex(r'')("op")+Regex(r'[\*\&\-]*')("pre_op2")+'t'Word(nums)("temp_op2")
+temp_assign_un_parser = 't'+Word(nums)("temp_res")+' = '+Regex(r'[\*\&\-]*')("pre_op1")+'t'Word(nums)("temp_op1")
 # funcall_assign_parser =
 # funcall_parser =  

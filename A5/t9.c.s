@@ -23,15 +23,13 @@ label1:
 	li $s0, 4
 	slt $s2, $s0, $s1
 	move $s0, $s2
-	not $s1, $s0
-	move $s0, $s1
 	bne $s0, $0, label2
 	j label3
 label2:
-	li $s1, 4
-	lw $s2, 12($sp)
-	sw $s1, 0($s2)
-	j label1
+	li $s0, 4
+	lw $s1, 12($sp)
+	sw $s0, 0($s1)
+	j label3
 label3:
 	j epilogue_main
 

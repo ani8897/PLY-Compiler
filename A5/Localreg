@@ -1,6 +1,7 @@
 Maintain a register list.
-Each temporary is used only once on the RHS
-Once the temporary occurs in the RHS, mark the register associated with that variable as free
+Each temporary is used only once on the RHS or for storing result of a comparison
+Once the temporary occurs in the RHS or it occurs in a comparison statement like bne x,0 label, mark the register associated with that variable as free
+Allocate registers to new temporaries from the free list
 
 Order the local variables in sorted order
 
@@ -13,5 +14,3 @@ In a function call, the order of parameters is the order of passing
 f(e,a,d)
 d a e
 ----->
-
-Star handling step wise just like uminus

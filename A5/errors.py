@@ -44,4 +44,4 @@ def raiseExpectedReturn(fname,expected_type,actual_type,expected_indirection,act
 	if actual_indirection == expected_indirection:
 		print("Incompatible return types in function %s , expected: %s and actual :%s, at line %d"%(fname,expected_type,actual_type,line_number))
 	else:
-		print("Incompatible dereferencing of return statement in function %s at line %d"%(fname, line_number))	
+		print("Incompatible dereferencing of return statement in function %s at line %d"%(fname, line_number))

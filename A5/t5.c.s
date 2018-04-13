@@ -52,18 +52,18 @@ label3:
 	bne $s0, $0, label4
 	j label5
 label4:
-	lw $s1, 4($sp)
-	lw $s2, 0($s1)
-	move $s1, $s2
+	lw $s0, 4($sp)
+	lw $s1, 0($s0)
+	move $s0, $s1
 	# setting up activation record for called function
-	li $s2, 3
-	sw $s2, -4($sp)
-	sw $s1, 0($sp)
+	li $s1, 3
+	sw $s1, -4($sp)
+	sw $s0, 0($sp)
 	sub $sp, $sp, 8
 	jal f # function call
 	add $sp, $sp, 8 # destroying activation record of called function
-	move $s1, $v1 # using the return value of called function
-	sw $s1, global_d
+	move $s0, $v1 # using the return value of called function
+	sw $s0, global_d
 	j label5
 label5:
 	j epilogue_main
