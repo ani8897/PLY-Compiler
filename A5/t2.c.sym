@@ -1,12 +1,12 @@
 Procedure table :-
 -----------------------------------------------------------------
-Name		|	Return Type  |  Parameter List
+Name		|	Return Type	|	Parameter List
 -----------------------------------------------------------------
-Variable table :- 
+Variable table :-
 -----------------------------------------------------------------
-Name	|	Scope		|	Base Type  |  Derived Type
+Name		|	Scope		|	Base Type	|	Derived Type
 -----------------------------------------------------------------
-ptr		|	procedure main	|	int	   |	*
-a		|	procedure main	|	int	   |	
+ptr		|	procedure main	|	int	|	*
+a		|	procedure main	|	int	|	
 -----------------------------------------------------------------
 -----------------------------------------------------------------

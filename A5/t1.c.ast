@@ -1,6 +1,5 @@
-
 FUNCTION f
-PARAMS (int a,int *b)
+PARAMS (int a, int *b)
 RETURNS *int
 	ASGN
 	(
@@ -14,10 +13,11 @@ RETURNS *int
 			VAR(m)
 		)
 	)
-RETURN 
-(
-	DEREF
+	RETURN
 	(
-		VAR(c)
+		DEREF
+		(
+			VAR(c)
+		)
 	)
-)
+

@@ -1,6 +1,5 @@
-
 FUNCTION f
-PARAMS (int a,int b)
+PARAMS (int a, int b)
 RETURNS *int
 	ASGN
 	(
@@ -11,17 +10,13 @@ RETURNS *int
 			VAR(m)
 		)
 	)
-RETURN 
-(
-	VAR(c)
-)
+	RETURN
+	(
+		VAR(c)
+	)
 
-
-
-
-
-Function Main
-PARAMS() 
+FUNCTION main
+PARAMS ()
 RETURNS void
 	ASGN
 	(
@@ -63,7 +58,8 @@ RETURNS void
 	(
 		VAR(d)
 		,
-		CALL f( 
+		CALL f
+		(
 			DEREF
 			(
 				VAR(px)
@@ -73,5 +69,6 @@ RETURNS void
 			(
 				VAR(py)
 			)
-		 )
+		)
 	)
+

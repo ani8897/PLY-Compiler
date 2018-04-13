@@ -1,5 +1,6 @@
 import glob
 from pyparsing import ParseException
+from cfg_parser import generate_body
 type_sizes = {
 	'int': '.word	0',
 	'float' : '.space	8'
@@ -24,56 +25,12 @@ def generate_global(rfile):
 
 #### Parsing cfg ###
 
-def parse_label(row,rfile):
+def parse_blocks(fname,rfile):
 
-	try:
-		res = glob.label_parser.parseString(row)
-		print(glob.label%int(res.block_num),file=rfile)
-		return True
-	except ParseException:
-		return False
-
-def parse_if(row,rfile):
-	return False
-
-def parse_else(row,rfile):
-	return False
-
-def parse_goto(row,rfile):
-	return False
-
-def parse_return(row,fname,rfile):
-
-	tokens = row.split()
-	if tokens[0] == 'return' and len(tokens) == 1:
-		print(glob.jump_epilogue%fname,file=rfile)
-		return True
-	try:
-		res = glob.return_parser.parseString(row)
-		print(glob.jump_epilogue%fname,file=rfile)
-		return True
-	except ParseException:
-		return False
-
-####################
-def generate_body(fname,rfile):
-
-	while True:
+	glob.stmtreturn = False
+	while not glob.stmtreturn:
 		row = glob.cfg_file.readline()
-		tokens = row.split()
-		if len(tokens) != 0:
-			# if tokens[0] == 'return':
-			# 	print(glob.jump_epilogue%fname,file=rfile)
-			# 	return
-			if parse_label(row,rfile): continue
-			if parse_if(row,rfile): continue
-			if parse_else(row,rfile): continue
-			if parse_goto(row,rfile): continue
-			if parse_return(row,fname,rfile): return
-		else:
-			if row == 'return':
-				print(glob.jump_epilogue%fname,file=rfile)
-				return
+		generate_body(row,fname,rfile)
 
 def translate_cfg(rfile):
 
@@ -86,7 +43,9 @@ def translate_cfg(rfile):
 				print("%s:"%fname,file=rfile)
 				num_locals = glob.root_table.get_size(fname)
 				print(glob.prologue%num_locals,file=rfile)
-				generate_body(fname,rfile)
+
+				parse_blocks(fname,rfile)
+				
 				print(glob.epilogue%(fname,num_locals),file=rfile)
 		except IndexError:
 			if row == '\n': 

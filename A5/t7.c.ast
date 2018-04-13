@@ -1,12 +1,12 @@
-
-Function Main
-PARAMS() 
+FUNCTION main
+PARAMS ()
 RETURNS void
 	ASGN
 	(
 		VAR(ans)
 		,
-		CALL f( 
+		CALL f
+		(
 			DEREF
 			(
 				VAR(x)
@@ -16,12 +16,14 @@ RETURNS void
 			(
 				VAR(y)
 			)
-		 )
+		)
 	)
+
 FUNCTION f
-PARAMS (float x,int y)
+PARAMS (float x, int y)
 RETURNS *int
-RETURN 
-(
-	VAR(t)
-)
+	RETURN
+	(
+		VAR(t)
+	)
+

@@ -55,9 +55,9 @@ class RootTable():
 
 	def check_function(self,fname):
 		if fname in self.funclist:
-			return (self.funclist[fname].ftype,self.funclist[fname].findirection,self.funclist[fname].protoargs,True)
+			return (self.funclist[fname].ftype,self.funclist[fname].findirection,self.funclist[fname].protoargs,self.funclist[fname].args,self.funclist[fname].proto,True)
 		else:
-			return (None,None,None,False)
+			return (None,None,None,None,False,False)
 
 	def get_size(self,fname):
 		ftable = self.funclist[fname]
@@ -224,21 +224,31 @@ def lookup(symtable,attr):
 
 def function_lookup(symtable,fname,paramlist):
 
-	(ftype,findirection,protoargs,status) = glob.root_table.check_function(fname)
+	(ftype,findirection,protoargs,args,proto,status) = glob.root_table.check_function(fname)
 	
 	if not status:
 		raiseFunctionNotDefined(p[1].syminfo.var_name,glob.line_number)
 		return (None,None,False)
 
-	# arglist = args.items()
-	if len(protoargs) != len(paramlist):
-		raiseNumParamMismatch(len(paramlist),len(protoargs),fname,glob.line_number)
+	if proto:
+		if len(protoargs) != len(paramlist):
+			raiseNumParamMismatch(len(paramlist),len(protoargs),fname,glob.line_number)
+			return (ftype,findirection,True)
+
+		for p in range(len(paramlist)):
+			(symtype,symindirection) = paramlist[p]
+			if protoargs[p][0] != symtype or (protoargs[p][1] != symindirection):
+				raiseParamTypeMismatch('expression','arglist_var_name',fname,glob.line_number) 
 		return (ftype,findirection,True)
+	else:
+		arglist = list(args.items())
+		if len(arglist) != len(paramlist):
+			raiseNumParamMismatch(len(paramlist),len(arglist),fname,glob.line_number)
+			return (ftype,findirection,True)
 
-	for p in range(len(paramlist)):
-		(symtype,symindirection) = paramlist[p]
-		if protoargs[p][0] != symtype or (protoargs[p][1] != symindirection):
-			raiseParamTypeMismatch('expression','arglist_var_name',fname,glob.line_number) 
-	return (ftype,findirection,True)	
-
+		for p in range(len(paramlist)):
+			(symtype,symindirection) = paramlist[p]
+			if arglist[p][1].type != symtype or (arglist[p][1].indirection != symindirection):
+				raiseParamTypeMismatch('expression',arglist[p][1].var_name,fname,glob.line_number) 
+		return (ftype,findirection,True)	
 
