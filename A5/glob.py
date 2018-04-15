@@ -29,7 +29,7 @@ curr_sym_table = root_table
 assembly_file = ""
 stmtreturn = False
 
-free_regs = Register()
+registers = Register()
 
 #Constant strings
 data = "\n\t.data"
@@ -58,12 +58,8 @@ jump_statement = "\tj label%d"
 jump_epilogue = "\tj epilogue_%s"
 
 
-# label_parser = '<bb' + ' ' + Word(nums)("block_num") +'>'
-# if_parser = 'if(t'+Word(nums)("temp_num")+') goto <bb '+Word(nums)("block_num")+'>'
-# else_parser = 'else goto <bb '+Word(nums)("block_num")+'>'
-# goto_parser = 'goto <bb '+Word(nums)("block_num")+'>'
-# return_parser = 'return '+Regex(r'\**[a-zA-Z_]*[a-zA-Z0-9_]*')("ret_token")
-# temp_assign_bin_parser = 't'+Word(nums)("temp_res")+' = t'Word(nums)("temp_op1")+Regex(r'[\+ \- \* \/ "==" "&&" "||" "!=" \> \< "!=" ">=" "<="]')("binop")+'t'Word(nums)("temp_op2")
-# temp_assign_un_parser = 't'+Word(nums)("temp_res")+' = '+Regex(r'[\*\&\-]*')("un_op")+'t'Word(nums)("temp_op")
-# funcall_assign_parser =
-# funcall_parser =  
+li = "\tli $%s, %d"
+la = "\tla $%s, global_%s"
+addi = "\taddi $%s, $%s, %d"
+lw = "\tlw $%s, %d($%s)"
+sw = "\tsw $%s, %d($%s)"

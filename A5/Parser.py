@@ -576,6 +576,7 @@ if __name__ == "__main__":
 	glob.cfg_file.close()
 	glob.sym_file.close()
 
+	glob.root_table.sort_locals()
 	glob.cfg_file = open(sys.argv[1] + '.cfg','r')	
 	generate_assembly(glob.assembly_file)
 

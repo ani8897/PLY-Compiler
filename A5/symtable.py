@@ -108,6 +108,9 @@ class RootTable():
 		print("-----------------------------------------------------------------",file=rfile)
 		print("-----------------------------------------------------------------",file=rfile)
 
+	def sort_locals(self):
+		for fname in self.funclist:
+			self.funclist[fname].sort_locals()
 
 
 class SymbolTable():
@@ -185,6 +188,19 @@ class SymbolTable():
 			return (self.args[var_name].type,self.args[var_name].indirection,True)
 		else:
 			return (None,None,False)
+
+	def sort_locals(self):
+		self.sorted_locals = OrderedDict(sorted(self.locals.items()))
+
+	def var_offset(self,var_name):
+		offset = 0
+		for vname in self.sorted_locals:
+			if self.sorted_locals[vname].type == 'float' and self.sorted_locals[vname].indirection == 0:
+				offset += 8
+			else:
+				offset += 4
+			if vname == var_name: break
+		return offset 
 
 class Attributes():
 

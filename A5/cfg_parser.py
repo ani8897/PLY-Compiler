@@ -120,30 +120,53 @@ def p_pointer(p):
 			| TIMES address %prec STAR
 			| TIMES ID %prec STAR
 	'''
-	pass
+	if p[2][0] == 'A':
+		p[0] = ('P',p[2][1],p[2][2]+1)
+	elif p[2][0] == 'P':
+		p[0] = ('P',p[2][1],p[2][2]+1)
+	else:
+		p[0] = ('P',p[2],1)
+		
 
 def p_address(p):
 	'''
-	address : AMPERSAND var
+	address : AMPERSAND ID
 	'''
-	pass
+	p[0] = ('A',p[2],-1)
 
 
-def p_var(p):
+def p_var_id(p):
 	'''
 	var : ID
-		| TEMPVAR
-		| const
-		| pointer
 	'''
-	pass
+	p[0] = ('I',p[1],0)
+
+def p_var_tempvar(p):
+	'''
+	var : TEMPVAR
+	'''
+	p[0] = ('T',p[1],0)
+
+def p_var_const(p):
+	'''
+	var : const
+	'''
+	p[0] = ('C',p[1],0)
+
+def p_var_pointer(p):
+	'''
+	var : pointer
+	'''
+	p[0] = p[1]
 
 def p_const(p):
 	'''
 	const : NUMBER
 		| FLOATNUM
 	'''
-	pass
+	reg = glob.registers.fetch_register()
+	print(glob.li%(reg,p[1]),file=globals()['rfile'])
+	p[0] = reg
 
 def p_label(p):
 	'''
@@ -187,7 +210,40 @@ def p_unassign(p):
 			| var EQUALS NOT var
 			| var EQUALS address
 	'''
-	pass
+	try:
+		rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+		if len(p) == 4:
+			if p[3][0] == 'A':
+
+				r_reg = glob.registers.fetch_register()
+				if p[3][1] in rt.globals:
+					print(glob.la%(r_reg,p[3][1]),file=globals()['rfile'])
+				else:
+					offset = ft.var_offset(p[3][1])
+					print(glob.addi%(r_reg,'sp',offset),file=globals()['rfile'])
+				
+				l_reg = glob.registers.fetch_register()
+				if p[1][0] == 'P':
+					if p[1][1] in rt.globals:
+						print(glob.la%(l_reg,p[1][1]),file=globals()['rfile'])
+					else:
+						offset = ft.var_offset(p[1][1])
+						print(glob.lw%(l_reg,offset,'sp'),file=globals()['rfile'])
+					
+					for indirection in  range(p[1][2] - 1):
+						t_reg = glob.registers.fetch_register()
+						print(glob.lw%(t_reg,0,l_reg),file=globals()['rfile'])
+						glob.registers.free_register(l_reg)
+						l_reg = t_reg
+
+					print(glob.sw%(r_reg,0,l_reg),file=globals()['rfile'])
+					glob.registers.free_register(l_reg)
+					glob.registers.free_register(r_reg)
+	except:
+		pass
+
+
+
 
 def p_binassign(p):
 	'''
@@ -258,6 +314,7 @@ def p_error(p):
 		print("Syntax error at EOF")
 
 def generate_body(data,fname,rfile):
+	# print(data)
 	globals()['fname'] = fname
 	globals()['rfile'] = rfile
 	lex.lex()
