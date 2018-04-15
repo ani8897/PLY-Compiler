@@ -14,11 +14,7 @@ f:
 
 label0:
 	la $s0, global_d
-	lw $s1, 4($sp)
-	sw $s0, 0($s1)
-	addi $s0, $sp, 8
-	lw $s1, 4($sp)
-	sw $s0, 0($s1)
+	addi $s2, $sp, 8
 	j label1
 label1:
 	j epilogue_f

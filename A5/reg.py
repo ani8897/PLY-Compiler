@@ -17,3 +17,6 @@ class Register():
 
 	def clear_mapping(self,temp_name):
 		free_register(self,self.mapping.pop(temp_name))
+
+	def get_mapping(self,temp_name):
+		return self.mapping[temp_name]

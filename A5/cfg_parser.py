@@ -210,35 +210,78 @@ def p_unassign(p):
 			| var EQUALS NOT var
 			| var EQUALS address
 	'''
+	rfile=globals()['rfile']
 	try:
 		rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 		if len(p) == 4:
+
+			## var EQUALS address ##
 			if p[3][0] == 'A':
 
 				r_reg = glob.registers.fetch_register()
 				if p[3][1] in rt.globals:
-					print(glob.la%(r_reg,p[3][1]),file=globals()['rfile'])
+					print(glob.la%(r_reg,p[3][1]),file=rfile)
 				else:
 					offset = ft.var_offset(p[3][1])
-					print(glob.addi%(r_reg,'sp',offset),file=globals()['rfile'])
+					print(glob.addi%(r_reg,'sp',offset),file=rfile)
 				
-				l_reg = glob.registers.fetch_register()
-				if p[1][0] == 'P':
-					if p[1][1] in rt.globals:
-						print(glob.la%(l_reg,p[1][1]),file=globals()['rfile'])
-					else:
-						offset = ft.var_offset(p[1][1])
-						print(glob.lw%(l_reg,offset,'sp'),file=globals()['rfile'])
+				if p[1][0] == 'P': lhs_is_pointer(p[1][1],p[1][2],r_reg)
+				elif p[1][0] == 'T': lhs_is_temporary(p[1][1],r_reg)
+				elif p[1][0] == 'I': lhs_is_id(p[1][1],r_reg)
 					
-					for indirection in  range(p[1][2] - 1):
-						t_reg = glob.registers.fetch_register()
-						print(glob.lw%(t_reg,0,l_reg),file=globals()['rfile'])
-						glob.registers.free_register(l_reg)
-						l_reg = t_reg
 
-					print(glob.sw%(r_reg,0,l_reg),file=globals()['rfile'])
-					glob.registers.free_register(l_reg)
+			## var EQUALS var ##
+
+			if p[3][0] == 'P':
+				r_reg = glob.registers.fetch_register()
+				if p[1][1] in rt.globals:
+					print(glob.la%(r_reg,p[1][1]),file=rfile)
+				else:
+					offset = ft.var_offset(p[1][1])
+					print(glob.lw%(r_reg,offset,'sp'),file=rfile)
+				
+				for indirection in  range(p[1][2]):
+					temp_reg = glob.registers.fetch_register()
+					print(glob.lw%(temp_reg,0,r_reg),file=rfile)
 					glob.registers.free_register(r_reg)
+					r_reg = temp_reg	
+
+				if p[1][0] == 'P': lhs_is_pointer(p[1][1],p[1][2],r_reg)
+				elif p[1][0] == 'T': lhs_is_temporary(p[1][1],r_reg)
+				elif p[1][0] == 'I': lhs_is_id(p[1][1],r_reg)
+				glob.registers.free_register(r_reg)
+
+			elif p[3][0] == 'T':
+				r_reg = glob.registers.get_mapping(p[3][1])
+				if p[1][0] == 'P': lhs_is_pointer(p[1][1],p[1][2],r_reg)
+				elif p[1][0] == 'T': lhs_is_temporary(p[1][1],r_reg)
+				elif p[1][0] == 'I': lhs_is_id(p[1][1],r_reg)
+				glob.registers.clear_mapping(r_reg)
+
+			elif p[3][0] == 'I':
+				r_reg = glob.registers.fetch_register()
+				if p[1][1] in rt.globals:
+					print(glob.la%(r_reg,p[1][1]),file=rfile)
+					temp_reg = glob.registers.fetch_register()
+					print(glob.lw%(temp_reg,0,r_reg),file=rfile)
+					glob.registers.free_register(r_reg)
+					r_reg = temp_reg
+				else:
+					offset = ft.var_offset(p[1][1])
+					print(glob.lw%(r_reg,offset,'sp'),file=rfile)
+				if p[1][0] == 'P': lhs_is_pointer(p[1][1],p[1][2],r_reg)
+				elif p[1][0] == 'T': lhs_is_temporary(p[1][1],r_reg)
+				elif p[1][0] == 'I': lhs_is_id(p[1][1],r_reg)
+				glob.registers.free_register(r_reg)
+
+			elif p[3][0] == 'C':
+				r_reg = p[3][1]
+				if p[1][0] == 'P': lhs_is_pointer(p[1][1],p[1][2],r_reg)
+				elif p[1][0] == 'T': lhs_is_temporary(p[1][1],r_reg)
+				elif p[1][0] == 'I': lhs_is_id(p[1][1],r_reg)
+				glob.registers.free_register(r_reg)
+
+
 	except:
 		pass
 
@@ -312,6 +355,41 @@ def p_error(p):
 		print("Syntax error at '{0}' line no  '{1}'".format(p.value,glob.line_number))
 	else:
 		print("Syntax error at EOF")
+
+
+def lhs_is_pointer(var_name,indirection,r_reg):
+	rfile=globals()['rfile']
+	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+	l_reg = glob.registers.fetch_register()
+	if p[1][1] in rt.globals:
+		print(glob.la%(l_reg,var_name),file=rfile)
+	else:
+		offset = ft.var_offset(var_name)
+		print(glob.lw%(l_reg,offset,'sp'),file=rfile)
+	
+	for i in  range(indirection - 1):
+		t_reg = glob.registers.fetch_register()
+		print(glob.lw%(t_reg,0,l_reg),file=rfile)
+		glob.registers.free_register(l_reg)
+		l_reg = t_reg
+
+	print(glob.sw%(r_reg,0,l_reg),file=rfile)
+	glob.registers.free_register(l_reg)
+
+def lhs_is_temporary(var_name,r_reg):
+	rfile=globals()['rfile']
+	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+	l_reg = glob.registers.add_mapping(var_name)
+	print(glob.move%(l_reg,r_reg),file=rfile)
+
+def lhs_is_id(var_name,r_reg):
+	rfile=globals()['rfile']
+	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+	if var_name in rt.globals:
+		print(glob.sw%(r_reg,'globals_'+var_name),file=rfile)
+	else:
+		offset = ft.var_offset(var_name)
+		print(glob.sw%(r_reg,offset,'sp'),file=rfile)
 
 def generate_body(data,fname,rfile):
 	# print(data)

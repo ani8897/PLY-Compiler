@@ -17,10 +17,13 @@ func1:
  # Prologue ends
 
 label0:
+	li $s0, 52
 	j label3
 label1:
+	li $s1, 0
 	j label3
 label2:
+	li $s2, 1
 	j label1
 label3:
 	j epilogue_func1
@@ -41,12 +44,17 @@ main:
  # Prologue ends
 
 label4:
+	lw $s3, 12($sp)
+	li $s4, 3
 	j label5
 label5:
+	li $s5, 52
 	j label8
 label6:
+	li $s6, 0
 	j label8
 label7:
+	li $s7, 1
 	j label6
 label8:
 	j epilogue_main
@@ -67,10 +75,13 @@ func2:
  # Prologue ends
 
 label9:
+	li $t0, 52
 	j label12
 label10:
+	li $t1, 0
 	j label12
 label11:
+	li $t2, 1
 	j label10
 label12:
 	j epilogue_func2
