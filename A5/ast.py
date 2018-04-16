@@ -143,7 +143,7 @@ class Node():
 			funcall_children, content, funcall_params = self.children, [], []
 
 			for exp in funcall_children:
-				node = exp.reconstruct_node(funcall=True)
+				node = exp.reconstruct_node(funcall=False)
 				content.extend(node[0])
 				funcall_params.append(node[1])
 

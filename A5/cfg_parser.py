@@ -147,11 +147,17 @@ def p_var_tempvar(p):
 	'''
 	p[0] = ('T',p[1],0)
 
-def p_var_const(p):
+def p_var_const_int(p):
 	'''
-	var : const
+	var : const_int
 	'''
 	p[0] = ('C',p[1],0)
+
+def p_var_const_float(p):
+	'''
+	var : const_float
+	'''
+	p[0] = ('F',p[1],0)
 
 def p_var_pointer(p):
 	'''
@@ -159,12 +165,18 @@ def p_var_pointer(p):
 	'''
 	p[0] = p[1]
 
-def p_const(p):
+def p_const_float(p):
 	'''
-	const : NUMBER
-		| FLOATNUM
+	const_float : FLOATNUM
 	'''
 	p[0] = p[1]
+
+def p_const_int(p):
+	'''
+	const_int : NUMBER
+	'''
+	p[0] = p[1]
+
 
 def p_label(p):
 	'''
@@ -184,7 +196,10 @@ def p_funassign(p):
 	'''
 	funassign : var EQUALS funcall
 	'''
-	pass
+	reg = glob.registers.fetch_register()
+	print(glob.move%(reg,'v1'),file=rfile)
+	analyse_lhs(p[1][0],p[1][1],p[1][2],reg)
+	glob.registers.free_register(reg)
 
 def p_funcall(p):
 	'''
@@ -192,14 +207,52 @@ def p_funcall(p):
 	params : var paramcomp
 			|
 	'''
-	pass
+	def get_size(v):
+		if v[0] == 'F':
+			size = 8
+		elif v[0] == 'C':
+			size = 4
+		elif v[0] == 'P':
+			size = 4
+		elif v[0] == 'T':
+			size = 4
+		elif v[0] == 'I':
+			size = 4
+		return size
+
+
+	if len(p) == 3:
+		p[2].insert(0,p[1])
+		p[0] = p[2]	
+	elif len(p) == 0:
+		p[0] = []
+	else:
+		size = 0
+		for v in p[3]:
+			size += get_size(v)
+
+		offset = -size 
+		for v in p[3]:
+			offset += get_size(v)
+			rhs_func = globals()['rhs_functions'][v[0]]
+			reg = rhs_func(v[1],v[2])
+			print(glob.sw%(reg,offset,'sp'),file=rfile)
+			glob.registers.free_register(reg)
+
+		print(glob.subi%('sp','sp',size),file=rfile)
+		print(glob.jal%p[1][1],file=rfile)
+		print(glob.addi%('sp','sp',size),file=rfile)
 
 def p_paramcomp(p):
 	'''
 	paramcomp : COMMA var paramcomp
 			|
 	'''
-	pass
+	if len(p) == 1:
+		p[0] = []
+	else:
+		p[3].insert(0,p[2])
+		p[0] = p[3]	
 
 def p_unassign(p):
 	'''
@@ -370,7 +423,7 @@ def lhs_is_pointer(var_name,indirection,r_reg):
 	if var_name in rt.globals:
 		print(glob.la%(l_reg,var_name),file=rfile)
 	else:
-		offset = ft.var_offset(var_name)
+		offset = ft.var_offset(var_name,indirection)
 		print(glob.lw%(l_reg,offset,'sp'),file=rfile)
 	
 	for i in  range(indirection - 1):
@@ -392,9 +445,9 @@ def lhs_is_id(var_name,r_reg):
 	rfile=globals()['rfile']
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 	if var_name in rt.globals:
-		print(glob.sw%(r_reg,'globals_'+var_name),file=rfile)
+		print(glob.sw_glob%(r_reg,'globals_'+var_name),file=rfile)
 	else:
-		offset = ft.var_offset(var_name)
+		offset = ft.var_offset(var_name, indirection)
 		print(glob.sw%(r_reg,offset,'sp'),file=rfile)
 
 def print_negu(r_reg):
@@ -412,7 +465,7 @@ def rhs_pointer(var_name,indirection):
 	if var_name in rt.globals:
 		print(glob.la%(r_reg,var_name),file=rfile)
 	else:
-		offset = ft.var_offset(var_name)
+		offset = ft.var_offset(var_name, indirection)
 		print(glob.lw%(r_reg,offset,'sp'),file=rfile)
 	
 	for i in range(indirection):
@@ -436,7 +489,7 @@ def rhs_id(var_name,indirection):
 		glob.registers.free_register(r_reg)
 		r_reg = temp_reg
 	else:
-		offset = ft.var_offset(var_name)
+		offset = ft.var_offset(var_name, indirection)
 		print(glob.lw%(r_reg,offset,'sp'),file=rfile) 
 
 	return r_reg
@@ -452,7 +505,7 @@ def rhs_address(var_name,indirection):
 	if var_name in rt.globals:
 		print(glob.la%(r_reg,var_name),file=rfile)
 	else:
-		offset = ft.var_offset(var_name)
+		offset = ft.var_offset(var_name, indirection)
 		print(glob.addi%(r_reg,'sp',offset),file=rfile)
 	return r_reg 
 

@@ -192,10 +192,10 @@ class SymbolTable():
 	def sort_locals(self):
 		self.sorted_locals = OrderedDict(sorted(self.locals.items()))
 
-	def var_offset(self,var_name):
+	def var_offset(self,var_name,ind):
 		offset = 0
 		for vname in self.sorted_locals:
-			if self.sorted_locals[vname].type == 'float' and self.sorted_locals[vname].indirection == 0:
+			if self.sorted_locals[vname].type == 'float' and self.sorted_locals[vname].indirection == ind:
 				offset += 8
 			else:
 				offset += 4
@@ -203,7 +203,7 @@ class SymbolTable():
 
 		offset += 8
 		for vname in self.args:
-			if self.args[vname].type == 'float' and self.args[vname].indirection == 0:
+			if self.args[vname].type == 'float' and self.args[vname].indirection == ind:
 				offset += 8
 			else:
 				offset += 4

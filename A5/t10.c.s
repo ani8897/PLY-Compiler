@@ -62,34 +62,41 @@ main:
  # Prologue ends
 
 label4:
+	li $s0, 3
+	sw $s0, -4($sp)
 	lw $s0, 4($sp)
 	lw $s1, 0($s0)
-	move $s0, $s1
+	sw $s1, 0($sp)
+	subi $sp, $sp, 8
+	jal func2
+	addi $sp, $sp, 8
+	move $s0, $v1
+	sw $s0, globals_g3
 	j label5
 label5:
-	la $s1, global_g3
-	lw $s2, 0($s1)
-	li $s1, 52
-	seq $s3, $s2, $s1
-	move $s1, $s3
-	bne $s1, $0, label6
+	la $s0, global_g3
+	lw $s1, 0($s0)
+	li $s0, 52
+	seq $s2, $s1, $s0
+	move $s0, $s2
+	bne $s0, $0, label6
 	j label8
 label6:
-	lw $s1, 12($sp)
-	lw $s2, 0($s1)
-	li $s1, 0
-	sne $s3, $s2, $s1
-	move $s1, $s3
-	bne $s1, $0, label7
+	lw $s0, 12($sp)
+	lw $s1, 0($s0)
+	li $s0, 0
+	sne $s2, $s1, $s0
+	move $s0, $s2
+	bne $s0, $0, label7
 	j label8
 label7:
+	la $s0, global_g3
+	lw $s1, 0($s0)
+	li $s0, 1
+	add $s2, $s1, $s0
+	move $s0, $s2
 	la $s1, global_g3
-	lw $s2, 0($s1)
-	li $s1, 1
-	add $s3, $s2, $s1
-	move $s1, $s3
-	la $s2, global_g3
-	sw $s1, 0($s2)
+	sw $s0, 0($s1)
 	j label6
 label8:
 	j epilogue_main
@@ -110,33 +117,33 @@ func2:
  # Prologue ends
 
 label9:
-	la $s1, global_g3
-	lw $s2, 0($s1)
-	li $s1, 52
-	seq $s3, $s2, $s1
-	move $s1, $s3
-	bne $s1, $0, label10
+	la $s0, global_g3
+	lw $s1, 0($s0)
+	li $s0, 52
+	seq $s2, $s1, $s0
+	move $s0, $s2
+	bne $s0, $0, label10
 	j label12
 label10:
-	lw $s1, 4($sp)
-	lw $s2, 0($s1)
-	li $s1, 0
-	sne $s3, $s2, $s1
-	move $s1, $s3
-	bne $s1, $0, label11
+	lw $s0, 4($sp)
+	lw $s1, 0($s0)
+	li $s0, 0
+	sne $s2, $s1, $s0
+	move $s0, $s2
+	bne $s0, $0, label11
 	j label12
 label11:
+	la $s0, global_g3
+	lw $s1, 0($s0)
+	li $s0, 1
+	add $s2, $s1, $s0
+	move $s0, $s2
 	la $s1, global_g3
-	lw $s2, 0($s1)
-	li $s1, 1
-	add $s3, $s2, $s1
-	move $s1, $s3
-	la $s2, global_g3
-	sw $s1, 0($s2)
+	sw $s0, 0($s1)
 	j label10
 label12:
-	lw $s1, 4($sp)
-	move $v1, $s1
+	lw $s0, 4($sp)
+	move $v1, $s0
 	j epilogue_func2
 # Epilogue begins
 epilogue_func2:

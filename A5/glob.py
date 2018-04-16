@@ -61,6 +61,7 @@ jump_epilogue = "\tj epilogue_%s"
 li = "\tli $%s, %d"
 la = "\tla $%s, global_%s"
 lw = "\tlw $%s, %d($%s)"
+sw_glob = "\tsw $%s, %s"
 sw = "\tsw $%s, %d($%s)"
 move = "\tmove $%s, $%s"
 
@@ -71,6 +72,8 @@ slt = "\tslt $%s, $%s, $%s"
 bne = "\tbne $%s, $0, label%d"
 
 addi = "\taddi $%s, $%s, %d"
+subi = "\tsubi $%s, $%s, %d"
+
 
 add = "\tadd $%s, $%s, $%s"
 sub = "\tsub $%s, $%s, $%s"
@@ -85,7 +88,7 @@ _not = "\tnot $%s, $%s"
 _and = "\tand $%s, $%s, $%s" 
 _or = "\tor $%s, $%s, $%s"
 
-jal = "\t%s"
+jal = "\tjal %s"
 
 
 arithmetic = {
