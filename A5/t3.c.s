@@ -13,6 +13,8 @@ f:
  # Prologue ends
 
 label0:
+	addi $s0, $sp, 8
+	sw $s0, 4($sp)
 	j label1
 label1:
 	j epilogue_f
@@ -33,6 +35,8 @@ main:
  # Prologue ends
 
 label2:
+	li $s1, 3
+	li $s2, 4
 	j label3
 label3:
 	j epilogue_main

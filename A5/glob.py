@@ -72,3 +72,5 @@ jal = "\t%s"
 div = "\tdiv %s, %s"
 mflo = "\tmflo %s"
 negu = "\tnegu $%s, $%s"
+_not = "\tnot $%s, $%s"
+

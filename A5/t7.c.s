@@ -12,6 +12,10 @@ main:
  # Prologue ends
 
 label0:
+	lw $s0, 12($sp)
+	move $s1, $s0
+	lw $s0, 12($sp)
+	move $s2, $s0
 	j label1
 label1:
 	j epilogue_main

@@ -45,7 +45,8 @@ main:
 
 label4:
 	lw $s3, 12($sp)
-	li $s4, 3
+	move $s4, $s3
+	li $s3, 3
 	j label5
 label5:
 	li $s5, 52

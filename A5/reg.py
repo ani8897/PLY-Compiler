@@ -11,12 +11,12 @@ class Register():
 		self.freelist.sort()
 
 	def add_mapping(self,temp_name):
-		new_reg = fetch_register(self)
+		new_reg = self.fetch_register()
 		self.mapping[temp_name] = new_reg
 		return new_reg
 
 	def clear_mapping(self,temp_name):
-		free_register(self,self.mapping.pop(temp_name))
+		self.free_register(self.mapping.pop(temp_name))
 
 	def get_mapping(self,temp_name):
 		return self.mapping[temp_name]

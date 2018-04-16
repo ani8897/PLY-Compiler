@@ -12,6 +12,11 @@ main:
  # Prologue ends
 
 label0:
+	addi $s0, $sp, 4
+	sw $s0, 8($sp)
+	li $s1, 2
+	lw $s2, 8($sp)
+	sw $s1, 0($s2)
 	j label1
 label1:
 	j epilogue_main
