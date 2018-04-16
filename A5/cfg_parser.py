@@ -213,24 +213,11 @@ def p_unassign(p):
 		rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 		if len(p) == 4:
 			## var EQUALS address ##
-			if p[3][0] == 'A':
-				r_reg = glob.registers.fetch_register()
-				if p[3][1] in rt.globals:
-					print(glob.la%(r_reg,p[3][1]),file=rfile)
-				else:
-					offset = ft.var_offset(p[3][1])
-					print(glob.addi%(r_reg,'sp',offset),file=rfile)
-				
-				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-				glob.registers.free_register(r_reg)
+			rhs_func = globals()['rhs_functions'][p[3][0]]
+			r_reg = rhs_func(p[3][1],p[3][2])
 
-			## var EQUALS var ##
-			else:
-				rhs_func = globals()['rhs_functions'][p[3][0]]
-				r_reg = rhs_func(p[3][1],p[3][2])
-
-				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-				glob.registers.free_register(r_reg)
+			analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
+			glob.registers.free_register(r_reg)
 			
 		else:
 			## Assuming temporaries on both sides ##
@@ -362,6 +349,11 @@ def p_returnstmt(p):
 			| RETURN address
 	'''
 	glob.stmtreturn = True
+	if len(p) == 3:
+		rhs_func = globals()['rhs_functions'][p[2][0]]
+		reg = rhs_func(p[2][1],p[2][2])
+		print(glob.move%('v1',reg),file=rfile)
+		glob.registers.free_register(reg)
 	print(glob.jump_epilogue%globals()['fname'],file=globals()['rfile'])
 
 def p_error(p):
@@ -435,6 +427,7 @@ def rhs_temporary(var_name,indirection):
 	return glob.registers.get_mapping(var_name)
 
 def rhs_id(var_name,indirection):
+	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 	r_reg = glob.registers.fetch_register()
 	if var_name in rt.globals:
 		print(glob.la%(r_reg,var_name),file=rfile)
@@ -453,6 +446,16 @@ def rhs_const(num,indirection):
 	print(glob.li%(reg,num),file=globals()['rfile'])
 	return reg
 
+def rhs_address(var_name,indirection):
+	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+	r_reg = glob.registers.fetch_register()
+	if var_name in rt.globals:
+		print(glob.la%(r_reg,var_name),file=rfile)
+	else:
+		offset = ft.var_offset(var_name)
+		print(glob.addi%(r_reg,'sp',offset),file=rfile)
+	return r_reg 
+
 def analyse_lhs(token,var_name,indirection,r_reg):
 	if token == 'P': lhs_is_pointer(var_name,indirection,r_reg)
 	elif token == 'T': lhs_is_temporary(var_name,r_reg)
@@ -466,7 +469,8 @@ def generate_body(data,fname,rfile):
 		'P' : rhs_pointer,
 		'T' : rhs_temporary,
 		'I' : rhs_id,
-		'C' : rhs_const
+		'C' : rhs_const,
+		'A' : rhs_address
 	}
 	lex.lex()
 	yacc.yacc(debug = False, write_tables = False)

@@ -135,6 +135,8 @@ label11:
 	sw $s1, 0($s2)
 	j label10
 label12:
+	lw $s1, 4($sp)
+	move $v1, $s1
 	j epilogue_func2
 # Epilogue begins
 epilogue_func2:
