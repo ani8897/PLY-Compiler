@@ -35,20 +35,20 @@ main:
  # Prologue ends
 
 label2:
-	addi $s1, $sp, 12
-	sw $s1, 4($sp)
-	addi $s2, $sp, 16
-	sw $s2, 8($sp)
-	li $s3, 2
-	lw $s4, 4($sp)
-	sw $s3, 0($s4)
-	li $s3, 3
-	lw $s4, 8($sp)
-	sw $s3, 0($s4)
-	lw $s3, 16($sp)
-	move $s4, $s3
-	lw $s3, 16($sp)
-	move $s5, $s3
+	addi $s0, $sp, 12
+	sw $s0, 4($sp)
+	addi $s0, $sp, 16
+	sw $s0, 8($sp)
+	li $s0, 2
+	lw $s1, 4($sp)
+	sw $s0, 0($s1)
+	li $s0, 3
+	lw $s1, 8($sp)
+	sw $s0, 0($s1)
+	lw $s0, 16($sp)
+	move $s1, $s0
+	lw $s0, 16($sp)
+	move $s2, $s0
 	j label3
 label3:
 	j epilogue_main

@@ -35,8 +35,8 @@ main:
  # Prologue ends
 
 label2:
-	li $s1, 3
-	li $s2, 4
+	li $s0, 3
+	li $s1, 4
 	j label3
 label3:
 	j epilogue_main

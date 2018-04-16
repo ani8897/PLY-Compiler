@@ -1,9 +1,10 @@
 
 	.data
+	global_d:	.word	0
 
 	.text	# The .text assembler directive indicates
-	.globl main	# The following is the code
-main:
+	.globl f	# The following is the code
+f:
 # Prologue begins
  	sw $ra, 0($sp)	# Save the return address
  	sw $fp, -4($sp)	# Save the frame pointer
@@ -12,16 +13,16 @@ main:
  # Prologue ends
 
 label0:
-	addi $s0, $sp, 4
-	sw $s0, 8($sp)
-	li $s0, 2
-	lw $s1, 8($sp)
+	lw $s0, 4($sp)
+	lw $s1, 0($s0)
+	negu $s0, $s1
+	lw $s1, 4($sp)
 	sw $s0, 0($s1)
 	j label1
 label1:
-	j epilogue_main
+	j epilogue_f
 # Epilogue begins
-epilogue_main:
+epilogue_f:
 	add $sp, $sp, 8
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)

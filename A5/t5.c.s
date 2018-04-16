@@ -35,19 +35,19 @@ main:
  # Prologue ends
 
 label2:
-	addi $s1, $sp, 8
-	sw $s1, 4($sp)
-	li $s2, 9
-	lw $s3, 4($sp)
-	sw $s2, 0($s3)
+	addi $s0, $sp, 8
+	sw $s0, 4($sp)
+	li $s0, 9
+	lw $s1, 4($sp)
+	sw $s0, 0($s1)
 	j label3
 label3:
-	li $s2, 5
+	li $s0, 5
 	j label5
 label4:
-	lw $s3, 8($sp)
-	move $s4, $s3
-	li $s3, 3
+	lw $s1, 8($sp)
+	move $s2, $s1
+	li $s1, 3
 	j label5
 label5:
 	j epilogue_main
