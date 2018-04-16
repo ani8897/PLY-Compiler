@@ -38,7 +38,7 @@ RETURNS void
 					)
 				)
 				,
-				DIV
+				PLUS
 				(
 					DEREF
 					(

@@ -65,7 +65,7 @@ class RootTable():
 		for l in ftable.locals:
 			if ftable.locals[l].type == 'int' or ftable.locals[l].indirection != 0: lsize += 4
 			else: lsize += 8
-		return lsize
+		return lsize + 8
 
 
 	def print_symbol_table(self,rfile):
@@ -199,7 +199,16 @@ class SymbolTable():
 				offset += 8
 			else:
 				offset += 4
+			if vname == var_name: return offset
+
+		offset += 8
+		for vname in self.args:
+			if self.args[vname].type == 'float' and self.args[vname].indirection == 0:
+				offset += 8
+			else:
+				offset += 4
 			if vname == var_name: break
+
 		return offset 
 
 class Attributes():

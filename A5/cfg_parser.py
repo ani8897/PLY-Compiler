@@ -238,7 +238,7 @@ def p_unassign(p):
 				r_reg = glob.registers.get_mapping(p[4][1])
 				l_reg = glob.registers.add_mapping(p[1][1])
 				print(glob._not%(l_reg,r_reg),file=rfile)
-				glob.registers.clear_mapping(r_reg)
+				glob.registers.clear_mapping(p[4][1])
 
 			elif p[3] == '-':
 				rhs_func = globals()['rhs_functions'][p[4][0]]
@@ -264,7 +264,32 @@ def p_condassign(p):
 	'''
 	condassign : var EQUALS var condop var
 	'''
-	pass
+	rfile = globals()['rfile']
+	rhs_func1,rhs_func2 = globals()['rhs_functions'][p[3][0]],globals()['rhs_functions'][p[5][0]]
+	r_reg1 = rhs_func1(p[3][1],p[3][2])
+	r_reg2 = rhs_func2(p[5][1],p[5][2])
+	r_reg = glob.registers.fetch_register()
+	if p[4] in glob.conditional:
+		print(glob.conditional[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
+		glob.registers.free_register(r_reg1)
+		glob.registers.free_register(r_reg2)
+	else:
+		if p[4] == '>' or p[4] == '<=':
+			print(glob.slt%(r_reg,r_reg2,r_reg1),file = rfile)
+		else:
+			print(glob.slt%(r_reg,r_reg1,r_reg2),file = rfile)
+		
+		glob.registers.free_register(r_reg1)
+		glob.registers.free_register(r_reg2)
+
+		if p[4] == '>=' or p[4] == '<=':
+			temp_reg = glob.registers.fetch_register()
+			print(glob._not%(temp_reg,r_reg))
+			glob.registers.free_register(r_reg)
+			r_reg = temp_reg
+
+	analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
+	glob.registers.free_register(r_reg)
 
 def p_arithassign(p):
 	'''
@@ -297,7 +322,7 @@ def p_condop(p):
 			| AND
 			| OR
 	'''
-	pass
+	p[0] = p[1]
 
 def p_arithop(p):
 	'''
@@ -312,7 +337,11 @@ def p_ifstmt(p):
 	'''
 	ifstmt : IF LPAREN TEMPVAR RPAREN GOTO LT BLOCK NUMBER GT
 	'''
-	pass
+	rfile = globals()['rfile']
+	reg = glob.registers.get_mapping(p[3])
+	print(glob.bne%(reg,p[8]),file = rfile)
+	glob.registers.clear_mapping(p[3])
+
 
 def p_elsestmt(p):
 	'''
