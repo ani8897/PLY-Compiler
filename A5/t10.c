@@ -11,7 +11,7 @@ void func1(int a, int b)
     {
         while(  **h != 0)
         {
-            **h = *g3 + 1;
+            **h = *g3 / 1;
             
         }
     }

@@ -68,9 +68,18 @@ move = "\tmove $%s, $%s"
 bne = "\tbne $%s, $%s, label%d"
 add = "\tadd $%s, $%s, $%s"
 sub = "\tsub $%s, $%s, $%s"
+mul = "\tmul $%s, $%s, $%s"
+div = "\tdiv $%s, $%s"
 jal = "\t%s"
-div = "\tdiv %s, %s"
-mflo = "\tmflo %s"
+div = "\tdiv $%s, $%s"
+mflo = "\tmflo $%s"
 negu = "\tnegu $%s, $%s"
 _not = "\tnot $%s, $%s"
+
+
+arithmetic = {
+	'+' : add,
+	'-' : sub,
+	'*' : mul
+}
 

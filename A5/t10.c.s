@@ -17,13 +17,19 @@ func1:
  # Prologue ends
 
 label0:
-	li $s0, 52
 	j label3
 label1:
-	li $s1, 0
 	j label3
 label2:
-	li $s2, 1
+	la $s0, global_g3
+	lw $s1, 0($s0)
+	li $s0, 1
+	div $s1, $s0
+	mflo $s2
+	move $s0, $s2
+	lw $s1, 4($sp)
+	lw $s2, 0($s1)
+	sw $s0, 0($s2)
 	j label1
 label3:
 	j epilogue_func1
@@ -44,16 +50,22 @@ main:
  # Prologue ends
 
 label4:
-	li $s3, 3
+	lw $s0, 4($sp)
+	lw $s1, 0($s0)
+	move $s0, $s1
 	j label5
 label5:
-	li $s4, 52
 	j label8
 label6:
-	li $s5, 0
 	j label8
 label7:
-	li $s6, 1
+	la $s1, global_g3
+	lw $s2, 0($s1)
+	li $s1, 1
+	add $s3, $s2, $s1
+	move $s1, $s3
+	la $s2, global_g3
+	sw $s1, 0($s2)
 	j label6
 label8:
 	j epilogue_main
@@ -74,13 +86,17 @@ func2:
  # Prologue ends
 
 label9:
-	li $s7, 52
 	j label12
 label10:
-	li $t0, 0
 	j label12
 label11:
-	li $t1, 1
+	la $s1, global_g3
+	lw $s2, 0($s1)
+	li $s1, 1
+	add $s3, $s2, $s1
+	move $s1, $s3
+	la $s2, global_g3
+	sw $s1, 0($s2)
 	j label10
 label12:
 	j epilogue_func2

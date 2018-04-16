@@ -164,9 +164,7 @@ def p_const(p):
 	const : NUMBER
 		| FLOATNUM
 	'''
-	reg = glob.registers.fetch_register()
-	print(glob.li%(reg,p[1]),file=globals()['rfile'])
-	p[0] = reg
+	p[0] = p[1]
 
 def p_label(p):
 	'''
@@ -229,7 +227,7 @@ def p_unassign(p):
 			## var EQUALS var ##
 			else:
 				rhs_func = globals()['rhs_functions'][p[3][0]]
-				r_reg = rhs_func(p[1][1],p[1][2])
+				r_reg = rhs_func(p[3][1],p[3][2])
 
 				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
 				glob.registers.free_register(r_reg)
@@ -244,7 +242,7 @@ def p_unassign(p):
 
 			elif p[3] == '-':
 				rhs_func = globals()['rhs_functions'][p[4][0]]
-				r_reg = rhs_func(p[1][1],p[1][2])
+				r_reg = rhs_func(p[4][1],p[4][2])
 				r_reg = print_negu(r_reg)
 
 				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
@@ -255,21 +253,38 @@ def p_unassign(p):
 		print("Error in unary assignment")
 		pass
 
-
-
-
 def p_binassign(p):
 	'''
-	binassign : var EQUALS var binop var
+	binassign : condassign
+			| arithassign 
 	'''
 	pass
 
-def p_binop(p):
+def p_condassign(p):
 	'''
-	binop : condop 
-		| arithop
+	condassign : var EQUALS var condop var
 	'''
 	pass
+
+def p_arithassign(p):
+	'''
+	arithassign : var EQUALS var arithop var
+	'''
+	rfile = globals()['rfile']
+	rhs_func1,rhs_func2 = globals()['rhs_functions'][p[3][0]],globals()['rhs_functions'][p[5][0]]
+	r_reg1 = rhs_func1(p[3][1],p[3][2])
+	r_reg2 = rhs_func2(p[5][1],p[5][2])
+	r_reg = glob.registers.fetch_register()
+	if p[4] in glob.arithmetic:
+		print(glob.arithmetic[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
+	else:
+		print(glob.div%(r_reg1,r_reg2),file = rfile)
+		print(glob.mflo%(r_reg),file=rfile)
+
+	glob.registers.free_register(r_reg1)
+	glob.registers.free_register(r_reg2)
+	analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
+	glob.registers.free_register(r_reg)
 
 def p_condop(p):
 	'''
@@ -291,7 +306,7 @@ def p_arithop(p):
 			| TIMES
 			| DIVIDE
 	'''
-	pass
+	p[0] = p[1]
 
 def p_ifstmt(p):
 	'''
@@ -404,7 +419,9 @@ def rhs_id(var_name,indirection):
 
 	return r_reg
 
-def rhs_const(reg,indirection):
+def rhs_const(num,indirection):
+	reg = glob.registers.fetch_register()
+	print(glob.li%(reg,num),file=globals()['rfile'])
 	return reg
 
 def analyse_lhs(token,var_name,indirection,r_reg):

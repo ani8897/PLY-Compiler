@@ -16,15 +16,15 @@ label0:
 	sw $s0, 8($sp)
 	li $s0, 5
 	lw $s1, 8($sp)
-	sw $ptr, 0($s1)
+	sw $s0, 0($s1)
 	j label1
 label1:
-	li $ptr, 4
+	li $s0, 4
 	j label3
 label2:
 	li $s1, 4
 	lw $s2, 12($sp)
-	sw $t, 0($s2)
+	sw $s1, 0($s2)
 	j label3
 label3:
 	j epilogue_main
