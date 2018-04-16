@@ -19,8 +19,8 @@ label0:
 	sw $s1, 0($s0)
 	li $s0, 9
 	lw $s1, 4($sp)
-	sw $s0, 0($s1)
-	li $s0, 3
+	sw $rt, 0($s1)
+	li $rt, 3
 	j label1
 label1:
 	j epilogue_main

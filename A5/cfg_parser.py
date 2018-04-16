@@ -216,7 +216,6 @@ def p_unassign(p):
 		if len(p) == 4:
 			## var EQUALS address ##
 			if p[3][0] == 'A':
-
 				r_reg = glob.registers.fetch_register()
 				if p[3][1] in rt.globals:
 					print(glob.la%(r_reg,p[3][1]),file=rfile)
@@ -228,30 +227,13 @@ def p_unassign(p):
 				glob.registers.free_register(r_reg)
 
 			## var EQUALS var ##
-			if p[3][0] == 'P':
-				r_reg = rhs_pointer(p[1][1],p[1][2])	
+			else:
+				rhs_func = globals()['rhs_functions'][p[3][0]]
+				r_reg = rhs_func(p[1][1],p[1][2])
 
 				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
 				glob.registers.free_register(r_reg)
-
-			elif p[3][0] == 'T':
-				r_reg = rhs_temporary(p[3][1])
-
-				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-				glob.registers.clear_mapping(r_reg)
-
-			elif p[3][0] == 'I':
-				r_reg = rhs_id(p[1][1])
-				
-				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-				glob.registers.free_register(r_reg)
-
-			elif p[3][0] == 'C':
-				r_reg = rhs_const(p[3][1])
-
-				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-				glob.registers.free_register(r_reg)
-
+			
 		else:
 			## Assuming temporaries on both sides ##
 			if p[3] == '!':
@@ -261,33 +243,12 @@ def p_unassign(p):
 				glob.registers.clear_mapping(r_reg)
 
 			elif p[3] == '-':
-				if p[4][0] == 'P':
-					r_reg = rhs_pointer(p[1][1],p[1][2])
-					r_reg = print_negu(r_reg)
+				rhs_func = globals()['rhs_functions'][p[4][0]]
+				r_reg = rhs_func(p[1][1],p[1][2])
+				r_reg = print_negu(r_reg)
 
-					analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-					glob.registers.free_register(r_reg)
-
-				elif p[4][0] == 'T':
-					r_reg = rhs_temporary(p[4][1])
-					r_reg = print_negu(r_reg)
-					
-					analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-					glob.registers.clear_mapping(r_reg)
-
-				elif p[4][0] == 'I':
-					r_reg = rhs_id(p[1][1])
-					r_reg = print_negu(r_reg)
-
-					analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-					glob.registers.free_register(r_reg)
-
-				elif p[4][0] == 'C':
-					r_reg = rhs_const(p[4][1])
-					r_reg = print_negu(r_reg)
-					
-					analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
-					glob.registers.free_register(r_reg)
+				analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
+				glob.registers.free_register(r_reg)
 
 	except:
 		print(p[1],p[2],p[3])
@@ -426,10 +387,10 @@ def rhs_pointer(var_name,indirection):
 
 	return r_reg
 
-def rhs_temporary(var_name):
+def rhs_temporary(var_name,indirection):
 	return glob.registers.get_mapping(var_name)
 
-def rhs_id(var_name):
+def rhs_id(var_name,indirection):
 	r_reg = glob.registers.fetch_register()
 	if var_name in rt.globals:
 		print(glob.la%(r_reg,var_name),file=rfile)
@@ -443,7 +404,7 @@ def rhs_id(var_name):
 
 	return r_reg
 
-def rhs_const(reg):
+def rhs_const(reg,indirection):
 	return reg
 
 def analyse_lhs(token,var_name,indirection,r_reg):
@@ -455,6 +416,12 @@ def generate_body(data,fname,rfile):
 	# print(data)
 	globals()['fname'] = fname
 	globals()['rfile'] = rfile
+	globals()['rhs_functions'] = {
+		'P' : rhs_pointer,
+		'T' : rhs_temporary,
+		'I' : rhs_id,
+		'C' : rhs_const
+	}
 	lex.lex()
 	yacc.yacc(debug = False, write_tables = False)
 	yacc.parse(data)

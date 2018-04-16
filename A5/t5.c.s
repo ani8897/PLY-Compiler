@@ -39,10 +39,10 @@ label2:
 	sw $s0, 4($sp)
 	li $s0, 9
 	lw $s1, 4($sp)
-	sw $s0, 0($s1)
+	sw $ptr, 0($s1)
 	j label3
 label3:
-	li $s0, 5
+	li $ptr, 5
 	j label5
 label4:
 	lw $s1, 8($sp)

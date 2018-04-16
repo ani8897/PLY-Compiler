@@ -41,14 +41,14 @@ label2:
 	sw $s0, 8($sp)
 	li $s0, 2
 	lw $s1, 4($sp)
-	sw $s0, 0($s1)
-	li $s0, 3
+	sw $px, 0($s1)
+	li $px, 3
 	lw $s1, 8($sp)
-	sw $s0, 0($s1)
-	lw $s0, 16($sp)
-	move $s1, $s0
-	lw $s0, 16($sp)
-	move $s2, $s0
+	sw $py, 0($s1)
+	lw $py, 16($sp)
+	move $s1, $py
+	lw $py, 16($sp)
+	move $s2, $py
 	j label3
 label3:
 	j epilogue_main

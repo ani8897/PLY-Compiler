@@ -44,18 +44,16 @@ main:
  # Prologue ends
 
 label4:
-	lw $s3, 12($sp)
-	move $s4, $s3
 	li $s3, 3
 	j label5
 label5:
-	li $s5, 52
+	li $s4, 52
 	j label8
 label6:
-	li $s6, 0
+	li $s5, 0
 	j label8
 label7:
-	li $s7, 1
+	li $s6, 1
 	j label6
 label8:
 	j epilogue_main
@@ -76,13 +74,13 @@ func2:
  # Prologue ends
 
 label9:
-	li $t0, 52
+	li $s7, 52
 	j label12
 label10:
-	li $t1, 0
+	li $t0, 0
 	j label12
 label11:
-	li $t2, 1
+	li $t1, 1
 	j label10
 label12:
 	j epilogue_func2
