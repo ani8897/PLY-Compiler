@@ -1,6 +1,7 @@
 class Register():
 	def __init__(self):
 		self.freelist = ['s0','s1','s2','s3','s4','s5','s6','s7','t0','t1','t2','t3','t4','t5','t6','t7','t8','t9']
+		self.fpfreelist = ['f10','f11','f12','f13','f14','f15','f16','f17','t0','t1','t2','t3','t4','t5','t6','t7','t8','t9']
 		self.mapping = {}
 
 	def fetch_register(self):

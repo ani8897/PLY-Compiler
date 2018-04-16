@@ -20,7 +20,6 @@ t_ignore = " \t"
 
 def t_newline(t):
 	r'\n|\r\n'
-	glob.line_number += len(t.value)
 
 t_LE = r'<='
 t_GE = r'>='
@@ -441,7 +440,7 @@ def lhs_is_temporary(var_name,r_reg):
 	l_reg = glob.registers.add_mapping(var_name)
 	print(glob.move%(l_reg,r_reg),file=rfile)
 
-def lhs_is_id(var_name,r_reg):
+def lhs_is_id(var_name,indirection,r_reg):
 	rfile=globals()['rfile']
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 	if var_name in rt.globals:
@@ -512,7 +511,7 @@ def rhs_address(var_name,indirection):
 def analyse_lhs(token,var_name,indirection,r_reg):
 	if token == 'P': lhs_is_pointer(var_name,indirection,r_reg)
 	elif token == 'T': lhs_is_temporary(var_name,r_reg)
-	elif token == 'I': lhs_is_id(var_name,r_reg)
+	elif token == 'I': lhs_is_id(var_name,indirection,r_reg)
 
 def generate_body(data,fname,rfile):
 	# print(data)

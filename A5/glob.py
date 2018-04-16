@@ -47,7 +47,7 @@ prologue = "\
 epilogue = "\
 # Epilogue begins\n\
 epilogue_%s:\n\
-	add $sp, $sp, %d\n\
+	addi $sp, $sp, %d\n\
 	lw $fp, -4($sp)\n\
 	lw $ra, 0($sp)\n\
 	jr $ra	# Jump back to the called procedure\n\
@@ -65,14 +65,13 @@ sw_glob = "\tsw $%s, %s"
 sw = "\tsw $%s, %d($%s)"
 move = "\tmove $%s, $%s"
 
-
 seq = "\tseq $%s, $%s, $%s"
 sne = "\tsne $%s, $%s, $%s"
 slt = "\tslt $%s, $%s, $%s"
 bne = "\tbne $%s, $0, label%d"
 
 addi = "\taddi $%s, $%s, %d"
-subi = "\tsubi $%s, $%s, %d"
+subi = "\tsub $%s, $%s, %d"
 
 
 add = "\tadd $%s, $%s, $%s"

@@ -9,7 +9,7 @@ int f(int *a)
 	else{
 		*b = *a;
 		*a = *a - 1;
-		*c = f(b);
+		*c = f(a);
 		*ret = *b * *c;
 	}
 	return *ret;
