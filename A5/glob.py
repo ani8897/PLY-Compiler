@@ -56,6 +56,63 @@ epilogue_%s:\n\
 label = "label%d:"
 jump_statement = "\tj label%d"
 jump_epilogue = "\tj epilogue_%s"
+j_cond_end = "\tj L_CondEnd_%d"
+label_cond_end = "L_CondEnd_%d"
+label_cond_false = "L_CondFalse_%d"
+label_cond_true = "L_CondTrue_%d"
+
+
+####### Float instructions #############
+float_cond_num = 0
+li_s = "\tli.s $%s, %s"
+l_s = "\tl.s $%s, %d($%s)"
+s_s = "\ts.s $%s, %d($%s)"
+s_s_glob = "\ts.s $%s, %s"
+mov_s = "\tmov.s $%s, $%s"
+add_s = "\tadd.s $%s, $%s, $%s"
+sub_s = "\tsub.s $%s, $%s, $%s"
+mul_s = "\tmul.s $%s, $%s, $%s"
+div_s = "\tdiv.s $%s, $%s, $%s"
+c_lt_s = "\tc.lt.s $%s, $%s\n \
+\tbc1f L_CondFalse_%d\n \
+\tli $%s, 1\n \
+\tj L_CondEnd_%d\n \
+L_CondFalse_%d:\n\
+\tli $%s 0\n\
+L_CondEnd_%d:"
+
+c_le_s = "\tc.le.s $%s, $%s\n \
+\tbc1f L_CondFalse_%d\n \
+\tli $%s, 1\n \
+\tj L_CondEnd_%d\n \
+L_CondFalse_%d:\n\
+\tli $%s 0\n\
+L_CondEnd_%d:"
+
+c_eq_s = "\tc.eq.s $%s, $%s\n \
+\tbc1f L_CondFalse_%d\n \
+\tli $%s, 1\n \
+\tj L_CondEnd_%d\n \
+L_CondFalse_%d:\n\
+\tli $%s 0\n\
+L_CondEnd_%d:"
+
+c_ne_s = "\tc.eq.s $%s, $%s\n \
+\tbc1f L_CondTrue_%d\n \
+\tli $%s, 0\n \
+\tj L_CondEnd_%d\n \
+L_CondTrue_%d:\n\
+\tli $%s 1\n\
+L_CondEnd_%d:"
+
+neg_s = "\tneg.s $%s, $%s"
+
+
+bc1t = "\tbc1f L_CondTrue_%d\n"
+bc1f = "\tbc1f L_CondFalse_%d\n"
+
+
+########################################
 
 
 li = "\tli $%s, %d"
@@ -68,6 +125,7 @@ move = "\tmove $%s, $%s"
 seq = "\tseq $%s, $%s, $%s"
 sne = "\tsne $%s, $%s, $%s"
 slt = "\tslt $%s, $%s, $%s"
+sle = "\tsle $%s, $%s, $%s"
 bne = "\tbne $%s, $0, label%d"
 
 addi = "\taddi $%s, $%s, %d"
@@ -77,7 +135,6 @@ subi = "\tsub $%s, $%s, %d"
 add = "\tadd $%s, $%s, $%s"
 sub = "\tsub $%s, $%s, $%s"
 mul = "\tmul $%s, $%s, $%s"
-div = "\tdiv $%s, $%s"
 div = "\tdiv $%s, $%s"
 mflo = "\tmflo $%s"
 
@@ -96,9 +153,50 @@ arithmetic = {
 	'*' : mul
 }
 
+float_arithmetic = {
+	'+' : add_s,
+	'-' : sub_s,
+	'*' : mul_s,
+	'/' : div_s	
+}
+
 conditional = {
 	'==' : seq,
 	'!=' : sne,
+	'<=' : sle,
+	'<'  : slt,
 	'&&' : _and,
 	'||' : _or
+}
+
+float_conditional = {
+	'==' : c_eq_s,
+	'!=' : c_ne_s,
+	'<=' : c_le_s,
+	'<'  : c_lt_s
+}
+
+move_map = {
+	True : mov_s,
+	False : move
+}
+
+sw_map = {
+	True : s_s,
+	False : sw
+}
+
+sw_glob_map = {
+	True : s_s_glob,
+	False : sw_glob
+}
+
+negu_map = {
+	True : neg_s,
+	False : negu
+}
+
+lw_map = {
+	True : l_s,
+	False : lw
 }

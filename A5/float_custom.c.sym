@@ -1,16 +1,18 @@
 Procedure table :-
 -----------------------------------------------------------------
 Name		|	Return Type	|	Parameter List
-f		|	 int	|	int * a
+func1		|	 int*	|	int  a, int  b
 -----------------------------------------------------------------
 Variable table :-
 -----------------------------------------------------------------
 Name		|	Scope		|	Base Type	|	Derived Type
 -----------------------------------------------------------------
-a		|	procedure f	|	int	|	*
-ret		|	procedure f	|	int	|	*
-b		|	procedure f	|	int	|	*
-c		|	procedure f	|	int	|	*
-a		|	procedure main	|	int	|	*
+x		|	global	|	float	|	*
+y		|	global	|	float	|	
+a		|	procedure func1	|	int	|	
+b		|	procedure func1	|	int	|	
+c		|	procedure func1	|	int	|	*
+fc		|	procedure func1	|	float	|	**
+fm		|	procedure func1	|	float	|	
 -----------------------------------------------------------------
 -----------------------------------------------------------------

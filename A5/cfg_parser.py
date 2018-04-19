@@ -307,25 +307,29 @@ def p_condassign(p):
 	rhs_func1,rhs_func2 = globals()['rhs_functions'][p[3][0]],globals()['rhs_functions'][p[5][0]]
 	r_reg1 = rhs_func1(p[3][1],p[3][2])
 	r_reg2 = rhs_func2(p[5][1],p[5][2])
-	r_reg = glob.registers.fetch_register()
-	if p[4] in glob.conditional:
-		print(glob.conditional[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
-		glob.registers.free_register(r_reg1)
-		glob.registers.free_register(r_reg2)
-	else:
-		if p[4] == '>' or p[4] == '<=':
-			print(glob.slt%(r_reg,r_reg2,r_reg1),file = rfile)
-		else:
-			print(glob.slt%(r_reg,r_reg1,r_reg2),file = rfile)
-		
-		glob.registers.free_register(r_reg1)
-		glob.registers.free_register(r_reg2)
 
-		if p[4] == '>=' or p[4] == '<=':
-			temp_reg = glob.registers.fetch_register()
-			print(glob._not%(temp_reg,r_reg))
-			glob.registers.free_register(r_reg)
-			r_reg = temp_reg
+	r_reg = glob.registers.fetch_register()
+	if not glob.registers.is_float_reg(r_reg1):
+		if p[4] in glob.conditional:
+			print(glob.conditional[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
+		else:
+			if p[4] == '>':
+				print(glob.slt%(r_reg,r_reg2,r_reg1),file = rfile)
+			else:
+				print(glob.sle%(r_reg,r_reg2,r_reg1),file = rfile)		
+	else:
+		c = glob.float_cond_num
+		if p[4] in glob.float_conditional:
+			print(glob.float_conditional[p[4]]%(r_reg1,r_reg2,c,r_reg,c,c,r_reg,c),file = rfile)
+		else:
+			if p[4] == '>':
+				print(glob.c_lt_s%(r_reg2,r_reg1,c,r_reg,c,c,r_reg,c),file = rfile)
+			else:
+				print(glob.c_le_s%(r_reg2,r_reg1,c,r_reg,c,c,r_reg,c),file = rfile)
+		glob.float_cond_num+=1
+
+	glob.registers.free_register(r_reg1)
+	glob.registers.free_register(r_reg2)
 
 	analyse_lhs(p[1][0],p[1][1],p[1][2],r_reg)
 	glob.registers.free_register(r_reg)
@@ -338,12 +342,17 @@ def p_arithassign(p):
 	rhs_func1,rhs_func2 = globals()['rhs_functions'][p[3][0]],globals()['rhs_functions'][p[5][0]]
 	r_reg1 = rhs_func1(p[3][1],p[3][2])
 	r_reg2 = rhs_func2(p[5][1],p[5][2])
-	r_reg = glob.registers.fetch_register()
-	if p[4] in glob.arithmetic:
-		print(glob.arithmetic[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
+
+	if not glob.registers.is_float_reg(r_reg1):
+		r_reg = glob.registers.fetch_register()
+		if p[4] in glob.arithmetic:
+			print(glob.arithmetic[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
+		else:
+			print(glob.div%(r_reg1,r_reg2),file = rfile)
+			print(glob.mflo%(r_reg),file=rfile)
 	else:
-		print(glob.div%(r_reg1,r_reg2),file = rfile)
-		print(glob.mflo%(r_reg),file=rfile)
+		r_reg = glob.registers.fetch_register(is_float=True)
+		print(glob.float_arithmetic[p[4]]%(r_reg,r_reg1,r_reg2),file = rfile)
 
 	glob.registers.free_register(r_reg1)
 	glob.registers.free_register(r_reg2)
@@ -418,6 +427,8 @@ def p_error(p):
 def lhs_is_pointer(var_name,indirection,r_reg):
 	rfile=globals()['rfile']
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+	is_float_reg = glob.registers.is_float_reg(r_reg)
+
 	l_reg = glob.registers.fetch_register()
 	if var_name in rt.globals:
 		print(glob.la%(l_reg,var_name),file=rfile)
@@ -431,28 +442,31 @@ def lhs_is_pointer(var_name,indirection,r_reg):
 		glob.registers.free_register(l_reg)
 		l_reg = t_reg
 
-	print(glob.sw%(r_reg,0,l_reg),file=rfile)
+	print(glob.sw_map[is_float_reg]%(r_reg,0,l_reg),file=rfile)
 	glob.registers.free_register(l_reg)
 
 def lhs_is_temporary(var_name,r_reg):
 	rfile=globals()['rfile']
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
-	l_reg = glob.registers.add_mapping(var_name)
-	print(glob.move%(l_reg,r_reg),file=rfile)
+	is_float_reg = glob.registers.is_float_reg(r_reg)
+	l_reg = glob.registers.add_mapping(var_name,is_float=is_float_reg)
+	print(glob.move_map[is_float_reg]%(l_reg,r_reg),file=rfile)
 
 def lhs_is_id(var_name,indirection,r_reg):
 	rfile=globals()['rfile']
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
+	is_float_reg = glob.registers.is_float_reg(r_reg)
 	if var_name in rt.globals:
-		print(glob.sw_glob%(r_reg,'globals_'+var_name),file=rfile)
+		print(glob.sw_glob_map[is_float_reg]%(r_reg,'globals_'+var_name),file=rfile)
 	else:
 		offset = ft.var_offset(var_name, indirection)
-		print(glob.sw%(r_reg,offset,'sp'),file=rfile)
+		print(glob.sw_map[is_float_reg]%(r_reg,offset,'sp'),file=rfile)
 
 def print_negu(r_reg):
 	rfile=globals()['rfile']
-	l_reg = glob.registers.fetch_register()
-	print(glob.negu%(l_reg,r_reg),file=rfile)
+	is_float_reg = glob.registers.is_float_reg(r_reg)
+	l_reg = glob.registers.fetch_register(is_float = is_float_reg)
+	print(glob.negu_map[is_float_reg]%(l_reg,r_reg),file=rfile)
 	glob.registers.free_register(r_reg)
 	return l_reg
 
@@ -461,17 +475,26 @@ def rhs_pointer(var_name,indirection):
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 	
 	r_reg = glob.registers.fetch_register()
+	is_float_var = None
+
 	if var_name in rt.globals:
+		is_float_var = rt.is_float_variable(var_name,indirection)
 		print(glob.la%(r_reg,var_name),file=rfile)
 	else:
+		is_float_var = ft.is_float_variable(var_name,indirection)
 		offset = ft.var_offset(var_name, indirection)
 		print(glob.lw%(r_reg,offset,'sp'),file=rfile)
 	
-	for i in range(indirection):
+	for i in range(indirection-1):
 		temp_reg = glob.registers.fetch_register()
 		print(glob.lw%(temp_reg,0,r_reg),file=rfile)
 		glob.registers.free_register(r_reg)
 		r_reg = temp_reg
+
+	temp_reg = glob.registers.fetch_register(is_float=is_float_var)
+	print(glob.lw_map[is_float_var]%(temp_reg,0,r_reg),file=rfile)
+	glob.registers.free_register(r_reg)
+	r_reg = temp_reg
 
 	return r_reg
 
@@ -480,22 +503,33 @@ def rhs_temporary(var_name,indirection):
 
 def rhs_id(var_name,indirection):
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
-	r_reg = glob.registers.fetch_register()
+	r_reg = None
 	if var_name in rt.globals:
+		#Address is always integer
+		r_reg = glob.registers.fetch_register()
 		print(glob.la%(r_reg,var_name),file=rfile)
-		temp_reg = glob.registers.fetch_register()
-		print(glob.lw%(temp_reg,0,r_reg),file=rfile)
+		
+		is_float_var = rt.is_float_variable(var_name,indirection)
+		temp_reg = glob.registers.fetch_register(is_float=is_float_var)
+		print(glob.lw_map[is_float_var]%(temp_reg,0,r_reg),file=rfile)
 		glob.registers.free_register(r_reg)
 		r_reg = temp_reg
 	else:
+		is_float_var = ft.is_float_variable(var_name,indirection)
+		r_reg = glob.registers.fetch_register(is_float=is_float_var)
 		offset = ft.var_offset(var_name, indirection)
-		print(glob.lw%(r_reg,offset,'sp'),file=rfile) 
+		print(glob.lw_map[is_float_var]%(r_reg,offset,'sp'),file=rfile) 
 
 	return r_reg
 
 def rhs_const(num,indirection):
 	reg = glob.registers.fetch_register()
 	print(glob.li%(reg,num),file=globals()['rfile'])
+	return reg
+
+def rhs_float(num,indirection):
+	reg = glob.registers.fetch_register(is_float=True)
+	print(glob.li_s%(reg,num),file=globals()['rfile'])
 	return reg
 
 def rhs_address(var_name,indirection):
@@ -522,6 +556,7 @@ def generate_body(data,fname,rfile):
 		'T' : rhs_temporary,
 		'I' : rhs_id,
 		'C' : rhs_const,
+		'F' : rhs_float,
 		'A' : rhs_address
 	}
 	lex.lex()

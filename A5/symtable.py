@@ -112,6 +112,8 @@ class RootTable():
 		for fname in self.funclist:
 			self.funclist[fname].sort_locals()
 
+	def is_float_variable(self,var_name,ind):
+		return self.globals[var_name].type == 'float' and self.globals[var_name].indirection == ind
 
 class SymbolTable():
 
@@ -210,6 +212,12 @@ class SymbolTable():
 			if vname == var_name: break
 
 		return offset 
+
+	def is_float_variable(self,var_name,ind):
+		if var_name in self.locals:
+			return self.locals[var_name].type == 'float' and self.locals[var_name].indirection == ind
+		if var_name in self.args:
+			return self.args[var_name].type == 'float' and self.args[var_name].indirection == ind
 
 class Attributes():
 
