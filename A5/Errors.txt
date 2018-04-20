@@ -1,3 +1,7 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+=====> CRIB ALERT: LINE 445 Parser.py
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 Errors
 
 All successfully parsed
@@ -6,20 +10,20 @@ Every test case has the new errors which I discovered in that test case, obvious
 
 t0
 they are using add sp, sp, 12, 
-we are using addi, ours is correct actually
-Some new line issues...ignore ?
+we are using addi, ours is correct actually => Changes made in glob.epilogue
+Some new line issues...ignore ? => Do diff -B
 Added comment for return value - Solved
 
 t1, t2
-some tab issues in global_d and global variables - ignore ?
+some tab issues in global_d and global variables - ignore ? => Changes made in glob.global
 they are using add
 we are using addi, ours is correct actually
 Some new line issues...ignored
 
 t3
 "globals" converted to "global" - Solved
-MAJOR -------- we have hardcoded globl main always, change that
-MAJOR -------- We have assumed main is the first function always, change that
+MAJOR -------- we have hardcoded globl main always, change that => Solved 
+MAJOR -------- We have assumed main is the first function always, change that => Solved
 
 Add the first two lines before the "main:"
 
@@ -42,15 +46,19 @@ Add the necessary comments, just like done in previous case
 Add this comment
 # setting up activation record for called function
 
+====> Necessary comments done
+
 t4, t5 - prev errors
 
 t6
 MAJOR ------- Offset error - label 0, first line 16 vs 20 , 12 vs 16...must be some one line change, check it
+======> Sorted, changes made in symtable.py
 
 t7 - prev errors
 
 t8
-MAJOR -------- xori instruction used - xori $s1, $s0, 1
+MAJOR -------- xori instruction used - xori $s1, $s0, 1 ==> Solved
+=====> CRIB ALERT: LINE 445 Parser.py
 It was there on moodle and will be used for a specific case, please check it
 
 t9 - prev errors
@@ -65,4 +73,5 @@ MAJOR ---- Add the following two lines before any function named func2
 One more thing, maine manually fast check kiya hai, so afaik, register allocation sahi hai apna, but please diff after you solve these to ensure it because maine line by line rigourously nhi kiya , animation se kiya :P 
 
 MAJOR ---- Lastly -- the function thing we discussed last night, uske direct consequences nhi pata chal rhe, but fir bhi change kar le
+======> Done
 Yeh sab ho gya to diff karle, mujhe test case 5 onwards manually karna pada tha :P

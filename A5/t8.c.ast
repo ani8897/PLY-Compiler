@@ -21,14 +21,17 @@ RETURNS void
 	)
 	WHILE
 	(
-		GT
+		NOT
 		(
-			DEREF
+			GT
 			(
-				VAR(ptr)
+				DEREF
+				(
+					VAR(ptr)
+				)
+				,
+				CONST(4)
 			)
-			,
-			CONST(4)
 		)
 		,
 		ASGN

@@ -5,12 +5,11 @@
 	.globl main	# The following is the code
 main:
 # Prologue begins
- 	sw $ra, 0($sp)	# Save the return address
- 	sw $fp, -4($sp)	# Save the frame pointer
- 	sub $fp, $sp, 8	# Update the frame pointer
- 	sub $sp, $sp, 20	# Make space for the locals
- # Prologue ends
-
+	sw $ra, 0($sp)	# Save the return address
+	sw $fp, -4($sp)	# Save the frame pointer
+	sub $fp, $sp, 8	# Update the frame pointer
+	sub $sp, $sp, 20	# Make space for the locals
+# Prologue ends
 label0:
 	addi $s0, $sp, 4
 	sw $s0, 8($sp)
@@ -33,11 +32,11 @@ label2:
 	j label3
 label3:
 	j epilogue_main
+
 # Epilogue begins
 epilogue_main:
-	addi $sp, $sp, 20
+	add $sp, $sp, 20
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure
 # Epilogue ends
-
