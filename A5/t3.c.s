@@ -17,10 +17,12 @@ label0:
 	sw $s0, 4($sp)
 	j label1
 label1:
+	lw $s0, 4($sp)
+	move $v1, $s0 # move return value to $v1
 	j epilogue_f
 # Epilogue begins
 epilogue_f:
-	add $sp, $sp, 16
+	addi $sp, $sp, 16
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure
@@ -35,12 +37,21 @@ main:
  # Prologue ends
 
 label2:
+	li $s0, 3
+	sw $s0, -4($sp)
+	li $s0, 4
+	sw $s0, 0($sp)
+	sub $sp, $sp, 8
+	jal f
+	addi $sp, $sp, 8
+	move $s0, $v1
+	sw $s0, globals_d
 	j label3
 label3:
 	j epilogue_main
 # Epilogue begins
 epilogue_main:
-	add $sp, $sp, 16
+	addi $sp, $sp, 16
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure

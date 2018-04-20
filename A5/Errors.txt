@@ -1,0 +1,68 @@
+Errors
+
+All successfully parsed
+
+Every test case has the new errors which I discovered in that test case, obviously I assume you fix the errors of the older cases as you move on because the older errors obviously repeat themselves in all the following test cases
+
+t0
+they are using add sp, sp, 12, 
+we are using addi, ours is correct actually
+Some new line issues...ignore ?
+Added comment for return value - Solved
+
+t1, t2
+some tab issues in global_d and global variables - ignore ?
+they are using add
+we are using addi, ours is correct actually
+Some new line issues...ignored
+
+t3
+"globals" converted to "global" - Solved
+MAJOR -------- we have hardcoded globl main always, change that
+MAJOR -------- We have assumed main is the first function always, change that
+
+Add the first two lines before the "main:"
+
+	.text	# The .text assembler directive indicates
+	.globl main	# The following is the code
+main:
+
+
+< 	jal f
+< 	addi $sp, $sp, 8
+< 	move $s0, $v1
+< 	sw $s0, globals_d
+---
+> 	jal f # function call
+> 	add $sp, $sp, 8 # destroying activation record of called function
+> 	move $s0, $v1 # using the return value of called function
+
+Add the necessary comments, just like done in previous case
+
+Add this comment
+# setting up activation record for called function
+
+t4, t5 - prev errors
+
+t6
+MAJOR ------- Offset error - label 0, first line 16 vs 20 , 12 vs 16...must be some one line change, check it
+
+t7 - prev errors
+
+t8
+MAJOR -------- xori instruction used - xori $s1, $s0, 1
+It was there on moodle and will be used for a specific case, please check it
+
+t9 - prev errors
+
+t10
+MAJOR ---- Okay, we needed to sort the globals according to alphabetic order, please do this.
+
+MAJOR ---- Add the following two lines before any function named func2
+	.text	# The .text assembler directive indicates
+	.globl func2	# The following is the code
+
+One more thing, maine manually fast check kiya hai, so afaik, register allocation sahi hai apna, but please diff after you solve these to ensure it because maine line by line rigourously nhi kiya , animation se kiya :P 
+
+MAJOR ---- Lastly -- the function thing we discussed last night, uske direct consequences nhi pata chal rhe, but fir bhi change kar le
+Yeh sab ho gya to diff karle, mujhe test case 5 onwards manually karna pada tha :P

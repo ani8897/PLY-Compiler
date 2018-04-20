@@ -47,7 +47,7 @@ label3:
 	j epilogue_func1
 # Epilogue begins
 epilogue_func1:
-	add $sp, $sp, 12
+	addi $sp, $sp, 12
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure
@@ -67,11 +67,11 @@ label4:
 	lw $s0, 4($sp)
 	lw $s1, 0($s0)
 	sw $s1, 0($sp)
-	subi $sp, $sp, 8
+	sub $sp, $sp, 8
 	jal func2
 	addi $sp, $sp, 8
 	move $s0, $v1
-	sw $s0, globals_g3
+	sw $s0, global_g3
 	j label5
 label5:
 	la $s0, global_g3
@@ -102,7 +102,7 @@ label8:
 	j epilogue_main
 # Epilogue begins
 epilogue_main:
-	add $sp, $sp, 20
+	addi $sp, $sp, 20
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure
@@ -143,11 +143,11 @@ label11:
 	j label10
 label12:
 	lw $s0, 4($sp)
-	move $v1, $s0
+	move $v1, $s0 # move return value to $v1
 	j epilogue_func2
 # Epilogue begins
 epilogue_func2:
-	add $sp, $sp, 12
+	addi $sp, $sp, 12
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure

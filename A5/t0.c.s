@@ -12,10 +12,12 @@ func1:
  # Prologue ends
 
 label0:
+	lw $s0, 4($sp)
+	move $v1, $s0 # move return value to $v1
 	j epilogue_func1
 # Epilogue begins
 epilogue_func1:
-	add $sp, $sp, 12
+	addi $sp, $sp, 12
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure

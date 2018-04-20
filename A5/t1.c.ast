@@ -10,18 +10,6 @@ RETURNS *int
 		,
 		ADDR
 		(
-			VAR(d)
-		)
-	)
-	ASGN
-	(
-		DEREF
-		(
-			VAR(c)
-		)
-		,
-		ADDR
-		(
 			VAR(m)
 		)
 	)

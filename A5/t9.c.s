@@ -35,7 +35,7 @@ label3:
 	j epilogue_main
 # Epilogue begins
 epilogue_main:
-	add $sp, $sp, 20
+	addi $sp, $sp, 20
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure

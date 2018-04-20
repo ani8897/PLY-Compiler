@@ -413,7 +413,8 @@ def p_returnstmt(p):
 	if len(p) == 3:
 		rhs_func = globals()['rhs_functions'][p[2][0]]
 		reg = rhs_func(p[2][1],p[2][2])
-		print(glob.move%('v1',reg),file=rfile)
+		print(glob.move%('v1',reg),file=rfile,end='')
+		print( " # move return value to $v1",file=rfile)
 		glob.registers.free_register(reg)
 	print(glob.jump_epilogue%globals()['fname'],file=globals()['rfile'])
 
@@ -457,7 +458,7 @@ def lhs_is_id(var_name,indirection,r_reg):
 	rt,ft = glob.root_table, glob.root_table.funclist[globals()['fname']]
 	is_float_reg = glob.registers.is_float_reg(r_reg)
 	if var_name in rt.globals:
-		print(glob.sw_glob_map[is_float_reg]%(r_reg,'globals_'+var_name),file=rfile)
+		print(glob.sw_glob_map[is_float_reg]%(r_reg,'global_'+var_name),file=rfile)
 	else:
 		offset = ft.var_offset(var_name, indirection)
 		print(glob.sw_map[is_float_reg]%(r_reg,offset,'sp'),file=rfile)

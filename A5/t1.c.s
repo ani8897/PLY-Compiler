@@ -13,18 +13,18 @@ f:
  # Prologue ends
 
 label0:
-	la $s0, global_d
-	lw $s1, 4($sp)
-	sw $s0, 0($s1)
 	addi $s0, $sp, 8
 	lw $s1, 4($sp)
 	sw $s0, 0($s1)
 	j label1
 label1:
+	lw $s0, 4($sp)
+	lw $s1, 0($s0)
+	move $v1, $s1 # move return value to $v1
 	j epilogue_f
 # Epilogue begins
 epilogue_f:
-	add $sp, $sp, 16
+	addi $sp, $sp, 16
 	lw $fp, -4($sp)
 	lw $ra, 0($sp)
 	jr $ra	# Jump back to the called procedure
