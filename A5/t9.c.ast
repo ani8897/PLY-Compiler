@@ -1,5 +1,5 @@
-FUNCTION main
-PARAMS ()
+Function Main
+PARAMS()
 RETURNS void
 	ASGN
 	(
@@ -40,5 +40,6 @@ RETURNS void
 			,
 			CONST(4)
 		)
+
 	)
 

@@ -1,5 +1,5 @@
-FUNCTION main
-PARAMS ()
+Function Main
+PARAMS()
 RETURNS void
 	ASGN
 	(

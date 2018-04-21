@@ -109,6 +109,7 @@ class RootTable():
 		print("-----------------------------------------------------------------",file=rfile)
 
 	def sort_locals(self):
+		self.sorted_globals = OrderedDict(sorted(self.globals.items()))
 		for fname in self.funclist:
 			self.funclist[fname].sort_locals()
 

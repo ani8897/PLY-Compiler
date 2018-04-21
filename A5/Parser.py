@@ -577,12 +577,12 @@ if __name__ == "__main__":
 	glob.ast.print_node(0,rfile = glob.ast_file)
 	glob.ast.check_main_return()
 	construct_cfg_prog(glob.ast, rfile = glob.cfg_file)
+	glob.root_table.sort_locals()
 	glob.root_table.print_symbol_table(rfile=glob.sym_file)
 	glob.ast_file.close()
 	glob.cfg_file.close()
 	glob.sym_file.close()
 
-	glob.root_table.sort_locals()
 	glob.cfg_file = open(sys.argv[1] + '.cfg','r')	
 	generate_assembly(glob.assembly_file)
 

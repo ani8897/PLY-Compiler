@@ -1,5 +1,5 @@
 FUNCTION func1
-PARAMS (int a, int b)
+PARAMS(int a,int b)
 RETURNS void
 	IF
 	(
@@ -48,19 +48,22 @@ RETURNS void
 					CONST(1)
 				)
 			)
+
 		)
+
 	)
 	RETURN
+	(
+	)
 
-FUNCTION main
-PARAMS ()
+Function Main
+PARAMS()
 RETURNS void
 	ASGN
 	(
 		VAR(g3)
 		,
-		CALL func2
-		(
+		CALL func2(
 			CONST(3)
 			,
 			DEREF
@@ -110,11 +113,13 @@ RETURNS void
 					CONST(1)
 				)
 			)
+
 		)
+
 	)
 
 FUNCTION func2
-PARAMS (int a, int b)
+PARAMS(int a,int b)
 RETURNS *int
 	IF
 	(
@@ -157,7 +162,9 @@ RETURNS *int
 					CONST(1)
 				)
 			)
+
 		)
+
 	)
 	RETURN
 	(

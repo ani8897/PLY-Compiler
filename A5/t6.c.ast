@@ -1,5 +1,5 @@
-FUNCTION main
-PARAMS ()
+Function Main
+PARAMS()
 RETURNS void
 	ASGN
 	(
@@ -26,8 +26,7 @@ RETURNS void
 	(
 		VAR(g)
 		,
-		CALL f
-		(
+		CALL f(
 			CONST(3)
 			,
 			VAR(g)
@@ -35,7 +34,7 @@ RETURNS void
 	)
 
 FUNCTION f
-PARAMS (int a, int *c)
+PARAMS(int a,int *c)
 RETURNS *int
 	RETURN
 	(

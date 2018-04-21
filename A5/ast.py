@@ -24,14 +24,15 @@ class Node():
 			exit(0)
 
 		if self.token == 'FUNCTION':
-			print('FUNCTION %s'%(self.children[0]),file=rfile)
-			print('PARAMS (',end='',file=rfile)
+			if self.children[0] == 'main': print('Function %s'%('Main'),file=rfile)
+			else: print('FUNCTION %s'%(self.children[0]),file=rfile)
+			print('PARAMS(',end='',file=rfile)
 			children = list(self.children[1].items())
 			for i in range(len(children)):
 				if i == len(self.children[1]) - 1:
 					print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s"%children[i][0],end='',file=rfile)
 				else:	
-					print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s, "%children[i][0],end = '',file=rfile)
+					print("%s "%children[i][1].type+ "*"*children[i][1].indirection + "%s,"%children[i][0],end = '',file=rfile)
 			print(')',file=rfile)
 			print('RETURNS '+'*'*self.children[2]+self.children[3],file=rfile)
 			self.children[4].print_node(depth+1,rfile)
@@ -44,15 +45,23 @@ class Node():
 					i+=1
 					child.print_node(depth,rfile)
 		else:
-			print('\t'*depth + self.token, file=rfile)
-			if len(self.children) != 0:
+			
+			if self.token[0:4] == 'CALL': print('\t'*depth + self.token+'(',file=rfile)
+			else: print('\t'*depth + self.token, file=rfile) 
+			
+			if len(self.children) != 0 or self.token == 'RETURN':
 				i = 0
-				print('\t'*depth + '(', file=rfile)
+				
+				if self.token[0:4] != 'CALL': print('\t'*depth + '(', file=rfile)
+
 				for child in self.children:
 					i+=1
 					child.print_node(depth+1,rfile)
 					if(i < len(self.children)): print('\t'*(depth+1) + ',', file=rfile)
-				print('\t'*depth + ')', file=rfile)
+				if self.token == 'IF' or self.token == 'WHILE': print('',file=rfile)
+				if self.token == 'NOT': print('\t'*(depth+1) + ',', file=rfile)
+				if self.token[0:4] != 'CALL': print('\t'*depth + ')', file=rfile)
+			if self.token[0:4] == 'CALL': print('\t'*depth + ')', file=rfile)
 
 	def reconstruct_node(self,funcall=False):
 		tokenMap = {
